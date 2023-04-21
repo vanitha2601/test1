@@ -98,7 +98,7 @@ const DoughnutChart = () => {
   },
     [])
   return (
-    <Doughnut data={data} options={options} />
+    <DoughnutChart data={data} options={options} />
   )
 
 }

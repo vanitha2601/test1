@@ -8,6 +8,7 @@ import 'chart.js/auto'
 
 
 function App() {
+  alert("TEst");
   return (
     <div className="App">
 

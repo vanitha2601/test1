@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Colors } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,9 +9,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import {DragDropContext,Droppable, Draggable} from 'react-beautiful-dnd';
-import uuid from 'uuid';
+
 import { Bar } from 'react-chartjs-2';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,11 +21,10 @@ ChartJS.register(
   Legend
 );
 
-
 const options = {
   indexAxis: 'x',
   elements: {
-    bar: {
+    Doughnut: {
       borderWidth: 2,
     },
   },
@@ -37,7 +35,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Dynamic Bar chart',
+      text: 'Dynamic Doughnut chart',
     },
   },
 };
@@ -78,6 +76,7 @@ const BarChart = () => {
             {
               label: 'Dataset Id',
               data: dataSet1,
+              backgroundColor: '#9BD0F5',
               backgroundColor: 'rgba(25, 90, 13, 0.5)',
             },
 
@@ -99,28 +98,8 @@ const BarChart = () => {
   },
     [])
   return (
-    // <DragDropContext onDropEnd={result=>console.log(result)}>
-    //   {
-    //   Object.entries(data).map(([id,data]))=>{
-    //     return (
-    //       <Droppable droppableId={id}>
-
-    //         {(provided,snapshot)=>{
-    //             return(
-    //               <div 
-    //               {...provided.droppableProps}
-    //               ref={provided.innerRef}
-    //               style={{
-
-    //               }}></div> 
-    //             )
-    //           }
-    //         }</Droppable>
-    //       )
-    //       }
-    // }
-    // </DragDropContext>
-     <Bar data={data} options={options} />
+    <Bar data={data} options={options} />
+    
   )
 
 }
