@@ -39,15 +39,12 @@ const options = {
   },
 };
 
-
-
-
 const DoughnutChart = () => {
 
   const [data, setData] = useState({
     labels: [],
-     datasets: [],
- });
+    datasets: [],
+  });
   useEffect(() => {
     const fetchData = async () => {
       //const url ='https://dummy.restapiexample.com/api/v1/employees'
@@ -82,7 +79,7 @@ const DoughnutChart = () => {
 
             {
               label: 'Dataset PostId',
-              data:dataSet2,
+              data: dataSet2,
               borderColor: 'rgb(53, 162, 235)',
               backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
@@ -98,7 +95,7 @@ const DoughnutChart = () => {
   },
     [])
   return (
-    <DoughnutChart data={data} options={options} />
+    <Doughnut data={data} options={options} />
   )
 
 }

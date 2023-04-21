@@ -23,7 +23,7 @@ ChartJS.register(
 const options = {
     indexAxis: 'x',
     elements: {
-        line: {
+        Pie: {
             borderWidth: 2,
         },
     },
@@ -40,15 +40,13 @@ const options = {
 };
 
 
-
-
 const PieChart = () => {
 
     const [data, setData] = useState({
         labels: [],
-         datasets: [],
-     });
-     
+        datasets: [],
+    });
+
     useEffect(() => {
         const fetchData = async () => {
             //const url ='https://dummy.restapiexample.com/api/v1/employees'
@@ -82,10 +80,10 @@ const PieChart = () => {
                         },
 
                         {
-                          label: 'Dataset PostId',
-                          data:dataSet2,
-                          borderColor: 'rgb(53, 162, 235)',
-                          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                            label: 'Dataset PostId',
+                            data: dataSet2,
+                            borderColor: 'rgb(53, 162, 235)',
+                            backgroundColor: 'rgba(53, 162, 235, 0.5)',
                         },
                     ],
                 })

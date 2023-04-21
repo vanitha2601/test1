@@ -40,15 +40,12 @@ const options = {
   },
 };
 
-
-
-
 const BarChart = () => {
 
   const [data, setData] = useState({
     labels: [],
-     datasets: [],
- });
+    datasets: [],
+  });
   useEffect(() => {
     const fetchData = async () => {
       //const url ='https://dummy.restapiexample.com/api/v1/employees'
@@ -82,7 +79,7 @@ const BarChart = () => {
 
             {
               label: 'Dataset PostId',
-              data:dataSet2,
+              data: dataSet2,
               borderColor: 'rgb(53, 162, 235)',
               backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
@@ -99,7 +96,7 @@ const BarChart = () => {
     [])
   return (
     <Bar data={data} options={options} />
-    
+
   )
 
 }

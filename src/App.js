@@ -3,19 +3,19 @@ import LineChart from './components/LineChart';
 import PieChart from './components/PieChart';
 import DoughnutChart from './components/DoughnutChart';
 import './App.css';
-import 'chart.js/auto'
+import 'chart.js/auto';
 
 
 
 function App() {
-  alert("TEst");
+
   return (
     <div className="App">
 
       <div id="div1">
-        
+
         <BarChart />
-       
+
       </div>
 
       <div id="div2" >
