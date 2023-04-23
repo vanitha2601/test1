@@ -68,7 +68,7 @@ const LineChart = () => {
                     dataSet2.push(val.name);
                 }
                 setData({
-                    // labels:['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    id: 2,
                     labels: labels,
                     datasets: [
                         {

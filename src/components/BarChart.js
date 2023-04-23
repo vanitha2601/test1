@@ -24,7 +24,7 @@ ChartJS.register(
 const options = {
   indexAxis: 'x',
   elements: {
-    Doughnut: {
+    Bar: {
       borderWidth: 2,
     },
   },
@@ -35,10 +35,46 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Dynamic Doughnut chart',
+      text: 'Dynamic Bar chart',
     },
   },
 };
+
+
+
+//import { Bar } from 'react-chartjs-2';
+
+// function BarChart() {
+//   alert("BARCHART");
+//   const [boxes, setBoxes] = useState({
+//       id: 1,
+//       chartData: {
+//         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+//         datasets: [
+//           {
+//             label: 'Sales',
+//             data: [65, 59, 80, 81, 56, 55, 40],
+//             backgroundColor: 'rgba(255, 99, 132, 0.2)',
+//             borderColor: 'rgba(255, 99, 132, 1)',
+//             borderWidth: 1,
+//           },
+//         ],
+//       },
+//     },
+
+// );
+
+//   return (
+//     <div>
+
+//           <Bar data={boxes.chartData} />
+
+//     </div>
+//   );
+// }
+
+
+
 
 const BarChart = () => {
 
@@ -67,8 +103,13 @@ const BarChart = () => {
           dataSet2.push(val.name);
         }
         setData({
-          // labels:['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+
+          id: 1,
+
+
           labels: labels,
+
+
           datasets: [
             {
               label: 'Dataset Id',
@@ -84,6 +125,8 @@ const BarChart = () => {
               backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
           ],
+
+
         })
       }).then((res) => {
         console.log("res", res)
@@ -93,11 +136,16 @@ const BarChart = () => {
     }
     fetchData();
   },
-    [])
-  return (
-    <Bar data={data} options={options} />
 
-  )
+    [])
+
+
+  return (
+
+    <Bar data={data} />
+
+  );
 
 }
+
 export default BarChart; 

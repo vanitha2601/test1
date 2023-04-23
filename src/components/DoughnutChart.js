@@ -66,7 +66,7 @@ const DoughnutChart = () => {
           dataSet2.push(val.name);
         }
         setData({
-          // labels:['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          id: 4,
           labels: labels,
           datasets: [
             {
@@ -95,7 +95,9 @@ const DoughnutChart = () => {
   },
     [])
   return (
+    // <div className="chart-container">
     <Doughnut data={data} options={options} />
+    // </div>
   )
 
 }

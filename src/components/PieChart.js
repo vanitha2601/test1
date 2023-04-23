@@ -68,7 +68,7 @@ const PieChart = () => {
                     dataSet2.push(val.name);
                 }
                 setData({
-                    // labels:['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    id: 3,
                     labels: labels,
                     datasets: [
                         {
@@ -97,7 +97,10 @@ const PieChart = () => {
     },
         [])
     return (
+        // <div className="chart-container">
         <Pie data={data} options={options} />
+        //   </div>
+
     )
 
 }
