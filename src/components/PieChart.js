@@ -97,9 +97,9 @@ const PieChart = () => {
     },
         [])
     return (
-        // <div className="chart-container">
+        <div className="chart-container">
         <Pie data={data} options={options} />
-        //   </div>
+          </div>
 
     )
 
