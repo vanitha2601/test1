@@ -1,9 +1,11 @@
 html,
 body {
-  height: 50%;
+  height: 100%;
+  width: 100%;
   padding: 0;
   margin: 0;
 }
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -11,18 +13,18 @@ body {
   gap: 10px;
   height: 100vh;
   width: 100vw;
-  position:relative;
+  position: absolute;
 }
 
 .chart {
   display: flex;
   justify-content: center;
   align-items: center;
-   border: 1px solid black;
-  box-sizing: border-box; 
+  border: 1px solid black;
+  box-sizing: border-box;
   padding: 1em;
   font-size: 1.5em;
- 
+
 }
 
 
@@ -39,7 +41,7 @@ body {
 .Pie {
   grid-row: 2 / 3;
   grid-column: 1 / 2;
- 
+
 }
 
 .Doughnut {
@@ -47,7 +49,10 @@ body {
   grid-column: 2 / 3;
 
 }
-/* .chart-container {
-  width: 300px;
-  height: 300px;
-} */
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  width: 400px;
+  height: 400px;
+}

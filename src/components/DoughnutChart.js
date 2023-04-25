@@ -95,9 +95,12 @@ const DoughnutChart = () => {
   },
     [])
   return (
-     <div className="chart-container">
-    <Doughnut data={data} options={options} />
-     </div>
+
+    <div className="chart-container" style={{ margin: 'auto', display: 'flex', justifyContent: 'center' }}>
+
+      <Doughnut data={data} options={options} />
+    </div>
+
   )
 
 }

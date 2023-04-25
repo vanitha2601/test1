@@ -141,9 +141,9 @@ const BarChart = () => {
 
 
   return (
-
-    <Bar data={data} />
-
+    <div className="grid-item" style={{ gridRow: "1 / 2", gridColumn: "1 / 2" }}>
+      <Bar data={data} />
+    </div>
   );
 
 }
