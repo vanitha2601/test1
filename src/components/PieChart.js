@@ -98,11 +98,11 @@ const PieChart = () => {
         [])
     return (
 
-        <div className="chart-container" style={{ margin: 'auto', display: 'flex', justifyContent: 'center' }}>
-            <Pie data={data} options={options} />
+        <div className="chart" style={{ margin: 'auto', display: 'flex', justifyContent: 'center', gridRow: "1 / 2", gridColumn: "1 / 2" }}>
+            <div className="pieDoughnut">
+                <Pie data={data} options={options} />
+            </div>
         </div>
-
-
     )
 
 }

@@ -1,7 +1,6 @@
 html,
 body {
   height: 100%;
-  width: 100%;
   padding: 0;
   margin: 0;
 }
@@ -14,6 +13,7 @@ body {
   height: 100vh;
   width: 100vw;
   position: absolute;
+
 }
 
 .chart {
@@ -53,6 +53,36 @@ body {
 .chart-container {
   display: flex;
   justify-content: center;
-  width: 400px;
-  height: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.chart {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 1em;
+  font-size: 1.5em;
+}
+
+.pieDoughnut {
+  margin: auto;
+
+  width: 300px;
+  /* set a smaller width */
+  height: 315px;
+  /* set a smaller height */
+}
+
+.doughnut,
+.pie {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
