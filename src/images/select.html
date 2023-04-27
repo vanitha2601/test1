@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://localhost:54182/Queries/Create?connectionId=1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        QueryTree
+ - boolean - Create Report    </title>
+    <style>
+    @font-face { font-family: 'Glyphicons Halflings'; src: url('/fonts/glyphicons-halflings-regular.eot'); src: url('/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('/fonts/glyphicons-halflings-regular.woff2') format('woff2'),url('/fonts/glyphicons-halflings-regular.woff') format('woff'),url('/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('/fonts/glyphicons-halflings-regular.svg') format('svg') }
+    </style>
+    <link type="text/css" href="./select_files/site.min.css" rel="stylesheet">
+    <link type="text/css" href="./select_files/jquery.min.css" rel="stylesheet">
+    
+<style type="text/css">.cufon-canvas{text-indent:0}@media screen,projection{.cufon-canvas{display:inline;display:inline-block;position:relative;vertical-align:middle;font-size:1px;line-height:1px}.cufon-canvas .cufon-alt{display:-moz-inline-box;display:inline-block;width:0;height:0;overflow:hidden}.cufon-canvas canvas{position:relative}}@media print{.cufon-canvas{padding:0 !important}.cufon-canvas canvas{display:none}.cufon-canvas .cufon-alt{display:inline}}</style><style type="text/css">.cufon-canvas{text-indent:0}@media screen,projection{.cufon-canvas{display:inline;display:inline-block;position:relative;vertical-align:middle;font-size:1px;line-height:1px}.cufon-canvas .cufon-alt{display:-moz-inline-box;display:inline-block;width:0;height:0;overflow:hidden}.cufon-canvas canvas{position:relative}}@media print{.cufon-canvas{padding:0 !important}.cufon-canvas canvas{display:none}.cufon-canvas .cufon-alt{display:inline}}</style></head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="http://localhost:54182/">
+                    <img src="./select_files/querytree_logo.png"><span class="navbar-brand">QueryTree</span>
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+                
+<form action="http://localhost:54182/Account/Logout" class="navbar-right" id="logoutForm" method="post">        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="http://querytreeapp.com/help/" target="_blank">Help</a>
+            </li>
+            <li class="dropdown">
+                <a href="http://localhost:54182/Queries/Create?connectionId=1#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="glyphicon glyphicon-cog"></i> vanithav2601@gmail.com&nbsp;<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
+                    <li><a href="http://localhost:54182/Account">Settings</a></li>
+                    <li><a href="http://localhost:54182/Team">My Team</a></li>
+                        <li><a href="javascript:document.getElementById(&#39;logoutForm&#39;).submit()">Sign out</a></li>
+                </ul>
+            </li>
+        </ul>
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8CDOYKbMUNlLhrv4pnqxF1PuywVagb1hkyBOFf5a1p_rOzwBqOA0dBhoGhZ1Ouc6T1ZoDVOL_0E8MNf-XocTgsHmnwEfni8QJb2qbD5C84Thjw2ZtNlB8endqrDT11bt8oB9ZQWu13fso7P_bj7NSO8MdXZ5kIY1ICrOei7mxb4F8_bnl29ItPob037LA8jxXQ"></form>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <div class="container alert-container affix">
+        </div>
+        
+
+<link rel="stylesheet" type="text/css" href="./select_files/aqb.css">
+
+<form action="http://localhost:54182/Queries/Create?connectionId=1" method="post">    <div class="row">
+        <div class="col-md-6"> <h2>Create Report</h2></div>
+        <div class="col-md-6" style="text-align:right; margin-top:21px">
+            <input type="submit" value="Create" class="btn btn-success">
+            <a class="btn btn-default" href="http://localhost:54182/Home/Details/1">Cancel</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-horizontal col-md-12">
+            <hr>
+            
+            
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Name" style="text-align: left;">Name</label>
+                <div class="col-md-10">
+                    <input class="form-control text-box single-line" id="Name" name="Name" type="text" value="">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Description" style="text-align: left;">Description</label>
+                <div class="col-md-10">
+                    <textarea class="form-control text-box multi-line" id="Description" name="Description"></textarea>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Description" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+            <input type="hidden" name="QueryDefinition" id="QueryDefinition">
+            <input type="hidden" name="DatabaseConnectionID" id="DatabaseConnectionID" value="1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="qt-container">
+    <div id="binding-root" style="" data-bind="visible: true">
+        <div id="top_panel" data-bind="visible: ResultsOnly() === false" style="height: 300px;">
+            <div id="data_tools" class="toolbar">
+                <ul class="icon_list" data-bind="foreach: Tools">
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Loads a database table" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Data Table</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Sort the rows into ascending or descending order of values" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Sort</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Remove rows from a table that don&#39;t meet certain criteria" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Filter</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Link two tables together where two column values are the same" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Join</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Displays the statistics for the connected source table2" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Summarize</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Pick which columns you want and in what order they should appear" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Select</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Create a table from the child values on each row of the source table" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Append</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Makes a new column by extracting text from within another column" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Extract</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Draw a line chart with lines coming from one or more columns on the source table" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Line Chart</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Draw a bar chart with the the size of the bars coming from one or more columns on the source table" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Bar Chart</span>
+                    </li>
+                    <!--/ko-->
+                
+                    <!-- ko if: $data.Visible-->
+                    <li data-bind="attr: { title: Description }, draggable_tool: $data" title="Draw a pie chart with the the size of the segments coming from one of columns on the source table" class="ui-draggable">
+                        <canvas width="32" height="32" data-bind="canvas_symbol: $data" class="lower-canvas" style="width: 32px; height: 32px;"></canvas>
+                        <span data-bind="text: Title">Pie Chart</span>
+                    </li>
+                    <!--/ko-->
+                </ul>
+                <div id="dropTarget"></div>
+            </div>
+            <div id="workspace" data-bind="droppable_area: $data, draw_nodes: current_nodes" class="ui-droppable">
+                <canvas id="workspace_canvas" width="1007" height="297" class="lower-canvas" style="width: 1007px; height: 297px;"></canvas>
+            </div>
+        </div>
+        <div data-bind="visible: ResultsOnly() &amp;&amp; ResultsOnlyLoaded() &amp;&amp; ObjectSelected() == false" style="display: none;">
+            <p>No Tool Selected, please edit this report and ensure a tool is selected.</p>
+        </div>
+        <div id="bottom_panel" style="height: 300px;">
+            <div id="resize_bar" data-bind="visible: ResultsOnly() === false" class="ui-draggable"></div>
+            <div id="bottom_left_panel" style="display: block;">
+                <div id="results_container" class="flexibleHeight" data-bind="visible: ObjectSelected, style: { &#39;margin-right&#39;: ResultsOnly() ? &#39;0&#39; : &#39;155px&#39; }" style="display: none; margin-right: 155px; height: 288px;">
+                    <div id="nonTabularResultsContainer" class="flexibleHeight" data-bind="visible: SelectedNodeHasRenderAndNotError, render_results: SelectedNode" style="display: none; height: 288px;">
+                    </div>
+                    <div id="node_status_panel" class="status_text" data-bind="visible: SelectedNodeHasError" style="display: none;">
+                        <span data-bind="visible: SelectedNodeStatus() == &#39;not_ready&#39;" style="display: none;">Connecting to your database</span>
+                        <br data-bind="visible: SelectedNodeStatus() == &#39;not_ready&#39;" style="display: none;">
+                        <img src="./select_files/loading.gif" data-bind="visible: SelectedNodeStatus() == &#39;not_ready&#39;" style="display: none;">
+                        <span data-bind="visible: SelectedNodeStatus() == &#39;not_configured&#39;" style="display: none;">This tool is not set up yet, please click options to edit its settings</span>
+                        <span data-bind="visible: SelectedNodeStatus() == &#39;no_data&#39;" style="display: none;">No data was returned</span>
+                        <span data-bind="visible: SelectedNodeStatus() == &#39;error&#39;, html: SelectedNodeErrorText()" style="display: none;"></span>
+                    </div>
+                    <table id="results" data-bind="visible: IsDataVisible" style="display: none;">
+                        <thead>
+                            <tr>
+                                <!-- ko foreach: CurrentDataColumns() --><!-- /ko -->
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: CurrentData"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="no_selected_node_panel" class="status_text flexibleHeight" data-bind="visible: ResultsOnly() == false &amp;&amp; ObjectSelected() == false" style="height: 288px;">
+                <p>No Tool Selected, click on a tool to see its data and options.</p>
+            </div>
+            <ul id="result_options" class="flexibleHeight" data-bind="visible: ObjectSelected &amp;&amp; ResultsOnly() === false" style="height: 288px;">
+                <li><a id="showConfig" class="btn btn-primary btn-block" data-bind="visible: ShowOptions &amp;&amp; ResultsOnly() === false">Options</a></li>
+                <li><a id="export" target="_blank" class="btn btn-success btn-block" data-bind="visible: ShowExport, click: Export, attr: { href: ExportUrl, download: ExportFileName }" style="display: none;">Export</a></li>
+                <li class="pager" data-bind="visible: IsDataVisible" style="display: none;">
+                    Rows <span data-bind="text: CurrentRowStartFormatted">0</span> to <span data-bind="text: CurrentRowEndFormatted">null</span> of <span data-bind="text: CurrentRowsTotalFormatted">undefined</span>
+                </li>
+                <li data-bind="visible: IsDataVisible" style="display: none;">
+                    <a id="PagerStart" class="btn btn-sm btn-default" data-bind="visible: IsPreviousVisible" style="display: none;">&lt;&lt;</a>
+                    <a id="PagerPrev" class="btn btn-sm btn-default" data-bind="visible: IsPreviousVisible" style="display: none;">&lt;</a>
+                    <a id="PagerNext" class="btn btn-sm btn-default" data-bind="visible: IsNextVisible" style="display: none;">&gt;</a>
+                    <a id="PagerEnd" class="btn btn-sm btn-default" data-bind="visible: IsNextVisible" style="display: none;">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="node_options_container"></div>
+</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <input type="submit" value="Create" class="btn btn-success">
+            <a class="btn btn-default" href="http://localhost:54182/Home/Details/1">Cancel</a>
+        </div>
+    </div>
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8CDOYKbMUNlLhrv4pnqxF1PuywVagb1hkyBOFf5a1p_rOzwBqOA0dBhoGhZ1Ouc6T1ZoDVOL_0E8MNf-XocTgsHmnwEfni8QJb2qbD5C84Thjw2ZtNlB8endqrDT11bt8oB9ZQWu13fso7P_bj7NSO8MdXZ5kIY1ICrOei7mxb4F8_bnl29ItPob037LA8jxXQ"></form>
+
+        <br>
+    </div>
+    
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <p>Powered By <a href="http://querytreeapp.com/"><img class="logo" src="./select_files/querytree.png"> QueryTree v<span>0.0.0.0</span></a></p>
+                <p>© 2012-<script>document.write(new Date().getFullYear())</script>2023 <a href="http://weared4.com/">D4 Software Ltd</a>, <a href="https://github.com/d4software/QueryTree/graphs/contributors">et al</a> — <a href="https://github.com/d4software/QueryTree">Source</a> available under <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html">LGPLv3</a> license.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="./select_files/base.js.download"></script>
+    
+    <script src="./select_files/jquery.ui@1.9.2,knockout@3.4.0,d3js@3.5.17,momentjs@2.13.0"></script>
+    <script src="./select_files/fabric.js.download"></script>
+    <script src="./select_files/aqb.min.js.download"></script>
+    <script>
+        $("form").submit(function () {
+            $("input#QueryDefinition").val(getQuery());
+        });
+    </script>
+
+
+
+</body></html>
