@@ -54,11 +54,12 @@
     overflow-x: hidden;
     width: 100px;
     float: left;
-    height: 100%;
+    height: 300px;
   }
   .canvas-image{
     
     
     margin: 21px;
   }
+  
   
