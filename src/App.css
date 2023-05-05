@@ -10,20 +10,21 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 10px;
-  height: 100vh;
+  /* height: 100vh; */
   width: 100vw;
   position: absolute;
 
 }
 
 .chart {
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   border: 1px solid black;
-  box-sizing: border-box;
-  padding: 1em;
+  /* box-sizing: border-box;
+  padding: 1em; */
   font-size: 1.5em;
+  
 
 }
 
@@ -31,6 +32,8 @@ body {
 .Bar {
   grid-row: 1 / 2;
   grid-column: 1 / 2;
+  height:200px;
+  width:300px;
 }
 
 .Line {
@@ -59,23 +62,14 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.chart {
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  box-sizing: border-box;
-  padding: 1em;
-  font-size: 1.5em;
-}
 
 .pieDoughnut {
   margin: auto;
 
-  width: 300px;
+  width: 280px;
   /* set a smaller width */
-  height: 315px;
+  height: 280px;
   /* set a smaller height */
 }
 
@@ -118,4 +112,8 @@ height : 55px;
   width:50px;
   text-align: left;
   margin-left: 8px;
+}
+.barChart{
+  height: 200px;
+  width:200px;
 }

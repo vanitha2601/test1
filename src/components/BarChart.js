@@ -143,7 +143,7 @@ const BarChart = () => {
   return (
     <div className="chart" >
 
-      <Bar data={data} />
+      <Bar data={data} className="barChart"/>
     </div>
 
   );
