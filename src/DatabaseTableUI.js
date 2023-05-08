@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './css/QueryTree.css';
 import Navbar from './components/Navbar';
 import Draggable from './Draggable';
@@ -16,10 +16,15 @@ import extracticon from './images/extract.png';
 import linecharticon from './images/linechart.png';
 import barcharticon from './images/barchart.png';
 import piecharticon from './images/piechart.png';
+import Arrow from "./Arrow";
+
 
 function DatabaseTableUI() {
   const rightDiv = useRef(null);
   const ICON_SIZE = 40;
+
+
+
   const databaseIconSrc = require('./images/db.png');
 
   const sortIconSrc = require('./images/sort.png');
@@ -59,16 +64,38 @@ function DatabaseTableUI() {
   const [rightIcons, setRightIcons] = useState([]);
   const [draggedIcon, setDraggedIcon] = useState(null);
   const [dropLocation, setDropLocation] = useState(null);
+  const [draggedIconId, setDraggedIconId] = useState(null);
+
+  const [draggingIconId, setDraggingIconId] = useState(null);
+  const [iconPositions, setIconPositions] = useState([]);
+
+
+  const [startX, setStartX] = useState(null);
+  const [startY, setStartY] = useState(null);
+  const [endX, setEndX] = useState(null);
+  const [endY, setEndY] = useState(null);
+
+  const handleMouseDown = (event, startX, startY) => {
+    setStartX(startX);
+    setStartY(startY);
+  };
+
+  const handleMouseUp = (event, endX, endY) => {
+    setEndX(endX);
+    setEndY(endY);
+  };
+
 
   const handleDragStart = (event, id) => {
     event.dataTransfer.setData('text/plain', id);
     event.dataTransfer.dropEffect = 'move';
-    event.target.style.opacity = "0.5";
+    // event.target.style.opacity = "0.5";
+
   };
 
 
   const handleDragEnd = (event) => {
-    event.target.style.opacity = "1";
+    event.target.style.opacity = "0.5";
   };
 
   const handleDragOver = (event, containerRef) => {
@@ -82,6 +109,9 @@ function DatabaseTableUI() {
   const handleDropRight = (event) => {
 
     event.preventDefault();
+
+
+
     const idValue = event.dataTransfer.getData("text/plain");
     const leftIcon = leftIcons[idValue];
     if (leftIcon) {
@@ -111,6 +141,8 @@ function DatabaseTableUI() {
       });
     }
   };
+
+
 
 
   const handleDrop = (event, id) => {
@@ -160,14 +192,6 @@ function DatabaseTableUI() {
     }
   };
 
-  // function handleDragOver(event) {
-  //   event.preventDefault();
-  //   const targetContainer = event.target.closest('.container');
-  //   if (targetContainer) {
-  //     targetContainer.classList.add('drag-over');
-  //   }
-  // }
-
   function handleDragLeave(event) {
     const targetContainer = event.target.closest('.container');
     if (targetContainer) {
@@ -177,10 +201,6 @@ function DatabaseTableUI() {
   }
 
 
-  // const handleRemove = (index) => {
-  //   const newIcons = rightIcons.filter((icon, i) => i !== index);
-  //   setRightIcons(newIcons);
-  // };
 
   return (
 
@@ -215,24 +235,29 @@ function DatabaseTableUI() {
 
           <div id="right-container" className="right-container"
             onDragLeave={handleDragLeave} onDragOver={handleDragOver}
-            onDrop={(event) => handleDropRight(event)}
+            onDrop={(event) => handleDropRight(event)}>
 
-          >
             {rightIcons.map((icon) => (
-              // <div key={index} className="right-icon">
-              <img
-                className="right-icon"
-                key={icon.id}
-                src={icon.src}
-                alt={icon.alt}
-                style={{ position: "absolute", left: icon.x, top: icon.y }}
+
+              <div className="right-icondb" style={{ position: "absolute", left: icon.x, top: icon.y }}
                 draggable onDragStart={(event) => handleDragStart(event, icon.id)}
                 onDrop={(event) => handleDropRight(event)}
-              />
-              //  <button onClick={() => handleRemove(index)}>Remove</button> 
-              // </div>
+                onMouseDown={(event) =>
+                  handleMouseDown(event, 0, 0)
+                } onMouseUp={(event) => handleMouseUp(event, 0, 0)}>
+                <img
+
+                  key={icon.id}
+                  src={icon.src}
+                  alt={icon.alt} className={`right-icon ${draggedIconId === icon.id ? "dragging" : ""}`}
+                />
+              </div>
+
+
             ))}
+
           </div>
+
         </div>
       </form>
     </div>

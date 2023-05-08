@@ -1,3 +1,5 @@
+
+
 .my-textbox {
     width: 300px;
     height: 100px;
@@ -96,7 +98,8 @@
     height: 300px;
     margin-left: auto;
     background: #eeeeee;
-    
+    display: flex;
+  align-items: center;
    
      /* display: flex; */
     /* flex-direction: column;
@@ -110,6 +113,7 @@
   img {
     border: 1px solid transparent;
     transition: border-color 0.2s linear;
+   
   }
 
   
@@ -117,13 +121,152 @@
     
    border-radius: 8px;
     box-shadow: 0 0 3px 3px #eeeeee;
+    
   }
-  .right-icon{
-    border: 1px solid red;
-  }
+ 
   @keyframes blink {
     50% {
       opacity: 0;
     }
   }
   
+
+  /* ICON IMAGES SETTING */
+  .right-icon {
+    position: relative; /* set container to relative position */
+    width: 50px; /* set width of container */
+    height: 50px; /* set height of container */
+    border: 2px solid black; /* set border around container */
+    border-radius: 10px; /* set border radius */
+    display: flex; /* use flexbox to center icon */
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    
+  }
+ 
+   .right-icon::before,
+  .right-icon::after {
+    content: ""; /* create pseudo elements */
+    position: absolute; /* set position to absolute */
+    top: 50%; /* position in the middle vertically */
+    transform: translateY(-50%); /* adjust position */
+    width: 20px; /* set width of arrow */
+    height: 20px; /* set height of arrow */
+    border-style: solid; /* set border style */
+    border-width: 2px 2px 0 0; /* set border widths to create triangle */
+    border-color: black; /* set border color */
+
+   
+  } 
+  
+  .right-icon::before {
+    left: -12px; /* position arrow on left side */
+    transform: translateY(-50%) rotate(-45deg); /* rotate arrow */
+    content: "";
+  position: absolute;
+  left: calc(100% + 5px); /* adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 1px solid black;
+  width: 20px; /* adjust as needed */
+  height: 20px; /* adjust as needed */
+  border-right: 1px solid black;
+  transform: rotate(45deg);
+
+  }
+  
+  .right-icon::after {
+    right: -12px; /* position arrow on right side */
+    transform: translateY(-50%) rotate(45deg); /* rotate arrow */
+    content: "";
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  width: 20px;
+  height: 2px;
+  background-color: black;
+  transform: translateY(-50%);
+  border-right: 6px solid black;
+  
+
+  }
+  
+  .right-icon img {
+    width: 50%; /* set width of icon */
+    height: auto; /* set height to auto to maintain aspect ratio */
+    border-radius: 10px; /* set border radius */
+    
+  }
+
+
+  .right-icon.dragging {
+    opacity: 0.5;
+  }
+  .image-border{
+    border: 2px solid black;
+  }
+
+  
+  .right-icon::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 5px);
+    right: -10px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid black;
+
+
+    
+
+  }
+
+  .right-icondb{
+   
+   
+    background-size: cover; /* this will make sure the image covers the entire container */
+    width: 50px; /* set the width and height of the container to match the image dimensions */
+    height: 50px;
+
+    position: relative;
+  } 
+/* 
+  .right-icondb:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 10px;
+    border-color: #fff transparent transparent transparent;
+    bottom: -10px;
+    left: calc(50% - 10px);
+  }
+
+  .right-icondb::after {
+    content: "➡";
+    display: inline-block;
+    margin-left: 5px;
+  } */
+  .right-icondb {
+    position: relative;
+    
+  }
+  
+  .right-icondb::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #000;
+    
+    
+  }
+
