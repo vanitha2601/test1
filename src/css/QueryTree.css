@@ -65,11 +65,7 @@
        cursor: move; 
    
   }
-  .canvas-image{
-    
-    
-    margin: 21px;
-  }
+ 
   
   .left-container {
     width: 100px;
@@ -101,11 +97,6 @@
     display: flex;
   align-items: center;
    
-     /* display: flex; */
-    /* flex-direction: column;
-    /* align-items: center; 
-    justify-content: center;
-    flex: 1;  */
   }
   .right-container:img {
     position: absolute;
@@ -268,5 +259,11 @@
     border-left: 10px solid #000;
     
     
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 

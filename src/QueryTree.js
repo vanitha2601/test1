@@ -255,136 +255,38 @@ canvas.addEventListener("mouseup", () => {
  
 
   return (
-    <div >
-      <h1>Create Report</h1>
-      <div className="textdiv">
-        <form>
-          <div>
-            <label className="my-label">
-              Name:
-
-            </label>
-            <input type="text" className="my-input form-control" />
-          </div>
-          <div >
-            <label className="my-label">
-              Description:
-
-            </label>
-            <textarea className="my-input form-control"
-
-            />
-          </div>
-          <div className="container" ref={containerRef} onDragOver={handleDragOver} onDrop={handleDrop}>
-          <div className="left-container" >
-              <canvas id="my-canvas" ref={canvasRef} className="canvas-image" width="80" height="650" draggable={true}
-              > </canvas>
-  {/* <img ref={imgRef} alt="Data Table" src={databaseicon} />   */}
-
-{/* <div className="container">
-      <div className="left-container" onDrop={(event) => handleDrop(event, leftIcons)} onDragOver={handleDragOver}>
-        {leftIcons.map((icon, index) => (
-          <img key={index} src={icon.src} alt={`Icon ${index}`} draggable onDragStart={(event) => handleDragStart(event, index)} />
-
-        ))}
-      </div>
-
-      <div  id="right-container"  className="right-container"  
-      onDrop={(event) => handleDrop(event, rightIcons)} 
-      onDragOver={handleDragOver}
-      >
-        {rightIcons.map((icon, index) => (
-            // <div key={index} className="right-icon">
-            <img 
-            key={icon.id}
-            src={icon.src}
-            alt={icon.alt}
-            draggable={true}  
-            // alt={`Icon ${index}`} 
-          //  draggable
-             onDragStart={(event) => handleDragStart(event, index)}
-            onDrop={(event) => handleDrop(event, index)}/>
-            //  <button onClick={() => handleRemove(index)}>Remove</button> 
-            // </div>
-        ))}
-      </div>
+    <div className="container-fluid main_container">
+    <div className="row">
+    <Navbar />
     </div>
-  ); */}
-
-  {/* <img ref={imgRef}
-                src={databaseicon}
-                alt="Data Table"
-                draggable={true} 
-              />
-              <img ref={imgRef}
-                src={sorticon}
-                alt="Data Table"
-                
-              />
-              <img ref={imgRef}
-                src={filtericon}
-                alt="Data Table"
-                
-              />
-              <img ref={imgRef}
-                src={joinicon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-              <img ref={imgRef}
-                src={summarizeicon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-              <img ref={imgRef}
-                src={selecticon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-              <img ref={imgRef}
-                src={appendicon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-              <img ref={imgRef}
-                src={extracticon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-               <img ref={imgRef}
-                src={linecharticon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-               <img ref={imgRef}
-                src={barcharticon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />
-               <img ref={imgRef}
-                src={piecharticon}
-                alt="Data Table"
-                draggable={true}
-                onDragStart={handleDragStart}
-              />  */}
-
-            </div>
-           
-          </div>
-          
-
-        </form>
-      </div>
+    <div className="row">
+    <div className="col-md-4">
+    <div className="row">
+    <div className="col-md-12">
+    <h3>Drag and Drop nodes to design query</h3>
     </div>
-  );
-
-}
+    </div>
+    <div className="row">
+    <div className="col-md-12">
+    <canvas ref={canvasRef} width={250} height={1000} />
+    </div>
+    </div>
+    </div>
+    <div className="col-md-8">
+    <div className="row">
+    <div className="col-md-12">
+    <h3>Generated SQL</h3>
+    </div>
+    </div>
+    <div className="row">
+   
+    </div>
+    </div>
+    </div>
+    <img ref={imgRef} style={{ display: "none" }} />
+    </div>
+    );
+    }
+    
 
 export default QueryTree
