@@ -1,14 +1,17 @@
 import React from 'react';
-import { Handle } from 'react-flow-renderer';
+import { Handle, Position} from 'react-flow-renderer';
 
 const CustomNode = ({ data }) => {
-  const { label, icon } = data;
+  const { id, alt, icon } = data;
+
   return (
-    <div  className="dndnode input" >
-      {icon}
-      <div>{label}</div>
+    <div className="nodetype">
+      <Handle id="target" type="target" position={Position.Left} isConnectableStart={false} />
+      <img src={icon} alt="Datatable" />
+      <Handle id = "source" type="source" position={Position.Right} isConnectableStart={true} />
     </div>
   );
 };
+
 
 export default CustomNode;

@@ -29,7 +29,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import Node from './CustomNode'; 
+import Node from './Node'; 
 
 
 function DatabaseTableUI() {

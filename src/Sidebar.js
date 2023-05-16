@@ -15,38 +15,62 @@ import extracticon from './images/extract.png';
 import linecharticon from './images/linechart.png';
 import barcharticon from './images/barchart.png';
 import piecharticon from './images/piechart.png';
+import Node from './Node';
+import CustomNode from './CustomNode';
+import ReactFlow, {
+    ReactFlowProvider,
+    addEdge,
+    useNodesState,
+    useEdgesState,
+    Controls, Handle,
+    ArrowHeadType, Position, removeElements, useStoreState, useStoreActions
+} from 'reactflow';
 
-const type = 'newNodeType';
-const icon = <img src={databaseIcon} alt="icon" />;
-console.log(JSON.stringify(icon));
+
+
+
 
 const nodeTypes = [
-    { type: 'datatable', icon: databaseIcon },
-    { type: 'sort', icon: sortIcon },
-    { type: 'filter', icon: filterIcon },
-    { type: 'join', icon: joinicon },
-    { type: 'summarize', icon: summarizeicon },
-    { type: 'select', icon: selecticon },
-    { type: 'append', icon: appendicon },
-    { type: 'extract', icon: extracticon },
-    { type: 'linechart', icon: linecharticon },
-    { type: 'barchart', icon: barcharticon },
-    { type: 'piechart', icon: piecharticon },
-  ];
+    {
+        id: 'dataTable', type: 'input', data: { label: 'Data Table' }, icon: databaseIcon, edges: ['right']
+    },
+    {
+        id: 'sort',   type: 'customNode', component: CustomNode,  data: {label: 'Sort'}, icon: sortIcon, edges: ['right', 'left']
+    },
+    {
+        id: 'filter', type: 'default',  data: {label: 'Filter'}, icon: filterIcon,edges: ['right', 'left']
+    },
+    {
+        id: 'join', type: 'default',  data: {label:  'Join'}, icon: joinicon, edges: ['right', 'left']
+    },
+    { id: 'summarize', type: 'default',  data: {label: 'Summarize'}, icon: summarizeicon, edges: ['right', 'left'] },
+    { id: 'select', type: 'default',  data: {label: 'Select'}, icon: selecticon, edges: ['right', 'left'] },
+    { id: 'append', type: 'default',  data: {label: 'Append'}, icon: appendicon, edges: ['right', 'left'] },
+    { id: 'extract', type: 'default',  data: {label: 'Extract'}, icon: extracticon, edges: ['right', 'left'] },
+    { id: 'line', type: 'output',  data: {label: 'Line Chart'}, icon: linecharticon, edges: ['left'] },
+    { id: 'bar', type: 'output',  data: {label: 'Bar Chart'}, icon: barcharticon, edges: ['left'] },
+    { id: 'pie', type: 'output',  data: {label: 'Pie Chart'}, icon: piecharticon, edges: ['left'] },
+];
 
 
 
 const Sidebar = () => {
-    const onDragStart = (event, nodeType, iconUrl) => {
+    const onDragStart = (event, id, nodeType,  component, iconUrl, edges) => {
+
         event.dataTransfer.setData('application/reactflow', nodeType);
         event.dataTransfer.setData('image/icon', iconUrl);
+        event.dataTransfer.setData('id', id);
         event.dataTransfer.effectAllowed = 'move';
-      };
+        // event.dataTransfer.setData('positionSource', sourcePos);
+        // event.dataTransfer.setData('positionTarget', targetPos);
+        event.dataTransfer.setData('component', component);
+        event.dataTransfer.setData('edges', edges);
+    };
 
     return (
         <aside>
-            
-          
+
+
             {/* <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'datatable')} draggable>
                 <img src={databaseIcon} alt="database icon" />
 
@@ -92,18 +116,22 @@ const Sidebar = () => {
 
 </div> */}
 
-{nodeTypes.map((nodeType) => (
-        <div
-          key={nodeType.type}
-          className={`dndnode ${nodeType.type}`}
-          onDragStart={(event) =>
-            onDragStart(event, nodeType.type, nodeType.icon)
-          }
-          draggable
-        >
-          <img src={nodeType.icon} alt={`${nodeType.type} icon`} />
-        </div>
-      ))}
+            {nodeTypes.map((nodeType) => (
+
+                <div
+                    key={nodeType.type}
+                    className={`dndnode ${nodeType.type}`}
+                    onDragStart={(event) =>
+                        onDragStart(event, nodeType.id, nodeType.type,  nodeType.component, nodeType.icon, nodeType.edges)}
+                    draggable
+                >
+                    
+                    <img src={nodeType.icon} label={nodeType.data.label} id={nodeType.id} />
+
+
+                </div>
+            ))}
+
 
         </aside>
     );
