@@ -251,6 +251,27 @@ const DnDFlow = () => {
 
 
 
+  const addConnection = (sourceNodeId, targetNodeId) => {
+    const sourceNode = nodes.find((node) => node.id === sourceNodeId);
+    const targetNode = nodes.find((node) => node.id === targetNodeId);
+
+    if (sourceNode && targetNode) {
+      if (!sourceNode.connections || !Array.isArray(sourceNode.connections)) {
+        sourceNode.connections = []; // Initialize the connections array
+      }
+
+      const newConnection = {
+        source: sourceNodeId,
+        target: targetNodeId,
+      };
+      alert(sourceNode.connections.length);
+      sourceNode.connections.push(newConnection);
+      // Perform any other necessary actions when adding a connection
+
+      console.log(`Connection added: ${JSON.stringify(newConnection)}`);
+      console.log(`Total connections for source node: ${sourceNode.connections.length}`);
+    }
+  };
 
 
 
@@ -290,75 +311,94 @@ const DnDFlow = () => {
     const connectionTargetCount = targetNode.connections?.length || 0;
     console.log(connectionTargetCount + "-----connectionTargetCount");
 
+    // Check if the connection is valid
+    if (source && target && source !== target) {
+      // Call the addConnection function to add the connection
+      addConnection(source, target);
 
-    const sourceNodeID = sourceNode.id;
-    const sourceNodeIDSplit = sourceNodeID.split("_");
-    alert(sourceNodeIDSplit[0]);
-    if (sourceNodeIDSplit[0] === "dataTable") {
+      // Perform any other necessary actions when a connection is made
 
-      const isTargetConnected = edges.some((connection) => connection.target === target);
-      if(isTargetConnected){
-return;
-      }else{
-        const newEdge = {
-          id: `e${source}-${target}`, // a unique ID for the edge
-          source,
-          sourceHandle: 'right', // you can set this if you have multiple source handles
-          target,
-          targetHandle: 'left', // you can set this if you have multiple target handles
-          type: 'custom-edge-type', // set your own custom edge type if needed
-          animated: true, // set to false if you don't want the edge to animate
-          // set the label for the edge
-          style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
-          // set the arrowhead type for the edge
-          sourcePosition: 'right',
-          targetPosition: 'left',
-          markerEnd: {
-            type: MarkerType.Arrow,
-          },
-  
-        };
-  
-        console.log(JSON.stringify(newEdge));
-  
-        setEdges([...edges, newEdge]);
-      }
+      // Refresh the state or trigger a re-render if needed
+      // onNodesChange(nodes);
+    }
 
-      
+
+    //   const sourceNodeID = sourceNode.id;
+    //   const sourceNodeIDSplit = sourceNodeID.split("_");
+    //   alert(sourceNodeIDSplit[0]);
+
+    //   const targetNodeID = targetNode.id;
+    //   const targetNodeIDSplit = targetNodeID.split("_");
+    //   alert(targetNodeIDSplit[0]);
+    //   if (sourceNodeIDSplit[0] === "dataTable") {
+
+
+    //       const isTargetConnected = edges.some((connection) => connection.target === target);
+    //       if(isTargetConnected){
+    // return;
+    //       }
+
+
+    //     else{
+    //       const newEdge = {
+    //         id: `e${source}-${target}`, // a unique ID for the edge
+    //         source,
+    //         sourceHandle: 'right', // you can set this if you have multiple source handles
+    //         target,
+    //         targetHandle: 'left', // you can set this if you have multiple target handles
+    //         type: 'custom-edge-type', // set your own custom edge type if needed
+    //         animated: true, // set to false if you don't want the edge to animate
+    //         // set the label for the edge
+    //         style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
+    //         // set the arrowhead type for the edge
+    //         sourcePosition: 'right',
+    //         targetPosition: 'left',
+    //         markerEnd: {
+    //           type: MarkerType.Arrow,
+    //         },
+
+    //       };
+
+    //       console.log(JSON.stringify(newEdge));
+
+    //       setEdges([...edges, newEdge]);
+    //     }
+
+
+    //   } else {
+
+    const isSourceConnected = edges.some((connection) => connection.source === source);
+    const isTargetConnected = edges.some((connection) => connection.target === target);
+
+    console.log(isSourceConnected + "***************" + isTargetConnected);
+    if (isSourceConnected || isTargetConnected) {
+      alert("else");
+      // Source node already has a connection, do not create a new connection
+      return;
     } else {
+      const newEdge = {
+        id: `e${source}-${target}`, // a unique ID for the edge
+        source,
+        sourceHandle: 'right', // you can set this if you have multiple source handles
+        target,
+        targetHandle: 'left', // you can set this if you have multiple target handles
+        type: 'custom-edge-type', // set your own custom edge type if needed
+        animated: true, // set to false if you don't want the edge to animate
+        // set the label for the edge
+        style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
+        // set the arrowhead type for the edge
+        sourcePosition: 'right',
+        targetPosition: 'left',
+        markerEnd: {
+          type: MarkerType.Arrow,
+        },
 
-      const isSourceConnected = edges.some((connection) => connection.source === source);
-      const isTargetConnected = edges.some((connection) => connection.target === target);
+      };
 
-      console.log(isSourceConnected + "***************" + isTargetConnected);
-      if (isSourceConnected || isTargetConnected) {
-        alert("else");
-        // Source node already has a connection, do not create a new connection
-        return;
-      }else{
-        const newEdge = {
-          id: `e${source}-${target}`, // a unique ID for the edge
-          source,
-          sourceHandle: 'right', // you can set this if you have multiple source handles
-          target,
-          targetHandle: 'left', // you can set this if you have multiple target handles
-          type: 'custom-edge-type', // set your own custom edge type if needed
-          animated: true, // set to false if you don't want the edge to animate
-          // set the label for the edge
-          style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
-          // set the arrowhead type for the edge
-          sourcePosition: 'right',
-          targetPosition: 'left',
-          markerEnd: {
-            type: MarkerType.Arrow,
-          },
-  
-        };
-  
-        console.log(JSON.stringify(newEdge));
-  
-        setEdges([...edges, newEdge]);
-      }
+      console.log(JSON.stringify(newEdge));
+
+      setEdges([...edges, newEdge]);
+      // }
     }
 
 
