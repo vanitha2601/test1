@@ -75,6 +75,13 @@ const DnDFlow = () => {
     return `node_${nodeId}`;
   };
 
+
+
+
+  // const nodeTypes = {
+  //   customnode:CustomNode
+  // }
+
   const nodesTypesRightContainer = [
     {
       id: 'dataTable',
@@ -83,7 +90,8 @@ const DnDFlow = () => {
       icon: databaseicon,
       sourcePosition: 'right',
       label: 'Data Table',
-      edges: ['right'], maxConnections: 1,
+      edges: ['right'],
+      maxConnections: 2,
       sourceHandle: {
         id: 'sourceHandle',
         position: Position.Right,
@@ -96,8 +104,8 @@ const DnDFlow = () => {
     {
       id: 'sort',
       label: 'Sort',
-      type: 'customNode',
-      component: CustomNode,
+      type: 'customnode',
+
       alt: 'Sort',
       icon: sorticon,
       sourcePosition: 'right',
@@ -235,20 +243,6 @@ const DnDFlow = () => {
   // Array to store connected nodes on the left edge
   const [rightTargets, setRightTargets] = useState([]);
 
-  // const updatedNodes = nodes.map((node) => {
-  //   const matchingNode = nodesTypesRightContainer.find((n) => n.id === node.id);
-  //   console.log(matchingNode+"Matching node");
-  //   if (matchingNode) {
-  //     return {
-  //       ...node,
-  //       maxConnections: matchingNode.edges.includes('left') ? 1 : 2
-  //     };
-  //   }
-  //   return node;
-  // });
-  // console.log(JSON.stringify(updatedNodes) + "updatednodes");
-  // setNodes(updatedNodes);
-
 
 
   const addConnection = (sourceNodeId, targetNodeId) => {
@@ -259,13 +253,27 @@ const DnDFlow = () => {
       if (!sourceNode.connections || !Array.isArray(sourceNode.connections)) {
         sourceNode.connections = []; // Initialize the connections array
       }
+      if (!targetNode.connections || !Array.isArray(targetNode.connections)) {
+        targetNode.connections = []; // Initialize the connections array
+      }
+
+      const existingSourceConnections = sourceNode.connections.length;
+      const existingTargetConnections = targetNode.connections.length;
+
+      // Check if the source node already has two connections
+      if (existingSourceConnections >= 2) {
+        return; // Ignore the connection attempt
+      }
 
       const newConnection = {
         source: sourceNodeId,
         target: targetNodeId,
       };
-      alert(sourceNode.connections.length);
+
+
       sourceNode.connections.push(newConnection);
+
+
       // Perform any other necessary actions when adding a connection
 
       console.log(`Connection added: ${JSON.stringify(newConnection)}`);
@@ -283,9 +291,12 @@ const DnDFlow = () => {
     return edges.filter((edge) => edge.source === nodeId || edge.target === nodeId).length;
   }
 
+
   const [selectedNode, setSelectedNode] = useState(null);
   // const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
   const onConnect = (event) => {
+
+
     const { source, target } = event;
     console.log(event);
     const sourceHandle = 'right';
@@ -300,21 +311,32 @@ const DnDFlow = () => {
 
     const sourceNode = nodes.find((node) => node.id === source);
     const targetNode = nodes.find((node) => node.id === target);
-    console.log(JSON.stringify(sourceNode.connections?.length) + "sourceNodemaxConnections");
+
     console.log(JSON.stringify(sourceNode) + "sourceNode");
+    console.log(JSON.stringify(targetNode) + "targetNode");
 
 
-
-    const connectionSourceCount = sourceNode.connections?.length || 0;
-    console.log(connectionSourceCount + "-----connectionSourceCount");
-
-    const connectionTargetCount = targetNode.connections?.length || 0;
-    console.log(connectionTargetCount + "-----connectionTargetCount");
 
     // Check if the connection is valid
     if (source && target && source !== target) {
       // Call the addConnection function to add the connection
       addConnection(source, target);
+
+      const sourceNodeID = sourceNode.id;
+      const sourceNodeIDSplit = sourceNodeID.split("_");
+
+
+
+      // Check if the source node already has two connections
+      if (sourceNode.connections && sourceNode.connections.length >= 2) {
+        const targetNodeID = targetNode.id;
+        const targetNodeIDSplit = targetNodeID.split("_");
+        console.log(JSON.stringify(sourceNode.connections[0]));
+        return;
+
+
+        // Ignore the connection attempt
+      }
 
       // Perform any other necessary actions when a connection is made
 
@@ -323,9 +345,7 @@ const DnDFlow = () => {
     }
 
 
-    //   const sourceNodeID = sourceNode.id;
-    //   const sourceNodeIDSplit = sourceNodeID.split("_");
-    //   alert(sourceNodeIDSplit[0]);
+
 
     //   const targetNodeID = targetNode.id;
     //   const targetNodeIDSplit = targetNodeID.split("_");
@@ -367,15 +387,34 @@ const DnDFlow = () => {
 
     //   } else {
 
+    // Extract source and target arrays
+    const sourceArray = edges.map(connection => connection.source);
+    const targetArray = edges.map(connection => connection.target);
+    console.log(JSON.stringify(sourceArray) + "***********" + JSON.stringify(targetArray));
+
+
+    const joinCount = targetArray.filter(target => target.includes("join")).length;
+    console.log(joinCount);
+
     const isSourceConnected = edges.some((connection) => connection.source === source);
     const isTargetConnected = edges.some((connection) => connection.target === target);
 
-    console.log(isSourceConnected + "***************" + isTargetConnected);
-    if (isSourceConnected || isTargetConnected) {
+    const requiredConnections = 2;
+    const joinNodes = targetArray.filter(target => target.includes("join"));
+    console.log(joinNodes, joinNodes);
+    const hasRequiredConnections = joinNodes.every(joinNode => targetArray.filter(target => target === joinNode).length >= requiredConnections);
+
+    //const hasRequiredConnections = targetArray.filter(target => target === joinNode).length >= requiredConnections;
+
+
+
+    console.log((JSON.stringify(edges.filter((connection) => connection)) + "***************" + "connectioncheck"));
+    if (isSourceConnected || isTargetConnected && hasRequiredConnections) {
       alert("else");
       // Source node already has a connection, do not create a new connection
       return;
     } else {
+
       const newEdge = {
         id: `e${source}-${target}`, // a unique ID for the edge
         source,
@@ -398,6 +437,8 @@ const DnDFlow = () => {
       console.log(JSON.stringify(newEdge));
 
       setEdges([...edges, newEdge]);
+
+
       // }
     }
 
@@ -525,7 +566,6 @@ const DnDFlow = () => {
       const positionSourceNode = event.dataTransfer.getData('positionSource');
       const positionTargetNode = event.dataTransfer.getData('positionTarget');
 
-      alert(JSON.stringify(positionSourceNode));
 
 
 
@@ -575,11 +615,27 @@ const DnDFlow = () => {
             // id: `${getId()}-right`,
           },
         },
-        maxConnections: {
-          left: selectedNodeType.type === 'join' ? 2 : 1,
-          right: selectedNodeType.edges.includes('right') ? 1 : 0,
-        },
+        // maxConnections: {
+        //   left: selectedNodeType.type === 'join' ? 2 : 1,
+        //   right: selectedNodeType.edges.includes('right') ? 1 : 0,
+        // },
       };
+      // Set the maxConnections property based on the node type
+      switch (selectedNodeType.type) {
+        case 'input':
+          newNode.maxConnections = 2;
+          break;
+        case 'customNode':
+          newNode.maxConnections = 1;
+          break;
+        case 'filter':
+          newNode.maxConnections = 1;
+          break;
+        // Add cases for other node types and their respective maxConnections values
+        default:
+          newNode.maxConnections = Infinity; // Default to unlimited connections
+          break;
+      }
       setNodes((nodes) => nodes.concat(newNode));
 
     },
@@ -639,8 +695,9 @@ const DnDFlow = () => {
                     onInit={setReactFlowInstance}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
-
+                    // nodeTypes={nodeTypes}
                     fitView
+
 
                   >
 
@@ -660,3 +717,4 @@ const DnDFlow = () => {
 };
 
 export default DnDFlow;
+

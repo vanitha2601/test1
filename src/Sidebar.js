@@ -125,7 +125,7 @@ const Sidebar = () => {
                         onDragStart(event, nodeType.id, nodeType.type,  nodeType.component, nodeType.icon, nodeType.edges)}
                     draggable
                 >
-                    
+                   
                     <img src={nodeType.icon} label={nodeType.data.label} id={nodeType.id} />
 
 
