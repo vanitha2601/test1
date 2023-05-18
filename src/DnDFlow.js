@@ -167,7 +167,17 @@ const DnDFlow = () => {
       alt: 'Summarize',
       icon: summarizeicon,
       edges: ['right', 'left'],
-      maxConnections: 1
+      sourcePosition: 'right',
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Right,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     {
       id: 'select',
@@ -176,7 +186,18 @@ const DnDFlow = () => {
       alt: 'Select',
       icon: selecticon,
       edges: ['right', 'left'],
-      maxConnections: 1
+      maxConnections: 1,
+      sourcePosition: 'right',
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Right,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     {
       id: 'append',
@@ -185,7 +206,18 @@ const DnDFlow = () => {
       alt: 'Append',
       icon: appendicon,
       edges: ['right', 'left'],
-      maxConnections: 1
+      maxConnections: 1,
+      sourcePosition: 'right',
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Right,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     {
       id: 'extract',
@@ -194,7 +226,18 @@ const DnDFlow = () => {
       alt: 'Extract',
       icon: extracticon,
       edges: ['right', 'left'],
-      maxConnections: 1
+      maxConnections: 1,
+      sourcePosition: 'right',
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Right,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
 
     {
@@ -204,16 +247,36 @@ const DnDFlow = () => {
       alt: 'Bar',
       icon: barcharticon,
       edges: ['left'],
-      maxConnections: 1
+      maxConnections: 1,
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Left,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     {
       id: 'line',
       label: 'Line',
       type: 'output',
-      alt: 'Bar Chart',
+      alt: 'Line Chart',
       icon: linecharticon,
       edges: ['left'],
-      maxConnections: 1
+      maxConnections: 1,
+      targetPosition: 'left',
+      maxConnections: 1,
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Left,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     {
       id: 'pie',
@@ -222,7 +285,16 @@ const DnDFlow = () => {
       alt: 'Pie Chart',
       icon: piecharticon,
       edges: ['left'],
-      maxConnections: 1
+      maxConnections: 1,
+      targetPosition: 'left',
+      sourceHandle: {
+        id: 'sourceHandle',
+        position: Position.Left,
+      },
+      targetHandle: {
+        id: 'targetHandle',
+        position: Position.Left,
+      },
     },
     // Add more nodes with their respective edges
   ];
@@ -261,9 +333,9 @@ const DnDFlow = () => {
       const existingTargetConnections = targetNode.connections.length;
 
       // Check if the source node already has two connections
-      if (existingSourceConnections >= 2) {
-        return; // Ignore the connection attempt
-      }
+      // if (existingSourceConnections >= 2) {
+      //   return; // Ignore the connection attempt
+      // }
 
       const newConnection = {
         source: sourceNodeId,
@@ -291,6 +363,9 @@ const DnDFlow = () => {
     return edges.filter((edge) => edge.source === nodeId || edge.target === nodeId).length;
   }
 
+  const isJoinNode = (nodeId) => {
+    return nodeId.startsWith('join');
+  };
 
   const [selectedNode, setSelectedNode] = useState(null);
   // const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
@@ -315,28 +390,69 @@ const DnDFlow = () => {
     console.log(JSON.stringify(sourceNode) + "sourceNode");
     console.log(JSON.stringify(targetNode) + "targetNode");
 
-
+    const sourceNodeID = sourceNode.id;
+    const sourceNodeIDSplit = sourceNodeID.split("_");
+    const targetNodeID = targetNode.id;
+    const targetNodeIDSplit = targetNodeID.split("_");
 
     // Check if the connection is valid
     if (source && target && source !== target) {
       // Call the addConnection function to add the connection
       addConnection(source, target);
 
-      const sourceNodeID = sourceNode.id;
-      const sourceNodeIDSplit = sourceNodeID.split("_");
 
+
+      //       if (sourceNodeIDSplit[0] === "dataTable") {
+      //         const sourceNode = nodes.find((node) => node.id === source);
+
+
+      // alert(JSON.stringify(sourceNode.connections.length));
+      //         if (sourceNode.connections && sourceNode.connections.length >= 2) {
+      //           const targetNode =nodes.find((node) => node.id === target);
+
+      //           // Check if the target node is not a join node
+      //           if (targetNode.id === 'join') {
+      //             alert("DataTable only accepts two connections and can only connect to Join nodes.");
+      //             const newEdge = {
+      //                       id: `e${source}-${target}`, // a unique ID for the edge
+      //                       source,
+      //                       sourceHandle: 'right', // you can set this if you have multiple source handles
+      //                       target,
+      //                       targetHandle: 'left', // you can set this if you have multiple target handles
+      //                       type: 'custom-edge-type', // set your own custom edge type if needed
+      //                       animated: true, // set to false if you don't want the edge to animate
+      //                       // set the label for the edge
+      //                       style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
+      //                       // set the arrowhead type for the edge
+      //                       sourcePosition: 'right',
+      //                       targetPosition: 'left',
+      //                       markerEnd: {
+      //                         type: MarkerType.Arrow,
+      //                       },
+
+      //                     };
+
+      //                     console.log(JSON.stringify(newEdge));
+
+      //                     setEdges([...edges, newEdge]);
+      //            // return;
+      //           }
+      //         }
+
+      //       }
 
 
       // Check if the source node already has two connections
-      if (sourceNode.connections && sourceNode.connections.length >= 2) {
-        const targetNodeID = targetNode.id;
-        const targetNodeIDSplit = targetNodeID.split("_");
-        console.log(JSON.stringify(sourceNode.connections[0]));
-        return;
+      // if (sourceNode.connections && sourceNode.connections.length >= 2) {
+      //   const targetNodeID = targetNode.id;
+      //   const targetNodeIDSplit = targetNodeID.split("_");
+      //   console.log(JSON.stringify(sourceNode.connections[0]));
+      //   alert("datatable only 2 connections accept");
+      //   return;
 
 
-        // Ignore the connection attempt
-      }
+      //   // Ignore the connection attempt
+      // }
 
       // Perform any other necessary actions when a connection is made
 
@@ -402,41 +518,56 @@ const DnDFlow = () => {
     const requiredConnections = 2;
     const joinNodes = targetArray.filter(target => target.includes("join"));
     console.log(joinNodes, joinNodes);
-    const hasRequiredConnections = joinNodes.every(joinNode => targetArray.filter(target => target === joinNode).length >= requiredConnections);
+
+    const joinNodeConnectionsCount = {};
+
+    for (const joinNode of joinNodes) {
+      const connectionsCount = targetArray.filter(target => target === joinNode).length;
+      joinNodeConnectionsCount[joinNode] = connectionsCount;
+    }
+
+    const hasRequiredConnections = joinNodes.every(joinNode => joinNodeConnectionsCount[joinNode] >= requiredConnections);
+
+
+    //const hasRequiredConnections = joinNodes.every(joinNode => targetArray.filter(target => target === joinNode).length >= requiredConnections);
 
     //const hasRequiredConnections = targetArray.filter(target => target === joinNode).length >= requiredConnections;
 
-
-
-    console.log((JSON.stringify(edges.filter((connection) => connection)) + "***************" + "connectioncheck"));
+    console.log(isSourceConnected + "--" + isTargetConnected);
     if (isSourceConnected || isTargetConnected && hasRequiredConnections) {
-      alert("else");
+
       // Source node already has a connection, do not create a new connection
       return;
     } else {
 
-      const newEdge = {
-        id: `e${source}-${target}`, // a unique ID for the edge
-        source,
-        sourceHandle: 'right', // you can set this if you have multiple source handles
-        target,
-        targetHandle: 'left', // you can set this if you have multiple target handles
-        type: 'custom-edge-type', // set your own custom edge type if needed
-        animated: true, // set to false if you don't want the edge to animate
-        // set the label for the edge
-        style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
-        // set the arrowhead type for the edge
-        sourcePosition: 'right',
-        targetPosition: 'left',
-        markerEnd: {
-          type: MarkerType.Arrow,
-        },
+      if (isTargetConnected && targetNodeIDSplit[0] !== "join") {
+        return;
+      } else {
+        const newEdge = {
+          id: `e${source}-${target}`, // a unique ID for the edge
+          source,
+          sourceHandle: 'right', // you can set this if you have multiple source handles
+          target,
+          targetHandle: 'left', // you can set this if you have multiple target handles
+          type: 'custom-edge-type', // set your own custom edge type if needed
+          animated: true, // set to false if you don't want the edge to animate
+          // set the label for the edge
+          style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
+          // set the arrowhead type for the edge
+          sourcePosition: 'right',
+          targetPosition: 'left',
+          markerEnd: {
+            type: MarkerType.Arrow,
+          },
 
-      };
+        };
 
-      console.log(JSON.stringify(newEdge));
+        console.log(JSON.stringify(newEdge));
 
-      setEdges([...edges, newEdge]);
+        setEdges([...edges, newEdge]);
+      }
+
+
 
 
       // }
