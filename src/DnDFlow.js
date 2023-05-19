@@ -12,7 +12,8 @@ import ReactFlow, {
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-
+import DataTablePopupComponent from './PopUpWindows/dataTablePopupComponent';
+import SortPopupComponent from './PopUpWindows/sortPopupComponent';
 
 
 
@@ -69,18 +70,6 @@ const DnDFlow = () => {
 
   let nodeId = 0; // Initialize the node ID counter
 
-  // Function to generate a unique node ID
-  const generateNodeId = () => {
-    nodeId++; // Increment the node ID counter
-    return `node_${nodeId}`;
-  };
-
-
-
-
-  // const nodeTypes = {
-  //   customnode:CustomNode
-  // }
 
   const nodesTypesRightContainer = [
     {
@@ -314,6 +303,9 @@ const DnDFlow = () => {
 
   // Array to store connected nodes on the left edge
   const [rightTargets, setRightTargets] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupContent, setPopupContent] = useState(false);
+
 
 
 
@@ -484,6 +476,9 @@ const DnDFlow = () => {
 
   const onDrop = useCallback(
     (event) => {
+      // Show the popup window
+      setShowPopup(true);
+
       event.preventDefault();
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -516,6 +511,17 @@ const DnDFlow = () => {
       console.log(JSON.stringify(draggedId) + "NODETYPES");
       console.log(JSON.stringify(selectedNodeType) + "selectedNodeType");
       const getId = () => `${selectedNodeType.id}_${id++}`;
+
+      let popupContent;
+      if (selectedNodeType.id === "dataTable") {
+        popupContent = <DataTablePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }
+      else if (selectedNodeType.id === "sort") {
+        popupContent = <SortPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }
+      // Show the popup window and set the popup content 
+      setShowPopup(true);
+      setPopupContent(popupContent);
 
       const newNode = {
         id: getId(),
@@ -575,9 +581,28 @@ const DnDFlow = () => {
       }
       setNodes((nodes) => nodes.concat(newNode));
 
+
+
     },
     [reactFlowInstance]
   );
+
+  // Function to close the popup window
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+  const handleRemoveTable = () => {
+    // Perform remove table logic here
+
+    // Close the popup
+    closePopup();
+  };
+
+  const handleNodeDoubleClick = (event, node) => {
+
+    // Open the popup when a node is double-clicked
+    setShowPopup(true);
+  };
 
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
@@ -623,7 +648,8 @@ const DnDFlow = () => {
               <ReactFlowProvider>
                 <div className="reactflow-wrapper" ref={reactFlowWrapper}>
 
-                  <ReactFlow onNodeDoubleClick={onNodeDoubleClick}
+                  <ReactFlow
+                    onNodeDoubleClick={handleNodeDoubleClick}
                     nodes={nodes}
                     edges={edges}
                     onNodesChange={onNodesChange}
@@ -639,7 +665,7 @@ const DnDFlow = () => {
                   >
 
                   </ReactFlow>
-                  {selectedNode && <NodePopup />}
+                  {showPopup && popupContent}
                 </div>
 
               </ReactFlowProvider>
