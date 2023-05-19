@@ -602,9 +602,17 @@ const DnDFlow = () => {
   };
 
   const handleNodeDoubleClick = (event, node) => {
-
     // Open the popup when a node is double-clicked
     setShowPopup(true);
+  };
+
+  const handleElementsRemove = (elementsToRemove) => {
+    console.log(elementsToRemove);
+    const removedNodes = elementsToRemove.filter((element) => element.type === 'node');
+    
+    // Perform deletion logic for the removed nodes
+    const updatedNodes = nodes.filter((node) => !removedNodes.some((removed) => removed.id === node.id));
+    setNodes(updatedNodes);
   };
 
   const NodePopup = () => {
@@ -661,6 +669,8 @@ const DnDFlow = () => {
                     onInit={setReactFlowInstance}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
+                    onElementsRemove={handleElementsRemove}
+                    // nodeTypes={nodesTypesRightContainer}
                     // nodeTypes={nodeTypes}
                     fitView
 
