@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SortPopupComponent = ({onClose, onRemoveTable}) => {
+const JoinPopupComponent = ({onClose, onRemoveTable}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleRemoveTable = () => {
@@ -36,32 +36,44 @@ const SortPopupComponent = ({onClose, onRemoveTable}) => {
        <div className="datatable-content">
      <div className="modal-body">
       <div className="form-group">
-          <label htmlFor="textbox">Sort </label>
-          <input type="text"  value="Sort" className="form-control" id="textbox" />
+          <label htmlFor="textbox">Name </label>
+          <input type="text"  value="Join" className="form-control" id="textbox" />
         </div>
      
     
     <div className="form-group">
-          <label htmlFor="dropdown">Sort By</label>
+          <label htmlFor="dropdown">Join Type</label>
           <select id="dropdown" className="form-control">
-            <option value="option1">Accounts</option>
-            <option value="option2">Company</option>
-            <option value="option3">Roles</option>
+            <option value="option1">Id</option>
+            <option value="option2">Address</option>
+            <option value="option3">Age</option>
           </select>
         </div>
 
-        <div className="checkbox-container">
-        <label>
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-          />
-         Descending
-        </label>
-      </div>
-     
-        <button type='button' className='btn btn-danger remove'>ADD ANOTHER</button>
+        <div className="form-group">
+          <label htmlFor="textbox">Table 1 Name : </label>
+          <input type="text"  value="" className="form-control" id="textbox" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="dropdown">Tabel 1 Column</label>
+          <select id="dropdown" className="form-control">
+            <option value="option1">Id</option>
+            <option value="option2">Address</option>
+            <option value="option3">Age</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="textbox">Table 2 Name :</label>
+          <input type="text"  value="" className="form-control" id="textbox" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="dropdown">Tabel 2 Column</label>
+          <select id="dropdown" className="form-control">
+            <option value="option1">ID</option>
+            <option value="option2">Address</option>
+            <option value="option3">Age</option>
+          </select>
+        </div>
         <div className="form-group toolHelpLink">
         <a href="https://example.com" target="_blank"   onClick={handleLinkClick}>
              How does this tool work?
@@ -78,4 +90,4 @@ const SortPopupComponent = ({onClose, onRemoveTable}) => {
   );
 };
 
-export default SortPopupComponent;
+export default JoinPopupComponent;

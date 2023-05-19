@@ -14,8 +14,8 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import DataTablePopupComponent from './PopUpWindows/dataTablePopupComponent';
 import SortPopupComponent from './PopUpWindows/sortPopupComponent';
-
-
+import FilterPopupComponent from './PopUpWindows/filterPopupComponent';
+import JoinPopupComponent from './PopUpWindows/joinPopupComponent';
 
 import Sidebar from './Sidebar';
 import Navbar from './components/Navbar';
@@ -476,8 +476,7 @@ const DnDFlow = () => {
 
   const onDrop = useCallback(
     (event) => {
-      // Show the popup window
-      setShowPopup(true);
+     
 
       event.preventDefault();
 
@@ -518,6 +517,10 @@ const DnDFlow = () => {
       }
       else if (selectedNodeType.id === "sort") {
         popupContent = <SortPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if(selectedNodeType.id === "filter"){
+        popupContent = <FilterPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if(selectedNodeType.id === "join"){
+        popupContent = <JoinPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
       // Show the popup window and set the popup content 
       setShowPopup(true);

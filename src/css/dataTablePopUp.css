@@ -91,9 +91,9 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
   z-index: 9999;
+  overflow: auto;
 }
 
 /* .popup-datatable {
@@ -105,9 +105,6 @@
 } */
 .popup-datatable {
   position: absolute;
-  top: 43%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -116,7 +113,7 @@
   width: 60%;
   margin: 30px auto;
   background-color: #fff;
-  height: 60%px;
+ 
 }
 
 .popup-header {
@@ -161,10 +158,11 @@
   margin-bottom: 5px;
 }
 
-.form-group input,
-.form-group select {
-  width: 100%;
-  height: 38px;
+
+.popup-datatable .form-group input,
+.popup-datatable .form-group select {
+  width: 100% !important;;
+  height: 36px !important;;
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -216,4 +214,20 @@
 }
 .form-control{
   box-shadow: inset 0 2px 0 rgba(0,0,0,.075);
+}
+
+/* Sort css */
+
+.checkbox-container{
+  margin-bottom: 15px;
+}
+
+.checkbox, .radio {
+  position: relative;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.toolHelpLink {
+  padding-top: 15px;
 }
