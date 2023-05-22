@@ -609,26 +609,17 @@ const DnDFlow = () => {
 
   const handleDeleteSelectedNodes = (selectedNodeId) => {
     const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
+    const updatedEdges = edges.filter(
+      (edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId
+    );
     setNodes(updatedNodes);
+    setEdges(updatedEdges);
   };
 
   const handleElementsRemove = (selectedNodeIds) => {
     const selectedNodes = selectedNodeIds.filter((el) => el.id === 'dataTable');
     console.log('Selected nodes:', selectedNodes);
   };
-
-  //const handleElementsRemove = () => {
-  // const selectedElements = useStoreState((store) => store.elements.filter(el => el.selected));
-  // const selectedElements = useStoreState((store) => store.getState().selectedElements);
-
-  //  console.log(JSON.stringify(selectedElements));
-  //const removedNodes = elementsToRemove.filter((element) => element.type === 'node');
-
-  // Perform deletion logic for the removed nodes
-  // const updatedNodes = nodes.filter((node) => !removedNodes.some((removed) => removed.id === node.id));
-  // setNodes(updatedNodes);
-  //};
-
 
   const handleNodeClick = (event, nodeId) => {
     const selectedNodeId = nodeId;
