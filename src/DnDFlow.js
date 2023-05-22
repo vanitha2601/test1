@@ -17,6 +17,9 @@ import DataTablePopupComponent from './PopUpWindows/dataTablePopupComponent';
 import SortPopupComponent from './PopUpWindows/sortPopupComponent';
 import FilterPopupComponent from './PopUpWindows/filterPopupComponent';
 import JoinPopupComponent from './PopUpWindows/joinPopupComponent';
+import SummarizePopupComponent from './PopUpWindows/summarizePopupComponent';
+import SelectPopupComponent from './PopUpWindows/selectPopupComponent';
+
 
 import Sidebar from './Sidebar';
 import Navbar from './components/Navbar';
@@ -517,6 +520,7 @@ const DnDFlow = () => {
       let popupContent;
       if (selectedNodeType.id === "dataTable") {
         popupContent = <DataTablePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        setShowPopup(true);
       }
       else if (selectedNodeType.id === "sort") {
         popupContent = <SortPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
@@ -524,9 +528,14 @@ const DnDFlow = () => {
         popupContent = <FilterPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       } else if (selectedNodeType.id === "join") {
         popupContent = <JoinPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "summarize") {
+        popupContent = <SummarizePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "select") {
+        popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
+
       // Show the popup window and set the popup content 
-      setShowPopup(true);
+     // setShowPopup(true);
       setPopupContent(popupContent);
 
       const newNode = {
@@ -586,9 +595,6 @@ const DnDFlow = () => {
           break;
       }
       setNodes((nodes) => nodes.concat(newNode));
-
-
-
     },
     [reactFlowInstance]
   );

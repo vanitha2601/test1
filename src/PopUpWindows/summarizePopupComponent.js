@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SortPopupComponent = ({onClose, onRemoveTable}) => {
+const SummarizePopupComponent = ({onClose, onRemoveTable}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleRemoveTable = () => {
@@ -36,32 +36,39 @@ const SortPopupComponent = ({onClose, onRemoveTable}) => {
        <div className="datatable-content">
      <div className="modal-body">
       <div className="form-group">
-          <label htmlFor="textbox">Sort </label>
+          <label htmlFor="textbox">Name </label>
           <input type="text"  value="Sort" className="form-control" id="textbox" />
         </div>
      
     
     <div className="form-group">
-          <label htmlFor="dropdown">Sort By</label>
-          <select id="dropdown" className="form-control">
-            <option value="option1">Accounts</option>
-            <option value="option2">Company</option>
-            <option value="option3">Roles</option>
+          <label htmlFor="dropdown">Calculate the</label>
+          <select id="dropdown" className="form-control" value="Number of Rows">
+            <option value="option1">Total</option>
+           
+            <option value="option2">Minimum</option>
+            <option value="option3">Maximum</option>
+            <option value="option4">Average</option>
+            <option value="option5">Median</option>
           </select>
         </div>
 
-        <div className="checkbox-container">
-        <label>
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-          />
-         Descending
-        </label>
-      </div>
-     
-        <button type='button' className='btn btn-primary'>ADD ANOTHER</button>
+        <div className="form-group">
+          <label htmlFor="dropdown">Of Column</label>
+          <select id="dropdown" className="form-control" value="Number of Rows">
+            <option value="option1">Total</option>
+           
+            <option value="option2">Minimum</option>
+            <option value="option3">Maximum</option>
+            <option value="option4">Average</option>
+            <option value="option5">Median</option>
+          </select>
+        </div>
+
+     <div>
+        <button type='button' className='btn btn-default'>ADD</button>
+        <button type='button' className='btn btn-primary'>BREAKDOWN SETTINGS</button>
+        </div>
         <div className="form-group toolHelpLink">
         <a href="https://example.com" target="_blank"   onClick={handleLinkClick}>
              How does this tool work?
@@ -78,4 +85,4 @@ const SortPopupComponent = ({onClose, onRemoveTable}) => {
   );
 };
 
-export default SortPopupComponent;
+export default SummarizePopupComponent;
