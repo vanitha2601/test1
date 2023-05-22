@@ -8,8 +8,9 @@ import ReactFlow, {
   ArrowHeadType, Position,
   removeElements, useStoreState,
   useStoreActions, useReactFlow,
-  getConnectedEdges, Background, MarkerType
+  getConnectedEdges, Background, MarkerType,
 } from 'reactflow';
+//import {useStoreState, removeElements } from 'react-flow-chart';
 
 import 'reactflow/dist/style.css';
 import DataTablePopupComponent from './PopUpWindows/dataTablePopupComponent';
@@ -67,6 +68,9 @@ const iconSources = [
 
 
 const DnDFlow = () => {
+
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
 
   let nodeId = 0; // Initialize the node ID counter
 
@@ -359,7 +363,6 @@ const DnDFlow = () => {
     return nodeId.startsWith('join');
   };
 
-  const [selectedNode, setSelectedNode] = useState(null);
   // const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
   const onConnect = (event) => {
 
@@ -476,7 +479,7 @@ const DnDFlow = () => {
 
   const onDrop = useCallback(
     (event) => {
-     
+
 
       event.preventDefault();
 
@@ -517,9 +520,9 @@ const DnDFlow = () => {
       }
       else if (selectedNodeType.id === "sort") {
         popupContent = <SortPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
-      }else if(selectedNodeType.id === "filter"){
+      } else if (selectedNodeType.id === "filter") {
         popupContent = <FilterPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
-      }else if(selectedNodeType.id === "join"){
+      } else if (selectedNodeType.id === "join") {
         popupContent = <JoinPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
       // Show the popup window and set the popup content 
@@ -595,8 +598,6 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
   const handleRemoveTable = () => {
-    // Perform remove table logic here
-
     // Close the popup
     closePopup();
   };
@@ -606,14 +607,52 @@ const DnDFlow = () => {
     setShowPopup(true);
   };
 
-  const handleElementsRemove = (elementsToRemove) => {
-    console.log(elementsToRemove);
-    const removedNodes = elementsToRemove.filter((element) => element.type === 'node');
-    
-    // Perform deletion logic for the removed nodes
-    const updatedNodes = nodes.filter((node) => !removedNodes.some((removed) => removed.id === node.id));
+  const handleDeleteSelectedNodes = (selectedNodeId) => {
+    const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
     setNodes(updatedNodes);
   };
+
+  const handleElementsRemove = (selectedNodeIds) => {
+    const selectedNodes = selectedNodeIds.filter((el) => el.id === 'dataTable');
+    console.log('Selected nodes:', selectedNodes);
+  };
+
+  //const handleElementsRemove = () => {
+  // const selectedElements = useStoreState((store) => store.elements.filter(el => el.selected));
+  // const selectedElements = useStoreState((store) => store.getState().selectedElements);
+
+  //  console.log(JSON.stringify(selectedElements));
+  //const removedNodes = elementsToRemove.filter((element) => element.type === 'node');
+
+  // Perform deletion logic for the removed nodes
+  // const updatedNodes = nodes.filter((node) => !removedNodes.some((removed) => removed.id === node.id));
+  // setNodes(updatedNodes);
+  //};
+
+
+  const handleNodeClick = (event, nodeId) => {
+    const selectedNodeId = nodeId;
+    setSelectedNodeId(selectedNodeId.id);
+  };
+
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+
+      const { source, target } = event;
+      if (event.key === 'Delete' && selectedNodeId) {
+        event.preventDefault();
+        handleDeleteSelectedNodes(selectedNodeId);
+        setSelectedNodeId(null);
+      }
+
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedNodeId]);
 
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
@@ -670,6 +709,7 @@ const DnDFlow = () => {
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                     onElementsRemove={handleElementsRemove}
+                    onNodeClick={handleNodeClick}
                     // nodeTypes={nodesTypesRightContainer}
                     // nodeTypes={nodeTypes}
                     fitView
