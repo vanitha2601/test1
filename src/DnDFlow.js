@@ -20,6 +20,9 @@ import JoinPopupComponent from './PopUpWindows/joinPopupComponent';
 import SummarizePopupComponent from './PopUpWindows/summarizePopupComponent';
 import SelectPopupComponent from './PopUpWindows/selectPopupComponent';
 import AppendPopupComponent from './PopUpWindows/appendPopupComponent';
+import ExtractPopupComponent from './PopUpWindows/extractPopupComponent';
+import LineChartPopupComponent from './PopUpWindows/lineChartPopupComponent';
+
 
 
 import Sidebar from './Sidebar';
@@ -535,8 +538,12 @@ const DnDFlow = () => {
         popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "append") {
         popupContent = <AppendPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "extract") {
+        popupContent = <ExtractPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "line") {
+        popupContent = <LineChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
-      
+       
       // Show the popup window and set the popup content 
      // setShowPopup(true);
       setPopupContent(popupContent);
