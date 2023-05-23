@@ -291,3 +291,8 @@ li.blockItem {
   overflow: hidden;
   margin: 3px;
 }
+.btn-danger {
+  color: #fff;
+  background-color: #d40000;
+  border-color: #b00;
+}

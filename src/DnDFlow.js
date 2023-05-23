@@ -19,6 +19,7 @@ import FilterPopupComponent from './PopUpWindows/filterPopupComponent';
 import JoinPopupComponent from './PopUpWindows/joinPopupComponent';
 import SummarizePopupComponent from './PopUpWindows/summarizePopupComponent';
 import SelectPopupComponent from './PopUpWindows/selectPopupComponent';
+import AppendPopupComponent from './PopUpWindows/appendPopupComponent';
 
 
 import Sidebar from './Sidebar';
@@ -532,8 +533,10 @@ const DnDFlow = () => {
         popupContent = <SummarizePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "select") {
         popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "append") {
+        popupContent = <AppendPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
-
+      
       // Show the popup window and set the popup content 
      // setShowPopup(true);
       setPopupContent(popupContent);
