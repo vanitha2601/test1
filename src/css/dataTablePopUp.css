@@ -120,7 +120,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
   border-bottom: 1px solid #e5e5e5;
     padding: 15px;
 }
@@ -177,7 +176,6 @@
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
 }
 
 .modal-footer button {
@@ -208,11 +206,11 @@
 }
 
 .modal-body{
-  padding:20px;
+  padding:15px;
   padding-right:30px;
 }
 .modal-footer{
-  padding: 20px;
+  padding: 15px;
   text-align: right;
   border-top: 1px solid #e5e5e5;
 }
@@ -233,7 +231,7 @@
   margin-bottom: 10px;
 }
 .toolHelpLink {
-  padding-top: 15px;
+   padding-top: 10px; 
 }
 .btn {
   padding: 8px 12px 7px;

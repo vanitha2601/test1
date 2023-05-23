@@ -1,7 +1,6 @@
 .list-container {
     display: flex;
     justify-content: space-between;
-    margin: 20px;
   }
   
   .column-list {
@@ -23,7 +22,7 @@
   .column-items {
     list-style-type: none;
     padding: 0;
-    height:100px;
+    height:130px;
     overflow:auto;
   }
   
@@ -51,4 +50,6 @@
   .remove-all-button:hover {
     background-color: #45a049;
   }
-  
+  .column-item.dragging {
+    background-color: #f5f5f5;
+  }

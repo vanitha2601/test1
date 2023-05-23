@@ -39,7 +39,7 @@ const dataTablePopupComponent = ({onClose, onRemoveTable}) => {
             <option value="option3">Roles</option>
           </select>
         </div>
-        <button type='button' className='btn btn-danger remove'>REFRESH TABLES</button>
+        <button type='button' className='btn btn-primary'>REFRESH TABLES</button>
         </div>
         <div className="modal-footer">
                         <button type='button' onClick={handleRemoveTable} class='btn btn-danger remove'>Remove Tool</button>
