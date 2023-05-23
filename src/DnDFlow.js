@@ -22,6 +22,8 @@ import SelectPopupComponent from './PopUpWindows/selectPopupComponent';
 import AppendPopupComponent from './PopUpWindows/appendPopupComponent';
 import ExtractPopupComponent from './PopUpWindows/extractPopupComponent';
 import LineChartPopupComponent from './PopUpWindows/lineChartPopupComponent';
+import BarChartPopupComponent from './PopUpWindows/barChartPopupComponent';
+import PieChartPopupComponent from './PopUpWindows/pieChartPopupComponent';
 
 
 
@@ -542,7 +544,12 @@ const DnDFlow = () => {
         popupContent = <ExtractPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "line") {
         popupContent = <LineChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "bar") {
+        popupContent = <BarChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+      }else if (selectedNodeType.id === "pie") {
+        popupContent = <PieChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }
+      
        
       // Show the popup window and set the popup content 
      // setShowPopup(true);
