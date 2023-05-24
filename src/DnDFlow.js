@@ -24,7 +24,11 @@ import ExtractPopupComponent from './PopUpWindows/extractPopupComponent';
 import LineChartPopupComponent from './PopUpWindows/lineChartPopupComponent';
 import BarChartPopupComponent from './PopUpWindows/barChartPopupComponent';
 import PieChartPopupComponent from './PopUpWindows/pieChartPopupComponent';
+import ColumnDragDrop from './PopUpWindows/ColumnDragDrop';
+import Column from './PopUpWindows/Column';
 
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 
 import Sidebar from './Sidebar';
@@ -537,7 +541,7 @@ const DnDFlow = () => {
       }else if (selectedNodeType.id === "summarize") {
         popupContent = <SummarizePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "select") {
-        popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <Column onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "append") {
         popupContent = <AppendPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "extract") {

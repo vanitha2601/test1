@@ -22,7 +22,7 @@
   .column-items {
     list-style-type: none;
     padding: 0;
-    height:130px;
+    height:100px;
     overflow:auto;
   }
   
@@ -39,7 +39,7 @@
     padding: 8px;
     font-size: 14px;
     font-weight: bold;
-    background-color: #4caf50;
+    background-color: gray;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -53,3 +53,132 @@
   .column-item.dragging {
     background-color: #f5f5f5;
   }
+  .column-item {
+    cursor: move;
+  }
+  .dragging {
+    opacity: 0.5; /* Reduce the opacity of the dragged item */
+    /* Add any additional styles you want for the dragged item */
+  }
+  
+  .dragging-over {
+    background-color: lightgray; /* Change the background color when dragging over a drop target */
+    /* Add any additional styles you want for the drop target */
+  }
+  .column-item.dragging {
+    background-color: lightblue;
+  }
+  div.modal div.modal-body ul li {
+    font-size: 1.05em;
+    cursor: move;
+    padding: 4px;
+}
+li.blockItem {
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  border-radius: 8px;
+  background-color: #5c8ab7;
+  overflow: hidden;
+  margin: 3px;
+  cursor:move;
+}
+.remove-column{
+  margin-left:190px;
+}
+.btn {
+  padding: 8px 12px 7px;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.btn-default {
+  color: #555;
+  background-color: #eee;
+  border-color: #e2e2e2;
+}
+.list-container{
+  display: flex;
+}
+.list-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.leftlist-container,
+.rightlist-container {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 150px;
+  overflow-y: auto;
+}
+
+.leftlist-container h4,
+.rightlist-container h4 {
+  margin-top: 0;
+}
+
+.blockItem {
+  padding: 5px;
+  background-color: #f5f5f5;
+  margin-bottom: 5px;
+  cursor: move;
+}
+
+.reactflow-wrapper {
+  flex: 1;
+  height: 200px;
+  border: 1px solid #ccc;
+  margin: 0 20px;
+}
+
+.reactflow-wrapper .react-flow__renderer {
+  height: 100%;
+}
+
+.rightlist-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  max-height: 150px;
+}
+.crossmark-button{
+  margin-left: 160px;
+}
+div.modal div.modal-body ul li {
+  font-size: 1.05em;
+  cursor: move;
+  padding: 4px;
+}
+li.blockItem {
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  border-radius: 8px;
+  background-color: gray;
+  overflow: hidden;
+  margin: 3px;
+}
+.leftlist-container{
+  padding:1px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+ul li:hover {
+  background-color: darkgray;
+}
+
