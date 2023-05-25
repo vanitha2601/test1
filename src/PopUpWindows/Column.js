@@ -132,6 +132,17 @@ const Column = ({ onClose, onRemoveTable }) => {
     });
   };
 
+  const handleAddAll = () => {
+    setRightList([...rightList, ...leftList]);
+    setLeftList([]);
+  };
+  
+  const handleRemoveAll = () => {
+    setLeftList([...leftList, ...rightList]);
+    setRightList([]);
+  };
+
+
   return (
     <div className="overlay">
       <div className="popup-datatable">
@@ -167,8 +178,9 @@ const Column = ({ onClose, onRemoveTable }) => {
                   ))}
                 </ul>
               </div>
+             
               <ReactFlowProvider>
-                <div ref={reactFlowWrapper}>
+                <div className="" ref={reactFlowWrapper}>
                   <ReactFlow
                     onInit={setReactFlowInstance}
                     onDrop={onDrop}
@@ -191,8 +203,18 @@ const Column = ({ onClose, onRemoveTable }) => {
                   ))}
                 </ul>
               </div>
-
+             
             </div>
+
+            <button className="btn btn-add" onClick={handleAddAll}>
+          Add All
+        </button>
+       
+        
+            <button className="btn btn-removeall" onClick={handleRemoveAll}>
+          Remove All
+        </button>
+        
           </div>
         </div>
         <div className="form-group toolHelpLink">

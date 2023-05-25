@@ -1,132 +1,108 @@
 
-import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 import '../css/draggableColumn.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
-
-
-const ColumnItem = ({ column, index }) => {
-    return (
-        <Draggable key={column.id} draggableId={column.id.toString()} index={index}>
-            {(provided) => (
-                <li
-                    className="column-item"
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                >
-                    {column.name}
-                </li>
-            )}
-        </Draggable>
-    );
-};
-
-const LeftList = ({ columns, handleAddAll }) => {
-    return (
-        <div className="column-list">
-            <h2 className="list-title">Left List</h2>
-            <ul className="column-items">
-                {columns.map((column) => (
-                    <li key={column.id} className="column-item">
-                        {column.name}
-                    </li>
-                ))}
-            </ul>
-            <button className="add-all-button" onClick={handleAddAll}>
-                Add All
-            </button>
-        </div>
-    );
-};
-
-const RightList = ({ selectedColumns, handleRemoveAll }) => {
-    return (
-        <div className="column-list">
-            <h2 className="list-title">Right List</h2>
-            <ul className="column-items">
-                {selectedColumns.map((column) => (
-                    <li key={column.id} className="column-item">
-                        {column.name}
-                    </li>
-                ))}
-            </ul>
-            <button className="remove-all-button" onClick={handleRemoveAll}>
-                Remove All
-            </button>
-        </div>
-    );
-};
+import React, { useState, useRef, useCallback } from 'react';
+import ReactFlow, {
+    ReactFlowProvider,
+    addEdge,
+    useNodesState,
+    useEdgesState,
+    Controls,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 
 
 
 
 
 const LineChartPopupComponent = ({ onClose, onRemoveTable }) => {
-    const [isChecked, setIsChecked] = useState(false);
     const [selectedColumns, setSelectedColumns] = useState([]);
+    const [leftList, setLeftList] = useState([
+        { id: 1, name: 'Column 1' },
+        { id: 2, name: 'Column 2' },
+        { id: 3, name: 'Column 3' },
+        // ...other columns
+    ]);
+    const [rightList, setRightList] = useState([]);
 
     const handleRemoveTable = () => {
-        // Call the onRemoveTable callback function
         if (onRemoveTable) {
             onRemoveTable();
         }
-        // Close the popup
         onClose();
     };
+
+    const reactFlowWrapper = useRef(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+    const onDrop = useCallback(
+        (event, list) => {
+            event.preventDefault();
+
+            const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+            const typeData = event.dataTransfer.getData('application/reactflow');
+            const type = JSON.parse(typeData);
+
+            if (!type) {
+                return;
+            }
+
+            const position = reactFlowInstance.project({
+                x: event.clientX - reactFlowBounds.left,
+                y: event.clientY - reactFlowBounds.top,
+            });
+
+
+            if (list === 'left' && !leftList.find((column) => column.id === type.id)) {
+                setRightList((columns) => columns.filter((column) => column.id !== type.id));
+                setLeftList((columns) => [...columns, type]);
+            }
+
+            if (list === 'right' && !rightList.find((column) => column.id === type.id)) {
+                setLeftList((columns) => columns.filter((column) => column.id !== type.id));
+                setRightList((columns) => [...columns, type]);
+            }
+        },
+        [reactFlowInstance, leftList, rightList]
+    );
+
 
     const handleLinkClick = () => {
         // Perform any actions when the link is clicked
         // ...
     };
 
-    const handleDragEnd = (result) => {
-        if (!result.destination) return;
+    const onDragStart = (event, column) => {
 
-        const { source, destination } = result;
-
-        if (source.droppableId === destination.droppableId) {
-            // Reorder columns within the same list
-            const updatedColumns = [...selectedColumns];
-            const [draggedColumn] = updatedColumns.splice(source.index, 1);
-            updatedColumns.splice(destination.index, 0, draggedColumn);
-            setSelectedColumns(updatedColumns);
-        } else {
-            // Move column from left list to right list
-            const updatedSelectedColumns = [...selectedColumns];
-            const [draggedColumn] = updatedSelectedColumns.splice(source.index, 1);
-            updatedSelectedColumns.splice(destination.index, 0, draggedColumn);
-            setSelectedColumns(updatedSelectedColumns);
-        }
+        event.dataTransfer.setData('application/reactflow', JSON.stringify(column));
+        event.dataTransfer.effectAllowed = 'move';
     };
+    const onDragOver = useCallback((event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }, []);
 
 
-
-    const [columns, setColumns] = useState([
-        { id: 1, name: 'Column 1' },
-        { id: 2, name: 'Column 2' },
-        { id: 3, name: 'Column 3' },
-        // ...other columns
-    ]);
+    const handleDeleteColumn = (columnId) => {
+        setRightList((columns) => columns.filter((column) => column.id !== columnId));
+        setLeftList((columns) => {
+            const existingColumn = rightList.find((column) => column.id === columnId);
+            if (!existingColumn) {
+                return [...columns];
+            }
+            return [...columns, existingColumn];
+        });
+    };
 
     const handleAddAll = () => {
-        setSelectedColumns([...selectedColumns, ...columns]);
-    };
-    const handleAddColumn = (column) => {
-        setSelectedColumns([...selectedColumns, column]);
-        setColumns(columns.filter((col) => col.id !== column.id));
-    };
-    const handleRemoveColumn = (column) => {
-        setSelectedColumns(selectedColumns.filter((col) => col.id !== column.id));
-        setColumns([...columns, column]);
+        setRightList([...rightList, ...leftList]);
+        setLeftList([]);
     };
 
     const handleRemoveAll = () => {
-        setColumns([...columns, ...selectedColumns]);
-        setSelectedColumns([]);
+        setLeftList([...leftList, ...rightList]);
+        setRightList([]);
     };
-
 
     return (
         <div className="overlay">
@@ -154,21 +130,68 @@ const LineChartPopupComponent = ({ onClose, onRemoveTable }) => {
                             <input type="text" value="" className="form-control" id="textbox" />
                         </div>
                         <div className="form-group">
-          <label htmlFor="dropdown">Axis Values</label>
-          <select id="dropdown" className="form-control">
-            <option value="option1">Accounts</option>
-            <option value="option2">Company</option>
-            <option value="option3">Roles</option>
-          </select>
-        </div>
+                            <label htmlFor="dropdown">Axis Values</label>
+                            <select id="dropdown" className="form-control">
+                                <option value="option1">Accounts</option>
+                                <option value="option2">Company</option>
+                                <option value="option3">Roles</option>
+                            </select>
+                        </div>
                         <h3>Plot the following columns :</h3>
                         <p className="helpText">Drag columns into the list on the right and reorder as required. Click the 'x' button to remove selected columns.
                         </p>
-
                         <div className="list-container">
-                            <LeftList columns={columns} handleAddAll={handleAddAll} handleAddColumn={handleAddColumn} />
-                            <RightList selectedColumns={selectedColumns} handleRemoveAll={handleRemoveAll} handleRemoveColumn={handleRemoveColumn} />
+                            <div className="leftlist-container" onDragOver={onDragOver} onDrop={(event) => onDrop(event, 'left')} >
 
+                                <ul>
+                                    {leftList.map((column) => (
+                                        <li
+                                            key={column.id}
+                                            className="blockItem ui-draggable"
+                                            draggable
+                                            onDragStart={(event) => onDragStart(event, column)}
+                                        >
+                                            {column.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <ReactFlowProvider>
+                                <div className="" ref={reactFlowWrapper}>
+                                    <ReactFlow
+                                        onInit={setReactFlowInstance}
+                                        onDrop={onDrop}
+                                        onDragOver={onDragOver}
+                                        fitView
+                                    >
+                                        <Controls />
+                                    </ReactFlow>
+                                </div>
+                            </ReactFlowProvider>
+                            <div className="rightlist-container" onDragOver={onDragOver} onDrop={(event) => onDrop(event, 'right')}>
+
+                                <ul>
+                                    {rightList.map((column) => (
+                                        <li key={column.id} className="blockItem ui-draggable" draggable
+                                            onDragStart={(event) => onDragStart(event, column)}>
+                                            {column.name}
+                                            <button className="crossmark-button" onClick={() => handleDeleteColumn(column.id)}>×</button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div className="add-remove">
+                            <button className="btn btn-add" onClick={handleAddAll}>
+                                Add All
+                            </button>
+
+
+                            <button className="btn btn-removeall" onClick={handleRemoveAll}>
+                                Remove All
+                            </button>
                         </div>
 
                         <div className="form-group toolHelpLink">

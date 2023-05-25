@@ -541,7 +541,7 @@ const DnDFlow = () => {
       }else if (selectedNodeType.id === "summarize") {
         popupContent = <SummarizePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "select") {
-        popupContent = <Column onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "append") {
         popupContent = <AppendPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "extract") {
