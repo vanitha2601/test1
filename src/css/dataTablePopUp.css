@@ -293,3 +293,12 @@ li.blockItem {
   background-color: #d40000;
   border-color: #b00;
 }
+.image-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.image-label {
+  margin-left: 10px;
+  font-weight: bold;
+}
