@@ -63,7 +63,7 @@ const RightList = ({ selectedColumns, handleRemoveAll }) => {
 
 
 
-const BarChartPopupComponent = ({ onClose, onRemoveTable }) => {
+const BarChartPopupComponent = ({ onClose, onRemoveTable, label }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [selectedColumns, setSelectedColumns] = useState([]);
 
@@ -143,7 +143,7 @@ const BarChartPopupComponent = ({ onClose, onRemoveTable }) => {
                     <div className="modal-body">
                         <div className="form-group">
                             <label htmlFor="textbox">Name </label>
-                            <input type="text" value="Bar Chart 1" className="form-control" id="textbox" />
+                            <input type="text" value={label} className="form-control" id="textbox" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="textbox">Vertical Axis Title </label>

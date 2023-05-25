@@ -11,7 +11,7 @@ import '../css/dataTablePopUp.css';
 
 import '../css/draggableColumn.css';
 
-const SelectPopupComponunt = ({ onClose, onRemoveTable }) => {
+const SelectPopupComponunt = ({ onClose, onRemoveTable, label }) => {
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [leftList, setLeftList] = useState([
     { id: 1, name: 'Column 1' },
@@ -114,7 +114,7 @@ const SelectPopupComponunt = ({ onClose, onRemoveTable }) => {
           <div className="modal-body">
             <div className="form-group">
               <label htmlFor="textbox">Name </label>
-              <input type="text" value="Select 1" className="form-control" id="textbox" />
+              <input type="text" value={label} className="form-control" id="textbox" />
             </div>
             <h3>Select which columns to include</h3>
             <p className="helpText">Drag columns into the list on the right and reorder as required. Click the 'x' button to remove selected columns.

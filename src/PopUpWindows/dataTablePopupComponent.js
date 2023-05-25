@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/dataTablePopUp.css';
 
-const dataTablePopupComponent = ({onClose, onRemoveTable}) => {
+const dataTablePopupComponent = ({onClose, onRemoveTable, label}) => {
 
   const handleRemoveTable = () => {
     // Call the onRemoveTable callback function
@@ -27,7 +27,7 @@ const dataTablePopupComponent = ({onClose, onRemoveTable}) => {
      <div className="modal-body">
       <div className="form-group">
           <label htmlFor="textbox">Name</label>
-          <input type="text"  value="Accounts" className="form-control" id="textbox" />
+          <input type="text"  value={label} className="form-control" id="textbox" />
         </div>
      
     

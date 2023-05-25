@@ -76,12 +76,7 @@
     overflow: auto;
     left: 0;
   }
-  /* .left-container img {
-    display: block;
-    margin: 10px auto;
-       
-   
-  } */
+ 
   .left-container img:active {
     opacity: 0.5;  
        cursor: move; 

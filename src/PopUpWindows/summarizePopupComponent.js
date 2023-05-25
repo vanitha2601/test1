@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SummarizePopupComponent = ({onClose, onRemoveTable}) => {
+const SummarizePopupComponent = ({onClose, onRemoveTable, label}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleRemoveTable = () => {
@@ -37,7 +37,7 @@ const SummarizePopupComponent = ({onClose, onRemoveTable}) => {
      <div className="modal-body">
       <div className="form-group">
           <label htmlFor="textbox">Name </label>
-          <input type="text"  value="Sort" className="form-control" id="textbox" />
+          <input type="text"  value={label} className="form-control" id="textbox" />
         </div>
      
     

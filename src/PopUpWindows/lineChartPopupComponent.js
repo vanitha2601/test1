@@ -15,7 +15,7 @@ import 'reactflow/dist/style.css';
 
 
 
-const LineChartPopupComponent = ({ onClose, onRemoveTable }) => {
+const LineChartPopupComponent = ({ onClose, onRemoveTable, label }) => {
     const [selectedColumns, setSelectedColumns] = useState([]);
     const [leftList, setLeftList] = useState([
         { id: 1, name: 'Column 1' },
@@ -119,7 +119,7 @@ const LineChartPopupComponent = ({ onClose, onRemoveTable }) => {
                     <div className="modal-body">
                         <div className="form-group">
                             <label htmlFor="textbox">Name </label>
-                            <input type="text" value="Line Chart 1" className="form-control" id="textbox" />
+                            <input type="text" value={label} className="form-control" id="textbox" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="textbox">Vertical Axis Title </label>

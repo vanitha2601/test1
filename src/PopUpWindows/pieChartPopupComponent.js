@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/dataTablePopUp.css';
 
-const PieChartPopupComponent = ({onClose, onRemoveTable}) => {
+const PieChartPopupComponent = ({onClose, onRemoveTable, label}) => {
     const handleLinkClick = () => {
         // Perform any actions when the link is clicked
         // ...
@@ -30,7 +30,7 @@ const PieChartPopupComponent = ({onClose, onRemoveTable}) => {
      <div className="modal-body">
       <div className="form-group">
           <label htmlFor="textbox">Name</label>
-          <input type="text"  value="Pie Chart 2" className="form-control" id="textbox" />
+          <input type="text"  value={label} className="form-control" id="textbox" />
         </div>
      
     

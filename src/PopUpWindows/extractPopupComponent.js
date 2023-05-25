@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 
-const ExtractPopupComponent = ({onClose, onRemoveTable}) => {
+const ExtractPopupComponent = ({onClose, onRemoveTable, label}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleRemoveTable = () => {
@@ -37,7 +37,7 @@ const ExtractPopupComponent = ({onClose, onRemoveTable}) => {
      <div className="modal-body">
       <div className="form-group">
           <label htmlFor="textbox">Name </label>
-          <input type="text"  value="Extract 1" className="form-control" id="textbox" />
+          <input type="text"  value={label} className="form-control" id="textbox" />
         </div>
      
     

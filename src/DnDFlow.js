@@ -8,7 +8,7 @@ import ReactFlow, {
   ArrowHeadType, Position,
   removeElements, useStoreState,
   useStoreActions, useReactFlow,
-  getConnectedEdges, Background, MarkerType,
+  getConnectedEdges, Background, MarkerType 
 } from 'reactflow';
 //import {useStoreState, removeElements } from 'react-flow-chart';
 
@@ -24,8 +24,8 @@ import ExtractPopupComponent from './PopUpWindows/extractPopupComponent';
 import LineChartPopupComponent from './PopUpWindows/lineChartPopupComponent';
 import BarChartPopupComponent from './PopUpWindows/barChartPopupComponent';
 import PieChartPopupComponent from './PopUpWindows/pieChartPopupComponent';
-import ColumnDragDrop from './PopUpWindows/ColumnDragDrop';
-import Column from './PopUpWindows/Column';
+// import ColumnDragDrop from './PopUpWindows/ColumnDragDrop';
+// import Column from './PopUpWindows/Column';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -529,29 +529,50 @@ const DnDFlow = () => {
 
       let popupContent;
       if (selectedNodeType.id === "dataTable") {
-        popupContent = <DataTablePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <DataTablePopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable} label={selectedNodeType.label}/>;
         setShowPopup(true);
       }
       else if (selectedNodeType.id === "sort") {
-        popupContent = <SortPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <SortPopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable}
+         label={selectedNodeType.label} />;
       } else if (selectedNodeType.id === "filter") {
-        popupContent = <FilterPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <FilterPopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable} 
+         label={selectedNodeType.label} />;
       } else if (selectedNodeType.id === "join") {
-        popupContent = <JoinPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <JoinPopupComponent onClose={closePopup} 
+        onRemoveTable={handleRemoveTable}
+        label={selectedNodeType.label}  />;
       }else if (selectedNodeType.id === "summarize") {
-        popupContent = <SummarizePopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <SummarizePopupComponent onClose={closePopup} 
+        onRemoveTable={handleRemoveTable}
+        label={selectedNodeType.label}  />;
       }else if (selectedNodeType.id === "select") {
-        popupContent = <SelectPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <SelectPopupComponent onClose={closePopup} 
+        onRemoveTable={handleRemoveTable}
+        label={selectedNodeType.label}  />;
       }else if (selectedNodeType.id === "append") {
-        popupContent = <AppendPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <AppendPopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable} 
+         label={selectedNodeType.label} />;
       }else if (selectedNodeType.id === "extract") {
-        popupContent = <ExtractPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <ExtractPopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable} 
+         label={selectedNodeType.label} />;
       }else if (selectedNodeType.id === "line") {
-        popupContent = <LineChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <LineChartPopupComponent onClose={closePopup}
+         onRemoveTable={handleRemoveTable}
+         label={selectedNodeType.label}  />;
       }else if (selectedNodeType.id === "bar") {
-        popupContent = <BarChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <BarChartPopupComponent onClose={closePopup} 
+        label={selectedNodeType.label} 
+        onRemoveTable={handleRemoveTable} />;
       }else if (selectedNodeType.id === "pie") {
-        popupContent = <PieChartPopupComponent onClose={closePopup} onRemoveTable={handleRemoveTable} />;
+        popupContent = <PieChartPopupComponent onClose={closePopup} 
+        onRemoveTable={handleRemoveTable}
+        label={selectedNodeType.label}  />;
       }
       
        
@@ -565,7 +586,7 @@ const DnDFlow = () => {
         position,
         icon,
         data: {
-          label: `${type} `,
+          label: `${selectedNodeType.label} `,
           labelPosition: 'bottom', // set the label position to bottom
           labelBgPadding: [6, 6], // set the padding for the label background
           labelStyle: { fontSize: '12px' },
@@ -672,6 +693,8 @@ const DnDFlow = () => {
     };
   }, [selectedNodeId]);
 
+
+  
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
     // You can use any UI component or CSS for styling
@@ -734,7 +757,9 @@ const DnDFlow = () => {
 
 
                   >
+ 
 
+ 
                   </ReactFlow>
                   {showPopup && popupContent}
                 </div>

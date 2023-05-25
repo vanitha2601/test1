@@ -1,83 +1,90 @@
 .list-container {
- 
-    display: flex;
-    justify-content: space-between;
-   
-    border-radius: 6px;
-  
-  
-  }
-  
-  .column-list {
-    width: 300px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
-  .list-title {
-    margin: 0;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #d3d3d3;
-    border-radius: 5px 5px 0 0;
-  }
-  
-  .column-items {
-    list-style-type: none;
-    padding: 0;
-    height:100px;
-    overflow:auto;
-  }
-  
-  .column-item {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .add-all-button,
-  .remove-all-button {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    padding: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    background-color: gray;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-all-button:hover,
-  .remove-all-button:hover {
-    background-color: #45a049;
-  }
-  .column-item.dragging {
-    background-color: #f5f5f5;
-  }
-  .column-item {
-    cursor: move;
-  }
-  .dragging {
-    opacity: 0.5; /* Reduce the opacity of the dragged item */
-    /* Add any additional styles you want for the dragged item */
-  }
-  
-  .dragging-over {
-    background-color: lightgray; /* Change the background color when dragging over a drop target */
-    /* Add any additional styles you want for the drop target */
-  }
-  .column-item.dragging {
-    background-color: lightblue;
-  }
-  div.modal div.modal-body ul li {
-    font-size: 1.05em;
-    cursor: move;
-    padding: 4px;
+
+  display: flex;
+  justify-content: space-between;
+
+
+
 }
+
+.column-list {
+  width: 300px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.list-title {
+  margin: 0;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #d3d3d3;
+  border-radius: 5px 5px 0 0;
+}
+
+.column-items {
+  list-style-type: none;
+  padding: 0;
+  height: 100px;
+  overflow: auto;
+}
+
+.column-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.add-all-button,
+.remove-all-button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: gray;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-all-button:hover,
+.remove-all-button:hover {
+  background-color: #45a049;
+}
+
+.column-item.dragging {
+  background-color: #f5f5f5;
+}
+
+.column-item {
+  cursor: move;
+}
+
+.dragging {
+  opacity: 0.5;
+  /* Reduce the opacity of the dragged item */
+  /* Add any additional styles you want for the dragged item */
+}
+
+.dragging-over {
+  background-color: lightgray;
+  /* Change the background color when dragging over a drop target */
+  /* Add any additional styles you want for the drop target */
+}
+
+.column-item.dragging {
+  background-color: lightblue;
+}
+
+div.modal div.modal-body ul li {
+  font-size: 1.05em;
+  cursor: move;
+  padding: 4px;
+}
+
 li.blockItem {
   color: #fff;
   font-weight: bold;
@@ -86,25 +93,30 @@ li.blockItem {
   background-color: #5c8ab7;
   overflow: hidden;
   margin: 3px;
-  cursor:move;
+  cursor: move;
 }
-.remove-column{
-  margin-left:190px;
+
+.remove-column {
+  margin-left: 190px;
 }
+
 .btn {
   padding: 8px 12px 7px;
   font-size: 12px;
   font-weight: 400;
   text-transform: uppercase;
 }
+
 .btn-default {
   color: #555;
   background-color: #eee;
   border-color: #e2e2e2;
 }
-.list-container{
+
+.list-container {
   display: flex;
 }
+
 .list-container {
   display: flex;
   justify-content: space-between;
@@ -139,9 +151,9 @@ li.blockItem {
   
 } */
 
-.reactflow-wrapper .react-flow__renderer {
+/* .reactflow-wrapper .react-flow__renderer {
   height: 100%;
-}
+} */
 
 .rightlist-container ul {
   list-style-type: none;
@@ -150,14 +162,17 @@ li.blockItem {
   overflow-y: auto;
   max-height: 150px;
 }
-.crossmark-button{
+
+.crossmark-button {
   margin-left: 160px;
 }
+
 div.modal div.modal-body ul li {
   font-size: 1.05em;
   cursor: move;
   padding: 4px;
 }
+
 li.blockItem {
   color: #fff;
   font-weight: bold;
@@ -260,6 +275,7 @@ ul li:hover {
 .ui-draggable-dragging {
   opacity: 0.5;
 }
+
 .btn {
   padding: 10px 20px;
   font-size: 14px;
@@ -284,14 +300,16 @@ ul li:hover {
 .btn-add:focus {
   outline: none;
 }
-.add-remove{
-  margin-left:1px;
+
+.add-remove {
+  margin-left: 1px;
 }
+
 .btn-removeall {
   background-color: #dc3545 !important;
   color: #fff !important;
   /* margin-left: 260px !important; */
-  margin:5px;
+  margin: 5px;
 }
 
 .btn-removeall:hover {
@@ -301,6 +319,3 @@ ul li:hover {
 .btn-removeall:focus {
   outline: none;
 }
-
-
-
