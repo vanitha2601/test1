@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SortPopupComponent = ({onClose, onRemoveTable, label}) => {
+const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit, nodes, setNodes, droppedNodes,setDroppedNodes}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleRemoveTable = () => {
@@ -13,6 +13,20 @@ const SortPopupComponent = ({onClose, onRemoveTable, label}) => {
     // Close the popup
     onClose();
   };
+
+  const handleSubmit = () => {
+    onValueSubmit(selectedNodeId,dynamicValue);
+  };
+
+
+  const [dynamicValue, setDynamicValue] = useState('');
+
+  // Function to update the dynamic value
+  const handleDynamicValueChange = (event) => {
+   
+    setDynamicValue(event.target.value);
+  };
+
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -37,7 +51,9 @@ const SortPopupComponent = ({onClose, onRemoveTable, label}) => {
      <div className="modal-body">
       <div className="form-group">
           <label htmlFor="textbox">Sort </label>
-          <input type="text"  value={label} className="form-control" id="textbox" />
+          <input type="text" value={dynamicValue}
+         className="form-control" onChange={handleDynamicValueChange}
+           id="textbox" />
         </div>
      
     
@@ -70,7 +86,7 @@ const SortPopupComponent = ({onClose, onRemoveTable, label}) => {
         </div>
         <div className="modal-footer">
                         <button type='button' onClick={handleRemoveTable} class='btn btn-danger remove'>REMOVE TOOL</button>
-                        <button type='button' className='btn btn-primary ok'  onClick={onClose}>OK</button>
+                        <button type='button' className='btn btn-primary ok'  onClick={handleSubmit}>OK</button>
                     </div>
     </div>
     </div>

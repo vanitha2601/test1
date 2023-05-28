@@ -8,7 +8,7 @@ import ReactFlow, {
   ArrowHeadType, Position,
   removeElements, useStoreState,
   useStoreActions, useReactFlow,
-  getConnectedEdges, Background, MarkerType 
+  getConnectedEdges, Background, MarkerType
 } from 'reactflow';
 //import {useStoreState, removeElements } from 'react-flow-chart';
 
@@ -50,6 +50,7 @@ import barcharticon from './images/barchart.png';
 import piecharticon from './images/piechart.png';
 import CustomNode from './CustomNode';
 
+import DroppedNode from './PopUpWindows/DroppedNode';
 import './index.css';
 
 
@@ -81,6 +82,10 @@ const iconSources = [
 
 
 const DnDFlow = () => {
+  const [nodeName, setNodeName] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
+  const [dropdownPopupDataTableValues, setDropdownPopupDataTableValues] = useState(['Accounts', 'Company', 'Roles']);
+
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -322,7 +327,7 @@ const DnDFlow = () => {
   const [rightTargets, setRightTargets] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState(false);
-
+  const [droppedNodes, setDroppedNodes] = useState([]);
 
 
 
@@ -362,7 +367,64 @@ const DnDFlow = () => {
     }
   };
 
+  const [submittedValue, setSubmittedValue] = useState('');
 
+
+
+
+  //   const updateNodeLabel = (nodeId, newLabel) => {
+
+  //     setNodes((nodes) => {
+  //       // Update the label of the new node
+  //       const newNode = {
+  //         ...nodes,
+  //         label: 'New Label', // Set the desired label for the new node
+  //       };
+
+  //       // Append the updated new node to the array
+  //       return nodes.concat(newNode);
+
+
+  //    // setNodes(updatedNodes);
+  //   });
+  // };
+
+  const handleValueSubmit = (selectedNodeId,  name, option) => {
+   console.log(name+"----"+option);
+
+    setNodes((nodes) => {
+      // Map over the nodes array and update the label for the desired node
+      const updatedNodes = nodes.map((node) => {
+        if (node.id === selectedNodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              label: name,
+            },
+            // Set the desired label for the node
+          };
+        }
+        return node;
+      });
+
+      return updatedNodes;
+      setNodes((nodes) => nodes.concat(updatedNodes));
+    }, [reactFlowInstance]);
+    
+    setNodeName(name);
+    setSelectedOption(option);
+
+    setShowPopup(false);
+  };
+
+  // const handleValueSubmit = (value) => {
+  //   alert(JSON.stringify(value)+"handlevaluesubmit");
+
+  //     setSubmittedValue(value);
+
+  //     setShowPopup(false);
+  // };
 
   const onNodeDoubleClick = (event, node) => {
     setSelectedNode(node);
@@ -488,7 +550,15 @@ const DnDFlow = () => {
   }, []);
 
   let id = 0;
+  // Callback function to update nodes in the parent component
+  const updateNodes = (updatedNodes) => {
+    setNodes(updatedNodes);
+  };
 
+  // Callback function to update dropped nodes in the parent component
+  const updateDroppedNodes = (droppedNodes) => {
+    setDroppedNodes(droppedNodes);
+  };
 
   const onDrop = useCallback(
     (event) => {
@@ -527,64 +597,13 @@ const DnDFlow = () => {
       console.log(JSON.stringify(selectedNodeType) + "selectedNodeType");
       const getId = () => `${selectedNodeType.id}_${id++}`;
 
-      let popupContent;
-      if (selectedNodeType.id === "dataTable") {
-        popupContent = <DataTablePopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable} label={selectedNodeType.label}/>;
-        setShowPopup(true);
-      }
-      else if (selectedNodeType.id === "sort") {
-        popupContent = <SortPopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable}
-         label={selectedNodeType.label} />;
-      } else if (selectedNodeType.id === "filter") {
-        popupContent = <FilterPopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable} 
-         label={selectedNodeType.label} />;
-      } else if (selectedNodeType.id === "join") {
-        popupContent = <JoinPopupComponent onClose={closePopup} 
-        onRemoveTable={handleRemoveTable}
-        label={selectedNodeType.label}  />;
-      }else if (selectedNodeType.id === "summarize") {
-        popupContent = <SummarizePopupComponent onClose={closePopup} 
-        onRemoveTable={handleRemoveTable}
-        label={selectedNodeType.label}  />;
-      }else if (selectedNodeType.id === "select") {
-        popupContent = <SelectPopupComponent onClose={closePopup} 
-        onRemoveTable={handleRemoveTable}
-        label={selectedNodeType.label}  />;
-      }else if (selectedNodeType.id === "append") {
-        popupContent = <AppendPopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable} 
-         label={selectedNodeType.label} />;
-      }else if (selectedNodeType.id === "extract") {
-        popupContent = <ExtractPopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable} 
-         label={selectedNodeType.label} />;
-      }else if (selectedNodeType.id === "line") {
-        popupContent = <LineChartPopupComponent onClose={closePopup}
-         onRemoveTable={handleRemoveTable}
-         label={selectedNodeType.label}  />;
-      }else if (selectedNodeType.id === "bar") {
-        popupContent = <BarChartPopupComponent onClose={closePopup} 
-        label={selectedNodeType.label} 
-        onRemoveTable={handleRemoveTable} />;
-      }else if (selectedNodeType.id === "pie") {
-        popupContent = <PieChartPopupComponent onClose={closePopup} 
-        onRemoveTable={handleRemoveTable}
-        label={selectedNodeType.label}  />;
-      }
-      
-       
-      // Show the popup window and set the popup content 
-     // setShowPopup(true);
-      setPopupContent(popupContent);
 
       const newNode = {
         id: getId(),
         type: selectedNodeType.type,
         position,
         icon,
+
         data: {
           label: `${selectedNodeType.label} `,
           labelPosition: 'bottom', // set the label position to bottom
@@ -637,12 +656,47 @@ const DnDFlow = () => {
           break;
       }
       setNodes((nodes) => nodes.concat(newNode));
+      // Update the droppedNodes array with the new node
+      //setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode]);
+      setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
+      // Update the droppedNodes state by adding the new node
+      // setDroppedNodes((droppedNodes) => [...droppedNodes, newNode]);
+
+      let popupContent;
+      if (selectedNodeType.id === "dataTable") {
+       
+        popupContent = <DataTablePopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={newNode.id}
+          nodeName={nodeName}
+          selectedOption={selectedOption}
+          dropdownPopupDataTableValues={dropdownPopupDataTableValues}
+          onValueSubmit={handleValueSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes} // Pass the setDroppedNodes function as a prop
+        />
+
+        setShowPopup(true);
+        setPopupContent(popupContent);
+      }
+
+
+
+      // Show the popup window and set the popup content 
+      // setShowPopup(true);
+      setPopupContent(popupContent);
+
+
     },
-    [reactFlowInstance]
+    [reactFlowInstance, setNodes, setDroppedNodes]
   );
 
   // Function to close the popup window
-  const closePopup = () => {
+  const closePopup = (value) => {
+    setSubmittedValue(value);
+
     setShowPopup(false);
   };
   const handleRemoveTable = () => {
@@ -652,7 +706,129 @@ const DnDFlow = () => {
 
   const handleNodeDoubleClick = (event, node) => {
     // Open the popup when a node is double-clicked
+    const selectedNodeId = node;
+    setSelectedNodeId(selectedNodeId);
+    alert(JSON.stringify(selectedNodeId.id));
+    let popupContent;
+    if ((selectedNodeId.id).match(/^dataTable/)) {
+      // Handle the popup window for datatable nodes
+      popupContent = <DataTablePopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        nodeName={nodeName}
+        selectedOption={selectedOption}
+        dropdownPopupDataTableValues={dropdownPopupDataTableValues}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} // Pass the setDroppedNodes function as a prop
+      />
+    } else if ((selectedNodeId.id).match(/^sort/)) {
+      // Handle the popup window for sort nodes
+      popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+
+    } else if ((selectedNodeId.id).match(/^filter/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <FilterPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^join/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <JoinPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^summarize/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <JoinPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^select/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <SelectPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^append/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <AppendPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^extract/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <ExtractPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^line/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <LineChartPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^bar/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <BarChartPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    } else if ((selectedNodeId.id).match(/^pie/)) {
+      // Handle the popup window for filter nodes
+      popupContent = <PieChartPopupComponent onClose={closePopup}
+        onRemoveTable={handleRemoveTable}
+        selectedNodeId={selectedNodeId.id}
+        onValueSubmit={handleValueSubmit}
+        setNodes={setNodes} // Pass the callback function as a prop
+        nodes={nodes} // Pass the nodes array as a prop
+        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+        setDroppedNodes={setDroppedNodes} />;
+    }
     setShowPopup(true);
+    setPopupContent(popupContent);
+
   };
 
   const handleDeleteSelectedNodes = (selectedNodeId) => {
@@ -675,6 +851,7 @@ const DnDFlow = () => {
   };
 
 
+
   useEffect(() => {
     const handleKeyDown = (event) => {
 
@@ -694,7 +871,7 @@ const DnDFlow = () => {
   }, [selectedNodeId]);
 
 
-  
+
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
     // You can use any UI component or CSS for styling
@@ -757,11 +934,12 @@ const DnDFlow = () => {
 
 
                   >
- 
 
- 
+
+
                   </ReactFlow>
                   {showPopup && popupContent}
+
                 </div>
 
               </ReactFlowProvider>
