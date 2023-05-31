@@ -84,11 +84,13 @@ const iconSources = [
 const DnDFlow = () => {
   const [nodeName, setNodeName] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
-  const [dropdownPopupDataTableValues, setDropdownPopupDataTableValues] = useState(['Accounts', 'Company', 'Roles']);
-
+    const [dropdownPopupDataTableValues, setDropdownPopupDataTableValues] = useState(['Accounts', 'Company', 'Roles']);
+    const [accountSortColumns, setAccountSortColumns] = useState([]);
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
+
+
 
   let nodeId = 0; // Initialize the node ID counter
 
@@ -328,7 +330,7 @@ const DnDFlow = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupContent, setPopupContent] = useState(false);
   const [droppedNodes, setDroppedNodes] = useState([]);
-
+  const [nodeData, setNodeData] = useState({}); // State to store individual node data
 
 
   const addConnection = (sourceNodeId, targetNodeId) => {
@@ -412,11 +414,29 @@ const DnDFlow = () => {
       setNodes((nodes) => nodes.concat(updatedNodes));
     }, [reactFlowInstance]);
     
-    setNodeName(name);
-    setSelectedOption(option);
+    // setNodeName(name);
+    // setSelectedOption(option);
+
+    setNodeData((prevNodeData) => ({
+          ...prevNodeData,
+          [selectedNodeId]: {
+            name,
+            option,
+          },
+        }));
 
     setShowPopup(false);
   };
+  // const handleValueSubmit = (selectedNodeId,  name, option) => {
+  //   // Update the node data in the state with the submitted values
+  //   setNodeData((prevNodeData) => ({
+  //     ...prevNodeData,
+  //     [selectedNodeId]: {
+  //       name,
+  //       option,
+  //     },
+  //   }));
+  // };
 
   // const handleValueSubmit = (value) => {
   //   alert(JSON.stringify(value)+"handlevaluesubmit");
@@ -549,7 +569,7 @@ const DnDFlow = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  let id = 0;
+ 
   // Callback function to update nodes in the parent component
   const updateNodes = (updatedNodes) => {
     setNodes(updatedNodes);
@@ -560,8 +580,20 @@ const DnDFlow = () => {
     setDroppedNodes(droppedNodes);
   };
 
+
+  const idCounters = {}; // Object to store separate counters for each node type
+  let id = 1;
+  const getId = (selectedEachNodeType) => {
+    if (!idCounters[selectedEachNodeType]) {
+      idCounters[selectedEachNodeType] = 1; // Initialize the counter if it doesn't exist
+    }
+    // const id = `${selectedEachNodeType}_${idCounters[selectedNodeType]++}`;
+    // return id;
+    return `${selectedEachNodeType}_${idCounters[selectedEachNodeType]++}`;
+  };
+
   const onDrop = useCallback(
-    (event) => {
+    (event, selectedEachNodeType) => {
 
 
       event.preventDefault();
@@ -595,11 +627,13 @@ const DnDFlow = () => {
       const selectedNodeType = nodesTypesRightContainer.find((node) => node.id === draggedId);
       console.log(JSON.stringify(draggedId) + "NODETYPES");
       console.log(JSON.stringify(selectedNodeType) + "selectedNodeType");
-      const getId = () => `${selectedNodeType.id}_${id++}`;
+      const selectedEachNodeId = selectedNodeType.id;
+     // const getId = (selectedEachNodeType) => `${selectedNodeType.id}_${id++}`;
 
+      
 
       const newNode = {
-        id: getId(),
+        id: getId(selectedEachNodeId),
         type: selectedNodeType.type,
         position,
         icon,
@@ -663,13 +697,33 @@ const DnDFlow = () => {
       // setDroppedNodes((droppedNodes) => [...droppedNodes, newNode]);
 
       let popupContent;
-      if (selectedNodeType.id === "dataTable") {
+      let selectedNodeData;
+
+
+// Get the first option value from the dropdown
+const firstOption = dropdownPopupDataTableValues[0];
+
+// Update the nodeData state with the default name
+
+
+      if ((newNode.id).match(/^dataTable/)) {
+
+        setNodeData((prevNodeData) => ({
+          ...prevNodeData,
+          [newNode.id]: {
+            name: firstOption,
+            option: '',
+          },
+        }));
        
+        if ((newNode.id) in nodeData) {
+          selectedNodeData = nodeData[newNode.id];
+        }
         popupContent = <DataTablePopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
           onRemoveTable={handleRemoveTable}
           selectedNodeId={newNode.id}
-          nodeName={nodeName}
-          selectedOption={selectedOption}
+          nodeName={newNode.id}
+          selectedOption={selectedNodeData?.option || ''}
           dropdownPopupDataTableValues={dropdownPopupDataTableValues}
           onValueSubmit={handleValueSubmit}
           setNodes={setNodes} // Pass the callback function as a prop
@@ -680,6 +734,35 @@ const DnDFlow = () => {
 
         setShowPopup(true);
         setPopupContent(popupContent);
+      } else if ((newNode.id).match(/^sort/)) {
+        
+
+        // if ((newNode.id) in nodeData) {
+        //   selectedNodeData = nodeData[newNode.id];
+        // }
+        // alert(JSON.stringify(selectedNodeData));
+
+       
+        // Handle the popup window for datatable nodes
+        // if (selectedNodeId in nodeData) {
+        //   selectedNodeData = nodeData[selectedNodeId];
+        // }
+        // Handle the popup window for sort nodes
+        popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={newNode.id}
+          nodeName={newNode.id}
+         // nodeName={selectedNodeData?.name || ''}
+          // nodeName={nodeName}
+          // selectedOption={selectedOption}
+          selectedOption={selectedNodeData?.option || ''}
+          dropdownPopupDataTableValues={dropdownPopupDataTableValues}
+          onValueSubmit={handleValueSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes} />;
+  
       }
 
 
@@ -704,19 +787,53 @@ const DnDFlow = () => {
     closePopup();
   };
 
+  const handlePopupSubmit = (selectedNodeId, name, dropdownValue) => {
+
+    // Check if the selected node exists in the nodeData
+  if (selectedNodeId in nodeData) {
+    // Node already exists, no need to set the name and dropdownValue again
+    return;
+  }
+    // Update the node data in the state with the submitted values
+    setNodeData((prevNodeData) => ({
+      ...prevNodeData,
+      [selectedNodeId]: {
+        name,
+        dropdownValue,
+      },
+    }));
+  };
+
   const handleNodeDoubleClick = (event, node) => {
     // Open the popup when a node is double-clicked
-    const selectedNodeId = node;
-    setSelectedNodeId(selectedNodeId);
-    alert(JSON.stringify(selectedNodeId.id));
+    const selectedNode = node;
+   
+    // alert(JSON.stringify(selectedNodeId.id));
+     const selectedNodeId = selectedNode.id;
+     setSelectedNodeId(selectedNodeId);
+    // Check if the data for the selected node exists in the state
+    // if (selectedNodeId in nodeData) {
+    //   // If the data exists, retrieve it
+    //   const selectedNodeData = nodeData[selectedNodeId];
+    //   // Use the data as needed
+    //   console.log(selectedNodeData+"selectednodedata");
+    // }
+
+let selectedNodeData;
     let popupContent;
-    if ((selectedNodeId.id).match(/^dataTable/)) {
+    if ((selectedNodeId).match(/^dataTable/)) {
       // Handle the popup window for datatable nodes
+      if (selectedNodeId in nodeData) {
+        selectedNodeData = nodeData[selectedNodeId];
+      }
+
       popupContent = <DataTablePopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
-        nodeName={nodeName}
-        selectedOption={selectedOption}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         dropdownPopupDataTableValues={dropdownPopupDataTableValues}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
@@ -724,102 +841,150 @@ const DnDFlow = () => {
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} // Pass the setDroppedNodes function as a prop
       />
-    } else if ((selectedNodeId.id).match(/^sort/)) {
+    } else if ((selectedNodeId).match(/^sort/)) {
+// Handle the popup window for sort nodes
+let selectedNodeData = {};
+     // Handle the popup window for datatable nodes
+      if (selectedNodeId in nodeData) {
+        selectedNodeData = nodeData[selectedNodeId];
+      }
+console.log(JSON.stringify(selectedNodeData)+"sortnode");
       // Handle the popup window for sort nodes
       popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
+        dropdownPopupDataTableValues={dropdownPopupDataTableValues}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
 
-    } else if ((selectedNodeId.id).match(/^filter/)) {
+    } else if ((selectedNodeId).match(/^filter/)) {
       // Handle the popup window for filter nodes
       popupContent = <FilterPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^join/)) {
+    } else if ((selectedNodeId).match(/^join/)) {
       // Handle the popup window for filter nodes
       popupContent = <JoinPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^summarize/)) {
+    } else if ((selectedNodeId).match(/^summarize/)) {
       // Handle the popup window for filter nodes
       popupContent = <JoinPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^select/)) {
+    } else if ((selectedNodeId).match(/^select/)) {
       // Handle the popup window for filter nodes
       popupContent = <SelectPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^append/)) {
+    } else if ((selectedNodeId).match(/^append/)) {
       // Handle the popup window for filter nodes
       popupContent = <AppendPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^extract/)) {
+    } else if ((selectedNodeId).match(/^extract/)) {
       // Handle the popup window for filter nodes
       popupContent = <ExtractPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^line/)) {
+    } else if ((selectedNodeId).match(/^line/)) {
       // Handle the popup window for filter nodes
       popupContent = <LineChartPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^bar/)) {
+    } else if ((selectedNodeId).match(/^bar/)) {
       // Handle the popup window for filter nodes
       popupContent = <BarChartPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes} />;
-    } else if ((selectedNodeId.id).match(/^pie/)) {
+    } else if ((selectedNodeId).match(/^pie/)) {
       // Handle the popup window for filter nodes
       popupContent = <PieChartPopupComponent onClose={closePopup}
         onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId.id}
+        selectedNodeId={selectedNodeId}
+        nodeName={selectedNodeData?.name || ''}
+        // nodeName={nodeName}
+        // selectedOption={selectedOption}
+        selectedOption={selectedNodeData?.option || ''}
         onValueSubmit={handleValueSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop

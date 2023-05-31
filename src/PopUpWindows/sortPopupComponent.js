@@ -1,9 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit, nodes, setNodes, droppedNodes,setDroppedNodes}) => {
+const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit,
+   nodes, setNodes, droppedNodes,setDroppedNodes, nodeName, selectedOption, dropdownPopupDataTableValues}) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  const [name, setName] = useState(nodeName);
+  const [dropDownOption, setDropdownOption] = useState(selectedOption);
+  
+  useEffect(() => {
+    
+  console.log(JSON.stringify(nodeName)+"nodeName");
+    setName(nodeName);
+    setDropdownOption(selectedOption);
+  }, [nodeName, selectedOption]);
 
   const handleRemoveTable = () => {
     // Call the onRemoveTable callback function
@@ -15,20 +26,22 @@ const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmi
   };
 
   const handleSubmit = () => {
-    onValueSubmit(selectedNodeId,dynamicValue);
+    onValueSubmit(selectedNodeId,name, dropDownOption);
   };
 
-
-  const [dynamicValue, setDynamicValue] = useState('');
-
-  // Function to update the dynamic value
-  const handleDynamicValueChange = (event) => {
-   
-    setDynamicValue(event.target.value);
-  };
+  
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
+  };
+   // Function to update the dynamic value
+   const handleNameChange = (event) => {
+   
+    setName(event.target.value);
+  };
+
+  const handleOptionChange = (event) => {
+    setDropdownOption(event.target.value);
   };
 
   const handleLinkClick = () => {
@@ -50,20 +63,27 @@ const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmi
        <div className="datatable-content">
      <div className="modal-body">
       <div className="form-group">
-          <label htmlFor="textbox">Sort </label>
-          <input type="text" value={dynamicValue}
-         className="form-control" onChange={handleDynamicValueChange}
+          <label htmlFor="textbox">Name </label>
+          <input type="text" value={name}
+         className="form-control" onChange={handleNameChange}
            id="textbox" />
         </div>
      
     
     <div className="form-group">
           <label htmlFor="dropdown">Sort By</label>
-          <select id="dropdown" className="form-control">
+          {/* <select id="dropdown" className="form-control">
             <option value="option1">Accounts</option>
             <option value="option2">Company</option>
             <option value="option3">Roles</option>
-          </select>
+          </select> */}
+          <select id="dropdown" className="form-control" value={dropDownOption} onChange={handleOptionChange}>
+        {dropdownPopupDataTableValues.map((value) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </select>
         </div>
 
         <div className="checkbox-container">

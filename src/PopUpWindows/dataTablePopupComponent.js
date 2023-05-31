@@ -38,6 +38,7 @@ console.log(selectedOption+"selectedOptionselectedOption");
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    
     onValueSubmit(selectedNodeId, name, dropDownOption);
   };
 
