@@ -2,8 +2,14 @@ import React, { useState, useEffect} from 'react';
 import '../css/dataTablePopUp.css';
 
 const DataTablePopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit, 
-  nodes, setNodes, droppedNodes,setDroppedNodes, nodeName, selectedOption, dropdownPopupDataTableValues}) => {
-console.log(nodeName+"nodeNamenodeName");
+  nodes, setNodes, droppedNodes,setDroppedNodes, 
+  nodeName, selectedOption, dropdownPopupDataTableValues,
+  handleDatabaseChange,
+  handleTableChange,
+  renderDatabaseOptions,
+  renderTableOptions,
+}) => {
+console.log(renderTableOptions+"renderTableOptions");
 console.log(selectedOption+"selectedOptionselectedOption");
   const [name, setName] = useState(nodeName);
   const [dropDownOption, setDropdownOption] = useState(selectedOption);
@@ -90,6 +96,15 @@ console.log(selectedOption+"selectedOptionselectedOption");
           </option>
         ))}
       </select>
+
+      <select onChange={handleDatabaseChange}>
+  {renderDatabaseOptions()}
+</select>
+
+<select onChange={handleTableChange}>
+  {renderTableOptions()}
+</select>
+
         </div>
         <button type='button' className='btn btn-primary'>REFRESH TABLES</button>
         </div>

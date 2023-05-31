@@ -90,8 +90,6 @@ const DnDFlow = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
 
-
-
   let nodeId = 0; // Initialize the node ID counter
 
 
@@ -333,6 +331,187 @@ const DnDFlow = () => {
   const [nodeData, setNodeData] = useState({}); // State to store individual node data
 
 
+  const [selectedDatabase, setSelectedDatabase] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [popupDropdownValues, setPopupDropdownValues] = useState([]);
+
+  const [data, setData] = useState({
+    connection: {
+      url: 'https://example.com',
+    },
+    databases: [
+      {
+        name: 'Employee Database',
+        tables: [
+          {
+            name: 'Accounts Table',
+            columns: ['id', 'name', 'age', 'salary', 'address'],
+          },
+          {
+            name: 'Employee Table',
+            columns: ['employee_id', 'employee_name','employee_age','employee_salary', 'employee_address'],
+          },
+        ],
+      },
+      {
+        name: 'Company Database ',
+        tables: [
+          {
+            name: 'Boolean Table',
+            columns: ['company_id', 'Company_name','Company_address'],
+          },
+          {
+            name: 'Simons Table',
+            columns: ['company_id', 'Company_name','Company_address'],
+          },
+        ],
+      },
+      {
+        name: 'Roles Database',
+        tables: [
+          {
+            name: 'Junior Table',
+            columns: ['id', 'name', 'gender', 'roles', 'yearsofexperionce'],
+          },
+          {
+            name: 'Senior Table',
+            columns: ['id', 'name', 'roles', 'yearsofexperionce'],
+          },
+        ],
+      },
+    ],
+  });
+
+  const renderDatabaseOptions = () => {
+    return data.databases.map((database, index) => (
+      <option key={index} value={database.name}>
+        {database.name}
+      </option>
+    ));
+  };
+
+  const renderTableOptions = () => {
+    console.log('renderTableOptions called'); // Check if the function is being called
+  
+    // Check if any databases exist
+    if (data.databases.length > 0) {
+      const defaultDatabase = data.databases[0];
+  
+      // Check if a table is already selected
+      if (selectedTable) {
+        return defaultDatabase.tables.map((table, index) => (
+          <option key={index} value={table.name} selected={table.name === selectedTable.name}>
+            {table.name}
+          </option>
+        ));
+      }
+  
+      // If no table is selected, set the first table as selected by default
+      const defaultTable = defaultDatabase.tables[0];
+      return defaultDatabase.tables.map((table, index) => (
+        <option key={index} value={table.name} selected={table === defaultTable}>
+          {table.name}
+        </option>
+      ));
+    }
+  
+    return null;
+  };
+  // const renderTableOptions = () => {
+  //   console.log('renderTableOptions called'); // Check if the function is being called
+  
+  //   if (selectedDatabase) {
+  //     console.log('selectedDatabase.tables:', selectedDatabase.tables); // Check the value of selectedDatabase.tables
+  
+  //     if (selectedTable) {
+  //       return selectedDatabase.tables.map((table, index) => (
+  //         <option key={index} value={table.name} selected={table.name === selectedTable.name}>
+  //           {table.name}
+  //         </option>
+  //       ));
+  //     }
+  
+  //     const defaultTable = selectedDatabase.tables[0];
+  //     return selectedDatabase.tables.map((table, index) => (
+  //       <option key={index} value={table.name} selected={table === defaultTable}>
+  //         {table.name}
+  //       </option>
+  //     ));
+  //   }
+  
+  //   return null;
+  // };
+  
+  
+
+  // const renderTableOptions = () => {
+  //   if (selectedDatabase) {
+  //     return selectedDatabase.tables.map((table, index) => (
+  //       <option key={index} value={table.name}>
+  //         {table.name}
+  //       </option>
+  //     ));
+  //   }
+  //   return null;
+  // };
+  
+
+  const handleDatabaseChange = (event) => {
+    const selectedDatabaseName = event.target.value;
+    const database = data.databases.find((db) => db.name === selectedDatabaseName);
+    setSelectedDatabase(database);
+  
+    // If a database is selected, reset the selected table
+    setSelectedTable(null);
+  };
+  
+  const handleTableChange = (event) => {
+    const selectedTableName = event.target.value;
+  
+    // Make sure there is a selected database
+    if (selectedDatabase) {
+      const selectedTable = selectedDatabase.tables.find((table) => table.name === selectedTableName);
+      setSelectedTable(selectedTable);
+    }
+  };
+
+
+
+  const getDropdownValues = (selectedNode) => {
+    let dropdownValues = {};
+  console.log(JSON.stringify(selectedNode));
+    if ((selectedNode.id).match(/^dataTable/)) {
+      // Get the selected database and table names
+      const selectedDatabaseName = selectedNode.data.database;
+      const selectedTableName = selectedNode.data.table;
+  alert(selectedDatabaseName+"----"+selectedTableName);
+      // Find the selected database from the data
+      const selectedDatabase = data.databases.find((db) => db.name === selectedDatabaseName);
+  
+      if (selectedDatabase) {
+        // Find the selected table from the selected database
+        const selectedTable = selectedDatabase.tables.find((table) => table.name === selectedTableName);
+  
+        if (selectedTable) {
+          // Extract the columns of the selected table
+          const columns = selectedTable.columns;
+  
+          // Add the database name, table name, and columns to the dropdown values
+          dropdownValues.database = selectedDatabaseName;
+          dropdownValues.table = selectedTableName;
+          dropdownValues.columns = columns;
+        }
+      }
+    }
+  
+    return dropdownValues;
+  };
+  
+
+
+
+
+
   const addConnection = (sourceNodeId, targetNodeId) => {
     const sourceNode = nodes.find((node) => node.id === sourceNodeId);
     const targetNode = nodes.find((node) => node.id === targetNodeId);
@@ -373,24 +552,6 @@ const DnDFlow = () => {
 
 
 
-
-  //   const updateNodeLabel = (nodeId, newLabel) => {
-
-  //     setNodes((nodes) => {
-  //       // Update the label of the new node
-  //       const newNode = {
-  //         ...nodes,
-  //         label: 'New Label', // Set the desired label for the new node
-  //       };
-
-  //       // Append the updated new node to the array
-  //       return nodes.concat(newNode);
-
-
-  //    // setNodes(updatedNodes);
-  //   });
-  // };
-
   const handleValueSubmit = (selectedNodeId,  name, option) => {
    console.log(name+"----"+option);
 
@@ -427,25 +588,7 @@ const DnDFlow = () => {
 
     setShowPopup(false);
   };
-  // const handleValueSubmit = (selectedNodeId,  name, option) => {
-  //   // Update the node data in the state with the submitted values
-  //   setNodeData((prevNodeData) => ({
-  //     ...prevNodeData,
-  //     [selectedNodeId]: {
-  //       name,
-  //       option,
-  //     },
-  //   }));
-  // };
-
-  // const handleValueSubmit = (value) => {
-  //   alert(JSON.stringify(value)+"handlevaluesubmit");
-
-  //     setSubmittedValue(value);
-
-  //     setShowPopup(false);
-  // };
-
+ 
   const onNodeDoubleClick = (event, node) => {
     setSelectedNode(node);
   };
@@ -630,7 +773,19 @@ const DnDFlow = () => {
       const selectedEachNodeId = selectedNodeType.id;
      // const getId = (selectedEachNodeType) => `${selectedNodeType.id}_${id++}`;
 
-      
+    //  const selectedDatabaseName = selectedDatabase ? selectedDatabase.name : '';
+    //  const selectedTableName = selectedTable ? selectedTable.name : '';
+
+     // Extract the database names from the data object
+  const selectedDatabaseNames = data.databases.map((db) => db.name);
+
+  // Extract the table names from the data object
+  const selectedTableNames = data.databases.reduce((acc, db) => {
+    const names = db.tables.map((table) => table.name);
+    return [...acc, ...names];
+  }, []);
+   alert(JSON.stringify(selectedDatabaseNames));
+   alert(JSON.stringify(selectedTableNames));
 
       const newNode = {
         id: getId(selectedEachNodeId),
@@ -643,8 +798,12 @@ const DnDFlow = () => {
           labelPosition: 'bottom', // set the label position to bottom
           labelBgPadding: [6, 6], // set the padding for the label background
           labelStyle: { fontSize: '12px' },
-          url: iconUrl, // set the font size for the label
+          url: iconUrl,
+           // set the font size for the label
+           database: selectedDatabaseNames, // Set the selected database name
+           table: selectedTableNames,
         },
+        
 
         style: {
           backgroundImage: `url(${iconUrl})`,
@@ -729,7 +888,11 @@ const firstOption = dropdownPopupDataTableValues[0];
           setNodes={setNodes} // Pass the callback function as a prop
           nodes={nodes} // Pass the nodes array as a prop
           droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
-          setDroppedNodes={setDroppedNodes} // Pass the setDroppedNodes function as a prop
+          setDroppedNodes={setDroppedNodes}
+          handleDatabaseChange={handleDatabaseChange}
+          handleTableChange={handleTableChange}
+          renderDatabaseOptions={renderDatabaseOptions}
+          renderTableOptions={renderTableOptions} // Pass the setDroppedNodes function as a prop
         />
 
         setShowPopup(true);
@@ -811,13 +974,10 @@ const firstOption = dropdownPopupDataTableValues[0];
     // alert(JSON.stringify(selectedNodeId.id));
      const selectedNodeId = selectedNode.id;
      setSelectedNodeId(selectedNodeId);
-    // Check if the data for the selected node exists in the state
-    // if (selectedNodeId in nodeData) {
-    //   // If the data exists, retrieve it
-    //   const selectedNodeData = nodeData[selectedNodeId];
-    //   // Use the data as needed
-    //   console.log(selectedNodeData+"selectednodedata");
-    // }
+    // const dropdownValues = getDropdownValues(node);
+
+     // Do something with the dropdownValues
+    // console.log(JSON.stringify(dropdownValues)+"dropdownValues");
 
 let selectedNodeData;
     let popupContent;
@@ -839,7 +999,11 @@ let selectedNodeData;
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
-        setDroppedNodes={setDroppedNodes} // Pass the setDroppedNodes function as a prop
+        setDroppedNodes={setDroppedNodes}
+        handleDatabaseChange={handleDatabaseChange}
+        handleTableChange={handleTableChange}
+        renderDatabaseOptions={renderDatabaseOptions}
+        renderTableOptions={renderTableOptions} // Pass the setDroppedNodes function as a prop
       />
     } else if ((selectedNodeId).match(/^sort/)) {
 // Handle the popup window for sort nodes
@@ -1117,6 +1281,8 @@ console.log(JSON.stringify(selectedNodeData)+"sortnode");
     </div>
   );
 };
+
+
 
 export default DnDFlow;
 
