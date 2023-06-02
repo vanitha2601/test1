@@ -97,7 +97,7 @@ const DnDFlow = () => {
     {
       id: 'dataTable',
       type: 'input',
-      alt: 'Data Table',
+      alt: 'dataTable',
       icon: databaseicon,
       sourcePosition: 'right',
       label: 'Data Table',
@@ -117,7 +117,7 @@ const DnDFlow = () => {
       label: 'Sort',
       type: 'customnode',
 
-      alt: 'Sort',
+      alt: 'sort',
       icon: sorticon,
       sourcePosition: 'right',
       targetPosition: 'left',
@@ -136,7 +136,7 @@ const DnDFlow = () => {
       id: 'filter',
       label: 'Filter',
       type: 'default',
-      alt: 'Filter',
+      alt: 'filter',
       icon: filtericon,
       sourcePosition: 'right',
       targetPosition: 'left',
@@ -381,24 +381,24 @@ const DnDFlow = () => {
   });
   const [selectedDatabase, setSelectedDatabase] = useState('');
   const [selectedTable, setSelectedTable] = useState('');
- 
+  const [selectedColumn, setSelectedColumn] = useState('');
   const [popupDropdownValues, setPopupDropdownValues] = useState([]);
 
-  
+
 
 
   const handleDatabaseChange = (event) => {
     const selectedDatabaseName = event.target.value;
 
-     const selectedDatabase = data.databases.find(database => database.name === selectedDatabaseName);
- 
-   setSelectedDatabase(selectedDatabase);
-  // if ( selectedDatabase.tables.length > 0) {
-   console.log(JSON.stringify(selectedDatabase.tables[0])+"SELECTED TABLE");
+    const selectedDatabase = data.databases.find(database => database.name === selectedDatabaseName);
+
+    setSelectedDatabase(selectedDatabase);
+    // if ( selectedDatabase.tables.length > 0) {
+    console.log(JSON.stringify(selectedDatabase.tables[0]) + "SELECTED TABLE");
     setSelectedTable(selectedDatabase.tables[0]);// Set the selected table to the first table in the selected database
-  //} else {
-  //  setSelectedTable(null); // If no tables are available, reset the selected table to null
- // }
+    //} else {
+    //  setSelectedTable(null); // If no tables are available, reset the selected table to null
+    // }
 
   };
 
@@ -422,7 +422,6 @@ const DnDFlow = () => {
       // Get the selected database and table names
       const selectedDatabaseName = selectedNode.data.database;
       const selectedTableName = selectedNode.data.table;
-      alert(selectedDatabaseName + "----" + selectedTableName);
       // Find the selected database from the data
       const selectedDatabase = data.databases.find((db) => db.name === selectedDatabaseName);
 
@@ -490,8 +489,7 @@ const DnDFlow = () => {
 
 
 
-  const handleValueSubmit = (selectedNodeId, name, selectedDatabase, selectedTable) => {
-    alert(name + "----" + JSON.stringify(selectedDatabase)+"********"+JSON.stringify(selectedTable));
+  const handleDataTableSubmit = (selectedNodeId, name, selectedDatabase, selectedTable) => {
 
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
@@ -503,7 +501,8 @@ const DnDFlow = () => {
               ...node.data,
               label: name,
               selectedDatabase: selectedDatabase,
-         
+              selectedTable: selectedTable
+
             },
             // Set the desired label for the node
           };
@@ -523,7 +522,45 @@ const DnDFlow = () => {
       [selectedNodeId]: {
         name,
         selectedDatabase,
-       
+        selectedTable
+      },
+    }));
+
+    setShowPopup(false);
+  };
+
+  const handleSortSubmit = (selectedNodeId, name) => {
+    setNodes((nodes) => {
+      // Map over the nodes array and update the label for the desired node
+      const updatedNodes = nodes.map((node) => {
+        if (node.id === selectedNodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              label: name,
+              selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
+              selectedTable: node.data.selectedTable,
+            },
+            // Set the desired label for the node
+          };
+        }
+        return node;
+      });
+
+      return updatedNodes;
+      setNodes((nodes) => nodes.concat(updatedNodes));
+    }, [reactFlowInstance]);
+
+    // setNodeName(name);
+    // setSelectedOption(option);
+
+    setNodeData((prevNodeData) => ({
+      ...prevNodeData,
+      [selectedNodeId]: {
+        name,
+        //   selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
+        // selectedTable: node.data.selectedTable,
       },
     }));
 
@@ -531,7 +568,7 @@ const DnDFlow = () => {
   };
 
 
-  
+
 
   const onNodeDoubleClick = (event, node) => {
     setSelectedNode(node);
@@ -589,6 +626,8 @@ const DnDFlow = () => {
 
     const isSourceConnected = edges.some((connection) => connection.source === source);
     const isTargetConnected = edges.some((connection) => connection.target === target);
+
+
 
     const requiredConnections = 2;
     const joinNodes = targetArray.filter(target => target.includes("join"));
@@ -730,17 +769,18 @@ const DnDFlow = () => {
       }, []);
 
       // Get the initial database and table values
-  const initialDatabase = data.databases[0];
-  const initialTable = initialDatabase.tables[0];
-    
+      const initialDatabase = data.databases[0];
+      const initialTable = initialDatabase.tables[0];
+      const generatedEachNodeId = getId(selectedEachNodeId);
       const newNode = {
-        id: getId(selectedEachNodeId),
+        id: generatedEachNodeId,
         type: selectedNodeType.type,
         position,
         icon,
-
+        alt: selectedNodeType.alt,
         data: {
-          label: `${selectedNodeType.label} `,
+          // label: `${selectedNodeType.label} `,
+          label: `${generatedEachNodeId} `,
           labelPosition: 'bottom', // set the label position to bottom
           labelBgPadding: [6, 6], // set the padding for the label background
           labelStyle: { fontSize: '12px' },
@@ -748,8 +788,8 @@ const DnDFlow = () => {
           // set the font size for the label
           database: selectedDatabaseNames, // Set the selected database name
           table: selectedTableNames,
-          selectedDatabase:initialDatabase,
-          selectedTable:initialTable
+          selectedDatabase: initialDatabase,
+          selectedTable: initialTable
         },
 
 
@@ -798,8 +838,8 @@ const DnDFlow = () => {
       }
 
       // Update the selectedDatabase and selectedTable states in the parent component
-  setSelectedDatabase(initialDatabase);
-  setSelectedTable(initialTable);
+      setSelectedDatabase(initialDatabase);
+      setSelectedTable(initialTable);
       setNodes((nodes) => nodes.concat(newNode));
       // Update the droppedNodes array with the new node
       //setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode]);
@@ -812,21 +852,20 @@ const DnDFlow = () => {
 
 
       // Get the first option value from the dropdown
-      const firstOption = dropdownPopupDataTableValues[0];
+      //  const firstOption = dropdownPopupDataTableValues[0];
 
       // Update the nodeData state with the default name
 
-  alert(JSON.stringify(initialDatabase));
       if ((newNode.id).match(/^dataTable/)) {
-      
 
-        setNodeData((prevNodeData) => ({
-          ...prevNodeData,
-          [newNode.id]: {
-            name: firstOption,
-            option: '',
-          },
-        }));
+
+        // setNodeData((prevNodeData) => ({
+        //   ...prevNodeData,
+        //   [newNode.id]: {
+        //     name: firstOption,
+        //     option: '',
+        //   },
+        // }));
 
         if ((newNode.id) in nodeData) {
           selectedNodeData = nodeData[newNode.id];
@@ -835,16 +874,16 @@ const DnDFlow = () => {
           onRemoveTable={handleRemoveTable}
           selectedNodeId={newNode.id}
           nodeName={newNode.id}
-         
-          onValueSubmit={handleValueSubmit}
+
+          onValueSubmit={handleDataTableSubmit}
           setNodes={setNodes} // Pass the callback function as a prop
           nodes={nodes} // Pass the nodes array as a prop
           droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
           setDroppedNodes={setDroppedNodes}
-         
-        data={data}
-       
-         />
+
+          data={data}
+
+        />
 
         setShowPopup(true);
         setPopupContent(popupContent);
@@ -862,20 +901,21 @@ const DnDFlow = () => {
         //   selectedNodeData = nodeData[selectedNodeId];
         // }
         // Handle the popup window for sort nodes
+
+
         popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
           onRemoveTable={handleRemoveTable}
           selectedNodeId={newNode.id}
           nodeName={newNode.id}
-          // nodeName={selectedNodeData?.name || ''}
-          // nodeName={nodeName}
-          // selectedOption={selectedOption}
-          selectedOption={selectedNodeData?.option || ''}
-          dropdownPopupDataTableValues={dropdownPopupDataTableValues}
-          onValueSubmit={handleValueSubmit}
+
+
+          onValueSubmit={handleSortSubmit}
           setNodes={setNodes} // Pass the callback function as a prop
           nodes={nodes} // Pass the nodes array as a prop
           droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
-          setDroppedNodes={setDroppedNodes} />;
+          setDroppedNodes={setDroppedNodes}
+          data={data}
+        />;
 
       }
 
@@ -919,16 +959,23 @@ const DnDFlow = () => {
   };
 
   const handleNodeDoubleClick = (event, node) => {
+
     // Open the popup when a node is double-clicked
     const selectedNode = node;
 
-     alert(JSON.stringify(node.data));
     const selectedNodeId = selectedNode.id;
     setSelectedNodeId(selectedNodeId);
-     // Extract the selected values from the node
-     const selectedDatabase = node.data.selectedDatabase;
-     const selectedTable = node.data.selectedTable;
-    alert(selectedDatabase+"----------"+selectedTable);
+    // Extract the selected values from the node
+    const selectedDatabase = node.data.selectedDatabase;
+    const selectedTable = node.data.selectedTable;
+
+    const selectedDatabaseSort = data.databases.find((database) => database.name === selectedDatabase);
+
+    // Extract the columns from the selected database or provide an empty array if not available
+    const columns = selectedDatabaseSort?.tables.flatMap((table) => table.columns) || [];
+
+
+    console.log(JSON.stringify(selectedDatabase) + "selectedDatabaseselectedDatabase");
     // const dropdownValues = getDropdownValues(node);
 
     // Do something with the dropdownValues
@@ -936,51 +983,92 @@ const DnDFlow = () => {
 
     let selectedNodeData;
     let popupContent;
+
+
+
     if ((selectedNodeId).match(/^dataTable/)) {
-      // Handle the popup window for datatable nodes
-      if (selectedNodeId in nodeData) {
-        selectedNodeData = nodeData[selectedNodeId];
-      }
 
       popupContent = <DataTablePopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
         onRemoveTable={handleRemoveTable}
         selectedNodeId={selectedNodeId}
-        nodeName={selectedNodeData?.name || ''}
-       
-        // selectedDatabase={selectedDatabase} // Pass the selected database name as prop
-        // selectedTable={selectedTable} // Pass the selected table name as prop
-        
-        onValueSubmit={handleValueSubmit}
+        nodeName={node.data.label}
+        onValueSubmit={handleDataTableSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes}
-       data={data}
-        // selectedInitialDatabase={selectedDatabase}
-        // selectedInitialTable={selectedTable}
+        data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
-      // Handle the popup window for sort nodes
-      let selectedNodeData = {};
-      // Handle the popup window for datatable nodes
-      if (selectedNodeId in nodeData) {
-        selectedNodeData = nodeData[selectedNodeId];
+
+      // Check if the Sort node is connected to a DataTable node
+      // const connectedDataTable = edges.some(
+      //   (edge) =>
+      //     edge.target === node.id && nodes[edge.source]?.alt === 'dataTable');
+
+      const connectedDataTable = edges.some((edge) => {
+        const isTargetMatch = edge.target === selectedNodeId;
+        console.log('Edge target:', edge.target);
+        const sourceNode = nodes.find((n) => n.id === edge.source);
+        const isDataTableSource = sourceNode && sourceNode.alt === 'dataTable';
+        console.log('Node source:', sourceNode);
+        console.log('Alt:', sourceNode.alt);
+        return isTargetMatch && isDataTableSource;
+      });
+
+
+
+      if (connectedDataTable) {
+        // Sort node is connected to a DataTable node
+        // Perform your desired actions here
+        console.log('Sort node is connected to a DataTable node');
+
+        // Access the DataTable node data if needed
+        const dataTableNode = edges.find(
+          (edge) => {
+            const isTargetMatch = edge.target === node.id;
+            const sourceNode = nodes.find((n) => n.id === edge.source);
+            const isDataTableSource = sourceNode && sourceNode.alt === 'dataTable';
+            console.log('edge.target:', edge.target);
+            console.log('nodes[]:', nodes);
+            return isTargetMatch && isDataTableSource;
+
+          });
+
+        const sourceId = dataTableNode.source;
+        const dataTableNodeData = nodeData[sourceId];
+
+        const columns = dataTableNodeData.selectedTable.columns;
+
+        //console.log('Tables:', tables);
+        alert(JSON.stringify(columns) + "columns");
+
+
+
+        // Handle the popup window for sort nodes
+        popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={selectedNodeId}
+          nodeName={node.data.label}
+          onValueSubmit={handleSortSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes}
+          edges={edges}
+          setEdges={setEdges}
+          columns={columns}
+        // firstColumn={selectedTable.columns}
+        />;
+
+      } else {
+        // Sort node is not connected to a DataTable node
+        // Perform other actions if desired
+        console.log('Sort node is not connected to a DataTable node');
       }
-      console.log(JSON.stringify(selectedNodeData) + "sortnode");
-      // Handle the popup window for sort nodes
-      popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
-        onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId}
-        nodeName={selectedNodeData?.name || ''}
-        // nodeName={nodeName}
-        // selectedOption={selectedOption}
-        selectedOption={selectedNodeData?.option || ''}
-        dropdownPopupDataTableValues={dropdownPopupDataTableValues}
-        onValueSubmit={handleValueSubmit}
-        setNodes={setNodes} // Pass the callback function as a prop
-        nodes={nodes} // Pass the nodes array as a prop
-        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
-        setDroppedNodes={setDroppedNodes} />;
+
+
+
 
     } else if ((selectedNodeId).match(/^filter/)) {
       // Handle the popup window for filter nodes
@@ -991,7 +1079,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1005,7 +1093,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1019,7 +1107,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1033,7 +1121,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1047,7 +1135,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1061,7 +1149,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1075,7 +1163,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1089,7 +1177,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1103,7 +1191,7 @@ const DnDFlow = () => {
         // nodeName={nodeName}
         // selectedOption={selectedOption}
         selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handleValueSubmit}
+        onValueSubmit={handlePopupSubmit}
         setNodes={setNodes} // Pass the callback function as a prop
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop

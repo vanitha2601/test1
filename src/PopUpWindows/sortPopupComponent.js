@@ -2,19 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import '../css/dataTablePopUp.css';
 
-const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit,
-   nodes, setNodes, droppedNodes,setDroppedNodes, nodeName, selectedOption, dropdownPopupDataTableValues}) => {
+const SortPopupComponent = ({onClose, onRemoveTable, nodeName,selectedNodeId,onValueSubmit,
+   nodes, setNodes, droppedNodes,setDroppedNodes,  data, 
+  //  firstColumn,
+   columns,}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const [name, setName] = useState(nodeName);
-  const [dropDownOption, setDropdownOption] = useState(selectedOption);
-  
+ 
   useEffect(() => {
-    
-  console.log(JSON.stringify(nodeName)+"nodeName");
+  
     setName(nodeName);
-    setDropdownOption(selectedOption);
-  }, [nodeName, selectedOption]);
+  }, [nodeName]);
 
   const handleRemoveTable = () => {
     // Call the onRemoveTable callback function
@@ -26,7 +25,7 @@ const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmi
   };
 
   const handleSubmit = () => {
-    onValueSubmit(selectedNodeId,name, dropDownOption);
+    onValueSubmit(selectedNodeId,name);
   };
 
   
@@ -40,13 +39,20 @@ const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmi
     setName(event.target.value);
   };
 
-  const handleOptionChange = (event) => {
-    setDropdownOption(event.target.value);
-  };
+  // const handleOptionChange = (event) => {
+  //   setDropdownOption(event.target.value);
+  // };
 
   const handleLinkClick = () => {
     // Perform any actions when the link is clicked
     // ...
+  };
+  const renderColumnOptions = () => {
+    return columns.map((column) => (
+      <option key={column} value={column}>
+        {column}
+      </option>
+    ));
   };
 
   return (
@@ -65,25 +71,25 @@ const SortPopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmi
       <div className="form-group">
           <label htmlFor="textbox">Name </label>
           <input type="text" value={name}
-         className="form-control" onChange={handleNameChange}
+         className="form-control" 
+         onChange={handleNameChange}
            id="textbox" />
         </div>
      
     
     <div className="form-group">
           <label htmlFor="dropdown">Sort By</label>
-          {/* <select id="dropdown" className="form-control">
-            <option value="option1">Accounts</option>
-            <option value="option2">Company</option>
-            <option value="option3">Roles</option>
-          </select> */}
-          <select id="dropdown" className="form-control" value={dropDownOption} onChange={handleOptionChange}>
-        {dropdownPopupDataTableValues.map((value) => (
-          <option key={value} value={value}>
-            {value}
-          </option>
-        ))}
-      </select>
+          
+        
+        <select
+              id="dropdown"
+              className="form-control"
+              value={columns}
+              // onChange={handleOptionChange}
+            >
+              {renderColumnOptions()}
+            </select>
+     
         </div>
 
         <div className="checkbox-container">
