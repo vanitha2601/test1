@@ -1,25 +1,61 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/dataTablePopUp.css';
 
-const DataTablePopupComponent = ({onClose, onRemoveTable, selectedNodeId,onValueSubmit, 
-  nodes, setNodes, droppedNodes,setDroppedNodes, 
-  nodeName, selectedOption, dropdownPopupDataTableValues,
-  handleDatabaseChange,
-  handleTableChange,
-  renderDatabaseOptions,
-  renderTableOptions,
+const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onValueSubmit,
+  nodes, setNodes, droppedNodes, setDroppedNodes,
+  nodeName, 
+  data,
 }) => {
-console.log(renderTableOptions+"renderTableOptions");
-console.log(selectedOption+"selectedOptionselectedOption");
+
   const [name, setName] = useState(nodeName);
-  const [dropDownOption, setDropdownOption] = useState(selectedOption);
+   const [selectedDatabase, setSelectedDatabase] = useState(data.databases[0]);
+   const [selectedTable, setSelectedTable] = useState(selectedDatabase.tables[0]);
+
+  const handleDatabaseChange = (event) => {
+    const selectedDatabaseName = event.target.value;
+     const selectedDatabase = data.databases.find(
+        (database) => database.name === selectedDatabaseName
+  );
+    setSelectedDatabase(selectedDatabase);
+  };
+
+  const renderDatabaseOptions = () => {
+    return data.databases.map((database, index) => (
+      <option key={index} value={database.name}>
+        {database.name}
+      </option>
+    ));
+  };
+
+  const renderTableOptions = () => {
+    const selectedDatabaseObj = data.databases.find(database => database.name === selectedDatabase.name);
+    if (selectedDatabaseObj && selectedDatabaseObj.tables.length > 0) {
+      return selectedDatabaseObj.tables.map((table) => (
+        <option key={table.name} value={table.name}>
+          {table.name}
+        </option>
+      ));
+    } else {
+      return null;
+    }
+  };
   
+
   useEffect(() => {
     setName(nodeName);
-    setDropdownOption(selectedOption);
-  }, [nodeName, selectedOption]);
+   // Find the selected node based on the selectedNodeId
+  
+   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
+  
+   if (selectedNode) {
+     // Update the selectedDatabase and selectedTable states based on the selected node's values
+     setSelectedDatabase(selectedNode.data.selectedDatabase);
+     setSelectedTable(selectedNode.data.selectedTable);
+   }
+ }, [nodeName],[selectedNodeId, nodes]);
+ 
 
-  console.log(selectedNodeId+"selectedNodeId");
+  console.log(selectedNodeId + "selectedNodeId");
   const handleNodesUpdate = () => {
     const updatedNodes = [...nodes]; // Create a copy of the nodes array
     // Update the nodes array as needed
@@ -27,12 +63,12 @@ console.log(selectedOption+"selectedOptionselectedOption");
 
     setNodes(updatedNodes); // Call the setNodes function to update the nodes in the parent component
   };
- // Example usage: Handle dropped nodes and update the state
- const handleDrop = (droppedNodes) => {
-  // Perform any necessary operations with the dropped nodes
-  // ...
-  setDroppedNodes(droppedNodes); // Call the setDroppedNodes function to update the dropped nodes in the parent component
-};
+  // Example usage: Handle dropped nodes and update the state
+  const handleDrop = (droppedNodes) => {
+    // Perform any necessary operations with the dropped nodes
+    // ...
+    setDroppedNodes(droppedNodes); // Call the setDroppedNodes function to update the dropped nodes in the parent component
+  };
 
   const handleRemoveTable = () => {
     // Call the onRemoveTable callback function
@@ -43,9 +79,8 @@ console.log(selectedOption+"selectedOptionselectedOption");
     onClose(nodes);
   };
   const handleSubmit = (event) => {
-    event.preventDefault();
-    
-    onValueSubmit(selectedNodeId, name, dropDownOption);
+   
+    onValueSubmit(selectedNodeId, name, selectedDatabase, selectedTable);
   };
 
 
@@ -53,67 +88,60 @@ console.log(selectedOption+"selectedOptionselectedOption");
 
   // Function to update the dynamic value
   const handleNameChange = (event) => {
-   
+
     setName(event.target.value);
   };
 
-  const handleOptionChange = (event) => {
-    setDropdownOption(event.target.value);
-  };
-
   return (
-    <div className = "overlay">
-      
-    <div className="popup-datatable">
-    <div className="popup-header">
-    <h4 class='modal-title'>Tool Options</h4>
-        <button className="close-button" onClick={onClose}>
-        
-        <span>&times;</span>
+    <div className="overlay">
+
+      <div className="popup-datatable">
+        <div className="popup-header">
+          <h4 class='modal-title'>Tool Options</h4>
+          <button className="close-button" onClick={onClose}>
+
+            <span>&times;</span>
           </button>
+        </div>
+        <div className="datatable-content">
+          <div className="modal-body">
+            <div className="form-group">
+              <label htmlFor="textbox">Name</label>
+              <input type="text" value={name}
+                className="form-control" onChange={handleNameChange}
+                id="textbox" />
+            </div>
+
+
+            <div className="form-group">
+              <label htmlFor="dropdown">List of Database </label>
+
+
+              <select id="database" className="form-control"
+                value={selectedDatabase.name} 
+                 onChange={handleDatabaseChange}
+                >
+                {renderDatabaseOptions()}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="dropdown">List of Table</label>
+
+              <select id="table" className="form-control" value={selectedTable} 
+              // onChange={handleTableChange}
+              >
+                {renderTableOptions()}
+              </select>
+
+            </div>
+            <button type='button' className='btn btn-primary'>REFRESH TABLES</button>
+          </div>
+          <div className="modal-footer">
+            <button type='button' onClick={handleRemoveTable} class='btn btn-danger remove'>Remove Tool</button>
+            <button type='button' className='btn btn-primary ok' onClick={handleSubmit} >OK</button>
+          </div>
+        </div>
       </div>
-       <div className="datatable-content">
-     <div className="modal-body">
-      <div className="form-group">
-          <label htmlFor="textbox">Name</label>
-          <input type="text" value={name}
-         className="form-control" onChange={handleNameChange}
-           id="textbox" />
-        </div>
-     
-    
-    <div className="form-group">
-          <label htmlFor="dropdown">Table</label>
-          {/* <select id="dropdown" className="form-control"  onChange={handleOptionChange}>
-            <option value="option1">Accounts</option>
-            <option value="option2">Company</option>
-            <option value="option3">Roles</option>
-          </select> */}
-          <select id="dropdown" className="form-control" value={dropDownOption} onChange={handleOptionChange}>
-        {dropdownPopupDataTableValues.map((value) => (
-          <option key={value} value={value}>
-            {value}
-          </option>
-        ))}
-      </select>
-
-      <select onChange={handleDatabaseChange}>
-  {renderDatabaseOptions()}
-</select>
-
-<select onChange={handleTableChange}>
-  {renderTableOptions()}
-</select>
-
-        </div>
-        <button type='button' className='btn btn-primary'>REFRESH TABLES</button>
-        </div>
-        <div className="modal-footer">
-                        <button type='button' onClick={handleRemoveTable} class='btn btn-danger remove'>Remove Tool</button>
-                        <button type='button' className='btn btn-primary ok'   onClick={handleSubmit} >OK</button>
-                    </div>
-    </div>
-    </div>
     </div>
   );
 };
