@@ -4,9 +4,10 @@ import '../css/dataTablePopUp.css';
 
 const SortPopupComponent = ({onClose, onRemoveTable, nodeName,selectedNodeId,onValueSubmit,
    nodes, setNodes, droppedNodes,setDroppedNodes,  data, 
-  //  firstColumn,
+    firstColumn,
    columns,}) => {
   const [isChecked, setIsChecked] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState(firstColumn);
 
   const [name, setName] = useState(nodeName);
  
@@ -25,7 +26,14 @@ const SortPopupComponent = ({onClose, onRemoveTable, nodeName,selectedNodeId,onV
   };
 
   const handleSubmit = () => {
-    onValueSubmit(selectedNodeId,name);
+    onValueSubmit(selectedNodeId,name, selectedColumns);
+  };
+
+  const handleColumnChange = (event) => {
+    
+      const selectedColumnName = event.target.value;
+      setSelectedColumns(selectedColumnName);
+      
   };
 
   
@@ -84,8 +92,8 @@ const SortPopupComponent = ({onClose, onRemoveTable, nodeName,selectedNodeId,onV
         <select
               id="dropdown"
               className="form-control"
-              value={columns}
-              // onChange={handleOptionChange}
+              value={selectedColumns} 
+               onChange={handleColumnChange}
             >
               {renderColumnOptions()}
             </select>
