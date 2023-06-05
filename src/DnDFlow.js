@@ -83,9 +83,9 @@ const iconSources = [
 
 const DnDFlow = () => {
   const [nodeName, setNodeName] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
-  const [dropdownPopupDataTableValues, setDropdownPopupDataTableValues] = useState(['Accounts', 'Company', 'Roles']);
-  const [accountSortColumns, setAccountSortColumns] = useState([]);
+  // const [selectedOption, setSelectedOption] = useState('');
+  // const [dropdownPopupDataTableValues, setDropdownPopupDataTableValues] = useState(['Accounts', 'Company', 'Roles']);
+  // const [accountSortColumns, setAccountSortColumns] = useState([]);
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -344,10 +344,24 @@ const DnDFlow = () => {
           {
             name: 'Accounts Table',
             columns: ['id', 'name', 'age', 'salary', 'address'],
+          //  columns: [
+          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+          //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
+          //   { name: 'age', dataType: 'int', data: [30, 35, 28, 42, 39] },
+          //   { name: 'salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
+          //   { name: 'address', dataType: 'varchar', data: ['New York', 'London', 'Paris', 'Tokyo', 'Sydney'] },
+          // ],
           },
           {
             name: 'Employee Table',
             columns: ['employee_id', 'employee_name', 'employee_age', 'employee_salary', 'employee_address'],
+            // columns: [
+            //   { name: 'Employee ID', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'First Name', dataType: 'varchar', data: ['vanitha', 'ana', 'Rose', 'aaron', 'David'] },
+            //   { name: 'Last Name', dataType: 'varchar', data: ['Venkat', 'Smith', 'Johnson', 'Williams', 'Brown'] },
+            //   { name: 'Age', dataType: 'int', data: [30, 35, 28, 42, 39] },
+            //   { name: 'Salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
+            // ],
           },
         ],
       },
@@ -357,10 +371,30 @@ const DnDFlow = () => {
           {
             name: 'Boolean Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
+          //  columns: [
+          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+          //   { name: 'companyName', dataType: 'varchar', data: ['Company A', 'Company B', 'Company C', 'Company D', 'Company E'] },
+          //   { name: 'isActive', dataType: 'boolean', data: [true, false, true, true, false] },
+          // ],
           },
           {
             name: 'Simons Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
+          // columns: [
+          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+          //   { name: 'companyName', dataType: 'varchar', data: ['Company X', 'Company Y', 'Company Z', 'Company W', 'Company V'] },
+          //   { name: 'isActive', dataType: 'boolean', data: [true, true, false, false, true] },
+          // ],
+          },
+          {
+            name: 'Products Table',
+            columns: ['product_id', 'product_name', 'Price', 'quantity'],
+            // columns: [
+            //   { name: 'Product ID', dataType: 'int', data: [101, 102, 103, 104, 105] },
+            //   { name: 'Product Name', dataType: 'varchar', data: ['Keyboard', 'Mouse', 'Monitor', 'Headphones', 'Speakers'] },
+            //   { name: 'Price', dataType: 'decimal', data: [49.99, 29.99, 199.99, 79.99, 149.99] },
+            //   { name: 'Quantity', dataType: 'int', data: [50, 100, 25, 10, 30] },
+            // ],
           },
         ],
       },
@@ -370,10 +404,23 @@ const DnDFlow = () => {
           {
             name: 'Junior Table',
             columns: ['id', 'name', 'gender', 'roles', 'yearsofexperionce'],
+          //  columns: [
+          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+          //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
+          //   { name: 'gender', dataType: 'varchar', data: ['Male', 'Female', 'Male', 'Female', 'Male'] },
+          //   { name: 'role', dataType: 'varchar', data: ['Junior Developer', 'Junior Designer', 'Junior Analyst', 'Junior Engineer', 'Junior Manager'] },
+          //   { name: 'yearsOfExperience', dataType: 'int', data: [2, 3, 1, 4, 2] },
+          // ],
           },
           {
             name: 'Senior Table',
             columns: ['id', 'name', 'roles', 'yearsofexperionce'],
+          //  columns: [
+          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+          //   { name: 'name', dataType: 'varchar', data: ['Vanitha', 'Jane', 'Aaron', 'Emily', 'Sanvi'] },
+          //   { name: 'role', dataType: 'varchar', data: ['Senior Developer', 'Senior Designer', 'Senior Analyst', 'Senior Engineer', 'Senior Manager'] },
+          //   { name: 'yearsOfExperience', dataType: 'int', data: [5, 6, 7, 8, 9] },
+          // ],
           },
         ],
       },
@@ -383,36 +430,6 @@ const DnDFlow = () => {
   const [selectedTable, setSelectedTable] = useState('');
   const [selectedColumn, setSelectedColumn] = useState('');
   const [popupDropdownValues, setPopupDropdownValues] = useState([]);
-
-
-
-
-  const handleDatabaseChange = (event) => {
-    const selectedDatabaseName = event.target.value;
-
-    const selectedDatabase = data.databases.find(database => database.name === selectedDatabaseName);
-
-    setSelectedDatabase(selectedDatabase);
-    // if ( selectedDatabase.tables.length > 0) {
-    console.log(JSON.stringify(selectedDatabase.tables[0]) + "SELECTED TABLE");
-    setSelectedTable(selectedDatabase.tables[0]);// Set the selected table to the first table in the selected database
-    //} else {
-    //  setSelectedTable(null); // If no tables are available, reset the selected table to null
-    // }
-
-  };
-
-  const handleTableChange = (event) => {
-    const selectedTableName = event.target.value;
-    const selectedTable = selectedDatabase.tables.find((table) => table.name === selectedTableName);
-    setSelectedTable(selectedTable);
-  };
-
-  // const handleTableChange = (event) => {
-  //   setSelectedTable(event.target.value);
-  // };
-
-
 
 
   const getDropdownValues = (selectedNode) => {
@@ -531,7 +548,7 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
 
-  const handleSortSubmit = (selectedNodeId, name, selectedColumns) => {
+  const handleSortSubmit = (selectedNodeId, name, selectedColumns, isChecked) => {
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
       const updatedNodes = nodes.map((node) => {
@@ -541,9 +558,11 @@ const DnDFlow = () => {
             data: {
               ...node.data,
               label: name,
+              
               // selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
               // selectedTable: node.data.selectedTable,
-              selectedColumns: selectedColumns
+              buildOrderBy: selectedColumns,
+              isChecked
             },
             // Set the desired label for the node
           };
@@ -562,7 +581,8 @@ const DnDFlow = () => {
       ...prevNodeData,
       [selectedNodeId]: {
         name,
-        selectedColumns: selectedColumns
+        buildOrderBy: selectedColumns,
+        isChecked
         //   selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
         // selectedTable: node.data.selectedTable,
       },
@@ -775,6 +795,7 @@ const DnDFlow = () => {
       // Get the initial database and table values
       const initialDatabase = data.databases[0];
       const initialTable = initialDatabase.tables[0];
+      const initialColumn = initialTable.columns[0];
       const generatedEachNodeId = getId(selectedEachNodeId);
       const newNode = {
         id: generatedEachNodeId,
@@ -793,7 +814,9 @@ const DnDFlow = () => {
           database: selectedDatabaseNames, // Set the selected database name
           table: selectedTableNames,
           selectedDatabase: initialDatabase,
-          selectedTable: initialTable
+          selectedTable: initialTable,
+          buildOrderBy:initialColumn,
+          isChecked:'false'
         },
 
 
@@ -844,6 +867,7 @@ const DnDFlow = () => {
       // Update the selectedDatabase and selectedTable states in the parent component
       setSelectedDatabase(initialDatabase);
       setSelectedTable(initialTable);
+      setSelectedColumn(initialColumn);
       setNodes((nodes) => nodes.concat(newNode));
       // Update the droppedNodes array with the new node
       //setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode]);
@@ -862,14 +886,6 @@ const DnDFlow = () => {
 
       if ((newNode.id).match(/^dataTable/)) {
 
-
-        // setNodeData((prevNodeData) => ({
-        //   ...prevNodeData,
-        //   [newNode.id]: {
-        //     name: firstOption,
-        //     option: '',
-        //   },
-        // }));
 
         if ((newNode.id) in nodeData) {
           selectedNodeData = nodeData[newNode.id];
@@ -894,10 +910,10 @@ const DnDFlow = () => {
       } else if ((newNode.id).match(/^sort/)) {
 
 
-        // if ((newNode.id) in nodeData) {
-        //   selectedNodeData = nodeData[newNode.id];
-        // }
-        // alert(JSON.stringify(selectedNodeData));
+        if ((newNode.id) in nodeData) {
+          selectedNodeData = nodeData[newNode.id];
+        }
+         alert(JSON.stringify(selectedNodeData));
 
 
         // Handle the popup window for datatable nodes
@@ -931,7 +947,7 @@ const DnDFlow = () => {
 
 
     },
-    [reactFlowInstance, setNodes, setDroppedNodes]
+    [reactFlowInstance, setNodes, setDroppedNodes, nodeData]
   );
 
   // Function to close the popup window
@@ -966,12 +982,21 @@ const DnDFlow = () => {
 
     // Open the popup when a node is double-clicked
     const selectedNode = node;
+    alert(JSON.stringify(selectedNode.data)+"selectedNode");
 
     const selectedNodeId = selectedNode.id;
     setSelectedNodeId(selectedNodeId);
     // Extract the selected values from the node
     const selectedDatabase = node.data.selectedDatabase;
     const selectedTable = node.data.selectedTable;
+    const selectedColumns = node.data.buildOrderBy;
+    const isChecked = node.data.isChecked;
+let isCheckedValue;
+    if(isChecked === "DESC"){
+      isCheckedValue = 'true';
+    }else{
+      isCheckedValue = 'false';
+    }
 
     const selectedDatabaseSort = data.databases.find((database) => database.name === selectedDatabase);
 
@@ -1033,13 +1058,16 @@ const DnDFlow = () => {
 
           });
 
+        alert(JSON.stringify(dataTableNode)+"dataTableNode");
+
+        const targetId = dataTableNode.target;
+        const sortNodeData = nodeData[targetId];
         const sourceId = dataTableNode.source;
         const dataTableNodeData = nodeData[sourceId];
         alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
+        alert(JSON.stringify(sortNodeData)+"sortNodeData");
         const columns = dataTableNodeData.selectedTable.columns;
 
-        //console.log('Tables:', tables);
-        alert(JSON.stringify(columns) + "columns");
 
 
 
@@ -1056,7 +1084,8 @@ const DnDFlow = () => {
           edges={edges}
           setEdges={setEdges}
           columns={columns}
-          firstColumn={node.data.selectedColumns}
+          firstColumn={selectedColumns}
+          isCheckedValue = {isCheckedValue}
         />;
       } else {
         // Sort node is not connected to a DataTable node
@@ -1077,6 +1106,7 @@ const DnDFlow = () => {
             edges={edges}
             setEdges={setEdges}
             columns={[]} // Empty columns array
+          //  isCheckedValue={false}
           />
         );
       }
