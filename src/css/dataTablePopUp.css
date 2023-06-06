@@ -253,7 +253,7 @@
   color: #fff;
   background-color: #004358;
   border-color: #00303f;
-  margin-left: 5px;
+  /* margin-left: 5px; */
 }
 
 .btn, .navbar {

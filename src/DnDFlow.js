@@ -548,7 +548,8 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
 
-  const handleSortSubmit = (selectedNodeId, name, selectedColumns, isChecked) => {
+  const handleSortSubmit = (selectedNodeId, name, selectedColumns, isChecked, 
+    selectedThenByColumns, showAdditionalinputlength) => {
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
       const updatedNodes = nodes.map((node) => {
@@ -562,7 +563,9 @@ const DnDFlow = () => {
               // selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
               // selectedTable: node.data.selectedTable,
               buildOrderBy: selectedColumns,
-              isChecked
+              isChecked,
+              selectedThenByColumns,
+              showAdditionalinputlength
             },
             // Set the desired label for the node
           };
@@ -582,7 +585,9 @@ const DnDFlow = () => {
       [selectedNodeId]: {
         name,
         buildOrderBy: selectedColumns,
-        isChecked
+        isChecked,
+        selectedThenByColumns,
+        showAdditionalinputlength
         //   selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
         // selectedTable: node.data.selectedTable,
       },
@@ -816,7 +821,8 @@ const DnDFlow = () => {
           selectedDatabase: initialDatabase,
           selectedTable: initialTable,
           buildOrderBy:initialColumn,
-          isChecked:'false'
+          isChecked:'false',
+          selectedThenByColumns:[]
         },
 
 
@@ -989,14 +995,7 @@ const DnDFlow = () => {
     // Extract the selected values from the node
     const selectedDatabase = node.data.selectedDatabase;
     const selectedTable = node.data.selectedTable;
-    const selectedColumns = node.data.buildOrderBy;
-    const isChecked = node.data.isChecked;
-let isCheckedValue;
-    if(isChecked === "DESC"){
-      isCheckedValue = 'true';
-    }else{
-      isCheckedValue = 'false';
-    }
+    
 
     const selectedDatabaseSort = data.databases.find((database) => database.name === selectedDatabase);
 
@@ -1030,6 +1029,15 @@ let isCheckedValue;
         data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
+      const selectedColumns = node.data.buildOrderBy;
+    const isChecked = node.data.isChecked;
+let isCheckedValue;
+    if(isChecked === "DESC"){
+      isCheckedValue = 'true';
+    }else{
+      isCheckedValue = 'false';
+    }
+
 
       // Check if the Sort node is connected to a DataTable node
       const connectedDataTable = edges.some((edge) => {
@@ -1065,12 +1073,13 @@ let isCheckedValue;
         const sourceId = dataTableNode.source;
         const dataTableNodeData = nodeData[sourceId];
         alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
-        alert(JSON.stringify(sortNodeData)+"sortNodeData");
+       // alert(JSON.stringify(sortNodeData)+"sortNodeData");
         const columns = dataTableNodeData.selectedTable.columns;
+       
 
 
-
-
+alert(JSON.stringify(node.data.selectedThenByColumns)+"node.data.selectedThenByColumns");
+alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
         // Handle the popup window for sort nodes
         popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
           onRemoveTable={handleRemoveTable}
@@ -1086,6 +1095,8 @@ let isCheckedValue;
           columns={columns}
           firstColumn={selectedColumns}
           isCheckedValue = {isCheckedValue}
+          selectedThenByColumnValue={node.data.selectedThenByColumns}
+          showAdditionalinputlength={node.data.showAdditionalinputlength}
         />;
       } else {
         // Sort node is not connected to a DataTable node
