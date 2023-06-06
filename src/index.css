@@ -172,3 +172,16 @@ img {
 /* #addanother{
 margin-left:5px;
 } */
+
+.create-cancel{
+  position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 15px;
+    text-align: center;
+}
+
+.create-cancel button {
+  margin-left: 10px;
+}

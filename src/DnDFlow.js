@@ -90,6 +90,8 @@ const DnDFlow = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
 
+
+
   let nodeId = 0; // Initialize the node ID counter
 
 
@@ -330,7 +332,7 @@ const DnDFlow = () => {
   const [droppedNodes, setDroppedNodes] = useState([]);
   const [nodeData, setNodeData] = useState({}); // State to store individual node data
 
-
+  const [sqlArray, setSqlArray] = useState([]);
 
 
   const [data, setData] = useState({
@@ -1294,7 +1296,73 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
   }, [selectedNodeId]);
 
 
+  const handleCreate = () => {
+   
+    console.log(JSON.stringify(nodes)+"nodes");
+  //  alert(JSON.stringify(nodeData));
 
+     // Check if the target and source nodes exist in the right container
+  
+     const connection = edges.find((edge) => {
+      return edge.source === 'dataTable_1' && edge.target === 'sort_1';
+    });
+  
+//     if (connection) {
+    
+//       nodes.forEach((node) => {
+//         const { buildOrderBy } = node.data;
+//       });
+//       sqlArray.push({buildOrderBy : buildOrderBy});
+//     }
+
+// const sqlArray=[
+//   { buildSelect: '*' },
+// ];
+// nodes.forEach((node) => {
+//   if (node.data.selectedDatabase && node.data.selectedTable) {
+//     sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
+//   }
+//   const { buildOrderBy } = node.data;
+//   console.log(buildOrderBy);
+//   sqlArray.push({buildOrderBy : buildOrderBy});
+// });
+
+
+
+
+const sqlArray = [
+  { buildSelect: '*' },
+];
+
+if (connection) {
+  alert(JSON.stringify(connection)+"connection");
+  nodes.forEach((node) => {
+    if (node.data.selectedDatabase && node.data.selectedTable) {
+      sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
+    }
+    const { buildOrderBy } = node.data;
+    sqlArray.push({ buildOrderBy: buildOrderBy });
+  });
+} else {
+  alert("else");
+  nodes.forEach((node) => {
+    if (node.data.selectedDatabase && node.data.selectedTable) {
+      sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
+    }
+  });
+}
+
+
+const output = JSON.stringify(sqlArray);
+console.log(output);
+
+
+  };
+
+  const handleCancel = () => {
+    // Reset the newArray to an empty array
+   // setNewArray([]);
+  };
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
     // You can use any UI component or CSS for styling
@@ -1351,6 +1419,8 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
                     onDragOver={onDragOver}
                     onElementsRemove={handleElementsRemove}
                     onNodeClick={handleNodeClick}
+                    nodeData={nodeData}
+            setNodeData={setNodeData}
                     // nodeTypes={nodesTypesRightContainer}
                     // nodeTypes={nodeTypes}
                     fitView
@@ -1369,7 +1439,10 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
             </div>
 
           </div>
-
+          <div className="create-cancel">
+        <button className="btn btn-success" type="button" onClick={handleCreate}>Create</button>
+        <button className="btn btn-default" type="button" onClick={handleCancel}>Cancel</button>
+      </div>
         </div>
       </form>
     </div>
