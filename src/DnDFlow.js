@@ -550,12 +550,23 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
 
-  const handleSortSubmit = (selectedNodeId, name, selectedColumns, isChecked, 
+  const handleSortSubmit = (selectedNodeId, name,buildOrderBy, selectedColumns, isChecked, 
+    thenByIsChecked, 
     selectedThenByColumns, showAdditionalinputlength) => {
+    //   let isCheckedValue;
+    //   if (isChecked) {
+    //     isCheckedValue = "DESC";
+    // } else {
+    //   isCheckedValue = "ASC";
+    // }
+    alert(JSON.stringify(selectedColumns)+"selectedColumnsSORTSUBMIT");
+      alert(selectedColumns+"selectedColumns"+selectedThenByColumns+"--selectedThenByColumns");
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
       const updatedNodes = nodes.map((node) => {
         if (node.id === selectedNodeId) {
+        //   const buildOrderBy = [selectedColumns,selectedThenByColumns];
+        // alert(JSON.stringify(buildOrderBy)+"buildOrderBySORTSUBMIT");
           return {
             ...node,
             data: {
@@ -564,8 +575,10 @@ const DnDFlow = () => {
               
               // selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
               // selectedTable: node.data.selectedTable,
-              buildOrderBy: selectedColumns,
+              buildOrderBy,
+              selectedColumns,
               isChecked,
+              thenByIsChecked,
               selectedThenByColumns,
               showAdditionalinputlength
             },
@@ -586,8 +599,10 @@ const DnDFlow = () => {
       ...prevNodeData,
       [selectedNodeId]: {
         name,
-        buildOrderBy: selectedColumns,
+        buildOrderBy,
+        selectedColumns,
         isChecked,
+        thenByIsChecked,
         selectedThenByColumns,
         showAdditionalinputlength
         //   selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
@@ -820,11 +835,11 @@ const DnDFlow = () => {
           // set the font size for the label
           database: selectedDatabaseNames, // Set the selected database name
           table: selectedTableNames,
-          selectedDatabase: initialDatabase,
-          selectedTable: initialTable,
-          buildOrderBy:initialColumn,
-          isChecked:'false',
-          selectedThenByColumns:[]
+          // selectedDatabase: initialDatabase,
+          // selectedTable: initialTable,
+          // buildOrderBy:initialColumn,
+          // isChecked:'false',
+          // selectedThenByColumns:[]
         },
 
 
@@ -871,15 +886,28 @@ const DnDFlow = () => {
           newNode.maxConnections = Infinity; // Default to unlimited connections
           break;
       }
-
+if(newNode.alt === 'dataTable'){
+  // newNode.data.selectedDatabase = initialDatabase;
+  // newNode.data.buildOrderBy = initialColumn;
+  newNode.data.selectedDatabase = initialDatabase;
+  newNode.data.selectedTable =  initialTable;
+}
+if(newNode.alt === 'sort'){
+  
+  newNode.data.buildOrderBy= initialColumn;
+  newNode.data.selectedColumns = initialColumn;
+  newNode.data.isChecked=false;
+  newNode.data.thenByIsChecked=false;
+  newNode.data.selectedThenByColumns=[];
+}
       // Update the selectedDatabase and selectedTable states in the parent component
       setSelectedDatabase(initialDatabase);
       setSelectedTable(initialTable);
       setSelectedColumn(initialColumn);
       setNodes((nodes) => nodes.concat(newNode));
       // Update the droppedNodes array with the new node
-      //setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode]);
-      setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
+      setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode.id]);
+     // setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
       // Update the droppedNodes state by adding the new node
       // setDroppedNodes((droppedNodes) => [...droppedNodes, newNode]);
 
@@ -955,7 +983,7 @@ const DnDFlow = () => {
 
 
     },
-    [reactFlowInstance, setNodes, setDroppedNodes, nodeData]
+    [reactFlowInstance, setNodes, setDroppedNodes, nodeData, droppedNodes]
   );
 
   // Function to close the popup window
@@ -1031,14 +1059,16 @@ const DnDFlow = () => {
         data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
-      const selectedColumns = node.data.buildOrderBy;
+      const selectedColumns = node.data.selectedColumns;
+      alert(JSON.stringify(selectedColumns)+"node.data.buildOrderBy");
     const isChecked = node.data.isChecked;
-let isCheckedValue;
-    if(isChecked === "DESC"){
-      isCheckedValue = 'true';
-    }else{
-      isCheckedValue = 'false';
-    }
+    alert(JSON.stringify(isChecked)+"isChecked");
+// let isCheckedValue;
+//     if(isChecked === "DESC"){
+//       isCheckedValue = 'true';
+//     }else{
+//       isCheckedValue = 'false';
+//     }
 
 
       // Check if the Sort node is connected to a DataTable node
@@ -1096,7 +1126,8 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
           setEdges={setEdges}
           columns={columns}
           firstColumn={selectedColumns}
-          isCheckedValue = {isCheckedValue}
+          isCheckedValue = {node.data.isChecked}
+          thenByIsCheckedValue = {node.data.thenByIsChecked}
           selectedThenByColumnValue={node.data.selectedThenByColumns}
           showAdditionalinputlength={node.data.showAdditionalinputlength}
         />;
@@ -1297,8 +1328,33 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
 
 
   const handleCreate = () => {
-   
+  alert(JSON.stringify(droppedNodes)+"droppednodesid");
     console.log(JSON.stringify(nodes)+"nodes");
+
+    const sqlArray = [
+      { buildSelect: '*' },
+    ];
+    droppedNodes.forEach((droppedNodeId) => {
+      const droppedNode = nodes.find((node) => node.id === droppedNodeId);
+    
+      if (droppedNode) {
+        if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
+          sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
+        }
+        const { buildOrderBy } = droppedNode.data;
+        alert(JSON.stringify(buildOrderBy) + "buildOrderBy");
+        if(buildOrderBy){
+          sqlArray.push({ buildOrderBy: buildOrderBy });
+        }
+        
+      }
+    });
+
+    console.log(JSON.stringify(sqlArray)+"firstsqlArray");
+
+
+
+
   //  alert(JSON.stringify(nodeData));
 
      // Check if the target and source nodes exist in the right container
@@ -1306,57 +1362,6 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
      const connection = edges.find((edge) => {
       return edge.source === 'dataTable_1' && edge.target === 'sort_1';
     });
-  
-//     if (connection) {
-    
-//       nodes.forEach((node) => {
-//         const { buildOrderBy } = node.data;
-//       });
-//       sqlArray.push({buildOrderBy : buildOrderBy});
-//     }
-
-// const sqlArray=[
-//   { buildSelect: '*' },
-// ];
-// nodes.forEach((node) => {
-//   if (node.data.selectedDatabase && node.data.selectedTable) {
-//     sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
-//   }
-//   const { buildOrderBy } = node.data;
-//   console.log(buildOrderBy);
-//   sqlArray.push({buildOrderBy : buildOrderBy});
-// });
-
-
-
-
-const sqlArray = [
-  { buildSelect: '*' },
-];
-
-if (connection) {
-  alert(JSON.stringify(connection)+"connection");
-  nodes.forEach((node) => {
-    if (node.data.selectedDatabase && node.data.selectedTable) {
-      sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
-    }
-    const { buildOrderBy } = node.data;
-    sqlArray.push({ buildOrderBy: buildOrderBy });
-  });
-} else {
-  alert("else");
-  nodes.forEach((node) => {
-    if (node.data.selectedDatabase && node.data.selectedTable) {
-      sqlArray.push({ buildTableName: `${node.data.selectedDatabase.name}.${node.data.selectedTable.name}` });
-    }
-  });
-}
-
-
-const output = JSON.stringify(sqlArray);
-console.log(output);
-
-
   };
 
   const handleCancel = () => {
@@ -1421,6 +1426,8 @@ console.log(output);
                     onNodeClick={handleNodeClick}
                     nodeData={nodeData}
             setNodeData={setNodeData}
+            droppedNodes={droppedNodes}
+            setDroppedNodes={setDroppedNodes}
                     // nodeTypes={nodesTypesRightContainer}
                     // nodeTypes={nodeTypes}
                     fitView

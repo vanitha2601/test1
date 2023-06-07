@@ -5,12 +5,13 @@ import '../css/dataTablePopUp.css';
 const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, onValueSubmit,
   nodes, setNodes, droppedNodes, setDroppedNodes, data,
   firstColumn,
-  columns, isCheckedValue,
+  columns, isCheckedValue, thenByIsCheckedValue,
   selectedThenByColumnValue, showAdditionalinputlength
 }) => {
-
+  alert(isCheckedValue + "insidepopupwindow");
   alert(showAdditionalinputlength + "showAdditionalinputlength");
   const [isChecked, setIsChecked] = useState(isCheckedValue);
+  const [thenByIsChecked, setThenByIsChecked] = useState(thenByIsCheckedValue);
   const [selectedColumns, setSelectedColumns] = useState(firstColumn);
   const [selectedThenByColumns, setSelectedThenByColumns] = useState(
     selectedThenByColumnValue.length > 0 ? selectedThenByColumnValue : ['']
@@ -24,19 +25,19 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
   useEffect(() => {
     setShowAdditionalInputs(showAdditionalinputlength > 0 ? [{}] : []);
 
-    alert(JSON.stringify(selectedThenByColumnValue) + "selectedThenByColumnValue");
     setName(nodeName);
-    setSelectedColumns(selectedColumns);
-    setIsChecked(isChecked);
+    setSelectedColumns(firstColumn);
+    setIsChecked(isCheckedValue);
+    setThenByIsChecked(thenByIsCheckedValue);
     setSelectedThenByColumns(selectedThenByColumnValue);
     //  setShowAdditionalInputs(showAdditionalinputlength);
-  }, [nodeName, selectedColumns, isChecked, selectedThenByColumnValue, showAdditionalinputlength]
+  }, [nodeName, firstColumn, isCheckedValue, thenByIsCheckedValue, selectedThenByColumnValue, showAdditionalinputlength]
   );
 
 
 
   const renderAdditionalInputs = () => {
-    alert(JSON.stringify(showAdditionalinputlength) + "showAdditionalinputlength**********");
+    // alert(JSON.stringify(showAdditionalinputlength) + "showAdditionalinputlength**********");
     if (showAdditionalInputs.length > 0) {
       return selectedThenByColumns.map((column, index) => (
         <div key={index}>
@@ -56,8 +57,8 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
             <label>
               <input
                 type="checkbox"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
+                checked={thenByIsChecked[index]}
+                onChange={(event) => handleThenByCheckboxChange(event, index)}
               />
               Descending
             </label>
@@ -105,50 +106,36 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(showAdditionalInputs.length);
-
-    alert('showAdditionalInputs:', showAdditionalInputs.length);
-
-    const buildOrderBy = selectedColumns;
-    alert(JSON.stringify(isChecked) + "isChecked");
+    alert(JSON.stringify(selectedColumns) + "selectedColumnsHANDLESUBMIT");
+    let buildOrderBy = selectedColumns;
+    alert(JSON.stringify(isChecked) + "isCheckedisCheckedisChecked");
     alert(JSON.stringify(selectedColumns) + "selectedColumns");
     const showAdditionalinputlength = showAdditionalInputs.length;
-    // setShowAdditionalInputs(true);
-    onValueSubmit(selectedNodeId, name, selectedColumns, isChecked, selectedThenByColumns, showAdditionalinputlength);
+
+
+    buildOrderBy += isChecked ? ' DESC' : '';
+
+    if (selectedThenByColumns.length > 0) {
+      buildOrderBy += ',' + selectedThenByColumns.join(',');
+    }
+
+    buildOrderBy += thenByIsChecked ? ' DESC' : '';
+
+    console.log(buildOrderBy);
+
+
+    alert(JSON.stringify(buildOrderBy) + "insidepopupsubmit");
+
+
+    onValueSubmit(selectedNodeId, name, buildOrderBy, selectedColumns,
+      isChecked, thenByIsChecked, selectedThenByColumns, showAdditionalinputlength);
     // Perform the submit action with the formData
     // ...
 
 
   };
 
-  // const handleColumnChange = (event) => {
-
-  //     const selectedColumnName = event.target.value;
-  //     setSelectedColumns(selectedColumnName);
-
-  // };
-  // const handleThenByColumnChange = (event) => {
-  //   const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-  //   setSelectedThenByColumns(selectedOptions);
-  // };
-  // const handleThenByColumnChange = (event, index) => {
-  //   const selectedValue = event.target.value;
-  //   setSelectedThenByColumns((prevSelectedColumns) => {
-  //     const updatedColumns = [...prevSelectedColumns];
-  //     updatedColumns[index] = selectedValue;
-  //     return updatedColumns;
-  //   });
-  // };
-  // Handler for selecting a column in the sort popup
-  // const handleThenByColumnChange = (event, index) => {
-  //   const { value } = event.target;
-  //   setSelectedThenByColumns((prevColumns) => {
-  //     const updatedColumns = [...prevColumns];
-  //     updatedColumns[index] = value;
-  //     return updatedColumns;
-  //   });
-  //  // setShowAdditionalInputs(true);
-  // };
+  
 
   const handleThenByColumnChange = (event, index) => {
     const { value } = event.target;
@@ -159,17 +146,6 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
     setSelectedThenByColumns(updatedColumns);
   };
 
-  // const handleThenByColumnChange = (event, index) => {
-  //   const { value } = event.target;
-
-  //   // Update the selectedThenByColumns state with the selected value
-  //   const updatedColumns = [...selectedThenByColumns];
-  //   updatedColumns[index] = value;
-  //   setSelectedThenByColumns(updatedColumns);
-
-  //   // Set showAdditionalInputs to true to show the additional inputs
-  //   setShowAdditionalInputs(true);
-  // };
 
   const handleColumnChange = (event) => {
     const selectedColumnName = event.target.value;
@@ -187,32 +163,16 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   const handleCheckboxChange = (event) => {
     const isChecked = event.target.checked;
+    alert(isChecked);
     setIsChecked(isChecked);
-    //setIsChecked(!isChecked);
-    alert(JSON.stringify(selectedColumns) + "selectedColumns");
-    setSelectedColumns(selectedColumns);
-    alert(JSON.stringify(selectedColumns) + "selectedColumns");
-    if (isChecked) {
-      setIsChecked("DESC");
-    } else {
-      setIsChecked("ASC");
-    }
-
   };
 
-  const handleThenByCheckboxChange = (event) => {
+  const handleThenByCheckboxChange = (event, index) => {
     const isChecked = event.target.checked;
-    setIsChecked(isChecked);
-    //setIsChecked(!isChecked);
-    alert(JSON.stringify(selectedThenByColumns) + "selectedColumns");
-    setSelectedThenByColumns(selectedThenByColumns);
-    alert(JSON.stringify(selectedThenByColumns) + "selectedColumns");
-    if (isChecked) {
-      setIsChecked("DESC");
-    } else {
-      setIsChecked("ASC");
-    }
-
+    setThenByIsChecked((prevIsChecked) => ({
+      ...prevIsChecked,
+      [index]: isChecked,
+    }));
   };
 
 
@@ -277,52 +237,7 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
               </label>
             </div>
 
-            {/* <div>
-      {renderAdditionalInputs()}
-    </div> */}
 
-            {/* {showAdditionalInputs && (
-          <div>
-        <div className="form-group">
-          <label htmlFor="dropdown">Then By</label>
-          
-        
-        <select
-              id="dropdown"
-              className="form-control"
-           
-              value={selectedColumns} 
-               onChange={handleThenByColumnChange}
-            >
-              {renderColumnOptions()}
-            </select>
-     
-        </div>
-        <div className="checkbox-container">
-        <label>
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={handleThenByCheckboxChange}
-          />
-         Descending
-        </label>
-      </div>  
-      </div>
-        )} */}
-
-            {/* <button type='button' className='btn btn-primary' onClick={handleAddAnotherClick}>
-{showAdditionalInputs ? 'HIDE' : 'ADD ANOTHER'}
-  </button> */}
-
-            {/* {showAdditionalInputs.length > 0  && (
-  <div>
-    
-    {renderAdditionalInputs()}
-  </div>
-)}  */}
-
-            {/* {showAdditionalInputs.length > 0 && renderAdditionalInputs()} */}
             {renderAdditionalInputs()}
             <div className="form-group">
               <button type='button' className='btn btn-primary' onClick={handleAddAnotherClick}>
