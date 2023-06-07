@@ -522,6 +522,7 @@ const DnDFlow = () => {
               selectedDatabase: selectedDatabase,
               selectedTable: selectedTable,
               columns: columns
+              
 
             },
             // Set the desired label for the node
@@ -891,6 +892,7 @@ if(newNode.alt === 'dataTable'){
   // newNode.data.buildOrderBy = initialColumn;
   newNode.data.selectedDatabase = initialDatabase;
   newNode.data.selectedTable =  initialTable;
+  newNode.data.selectedColumns =  initialColumn;
 }
 if(newNode.alt === 'sort'){
   
@@ -1025,7 +1027,8 @@ if(newNode.alt === 'sort'){
     // Extract the selected values from the node
     const selectedDatabase = node.data.selectedDatabase;
     const selectedTable = node.data.selectedTable;
-    
+    const selectedColumns = node.data.selectedColumns;
+    alert(JSON.stringify(selectedColumns)+"INIALNODEDOUBLECLICK");
 
     const selectedDatabaseSort = data.databases.find((database) => database.name === selectedDatabase);
 
@@ -1059,8 +1062,8 @@ if(newNode.alt === 'sort'){
         data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
-      const selectedColumns = node.data.selectedColumns;
-      alert(JSON.stringify(selectedColumns)+"node.data.buildOrderBy");
+     
+      alert(JSON.stringify(selectedColumns)+"node.data.selectedColumnsINSIDESORT");
     const isChecked = node.data.isChecked;
     alert(JSON.stringify(isChecked)+"isChecked");
 // let isCheckedValue;
@@ -1107,7 +1110,13 @@ if(newNode.alt === 'sort'){
         alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
        // alert(JSON.stringify(sortNodeData)+"sortNodeData");
         const columns = dataTableNodeData.selectedTable.columns;
-       
+        let selectedColumns;
+        if(columns.length>0){
+           selectedColumns = columns[0];
+        }else{
+          selectedColumns = '';
+        }
+      
 
 
 alert(JSON.stringify(node.data.selectedThenByColumns)+"node.data.selectedThenByColumns");
@@ -1150,6 +1159,11 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
             edges={edges}
             setEdges={setEdges}
             columns={[]} // Empty columns array
+            firstColumn={''}
+            isCheckedValue = {false}
+            thenByIsCheckedValue = {false}
+            selectedThenByColumnValue={[]}
+            showAdditionalinputlength={0}
           //  isCheckedValue={false}
           />
         );

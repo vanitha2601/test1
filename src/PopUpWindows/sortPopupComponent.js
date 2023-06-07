@@ -8,8 +8,8 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
   columns, isCheckedValue, thenByIsCheckedValue,
   selectedThenByColumnValue, showAdditionalinputlength
 }) => {
-  alert(isCheckedValue + "insidepopupwindow");
-  alert(showAdditionalinputlength + "showAdditionalinputlength");
+  alert(JSON.stringify(firstColumn)+"firstColumn");
+  alert(JSON.stringify(columns[0])+"columns[]0");
   const [isChecked, setIsChecked] = useState(isCheckedValue);
   const [thenByIsChecked, setThenByIsChecked] = useState(thenByIsCheckedValue);
   const [selectedColumns, setSelectedColumns] = useState(firstColumn);
@@ -37,7 +37,6 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
 
   const renderAdditionalInputs = () => {
-    // alert(JSON.stringify(showAdditionalinputlength) + "showAdditionalinputlength**********");
     if (showAdditionalInputs.length > 0) {
       return selectedThenByColumns.map((column, index) => (
         <div key={index}>
@@ -106,10 +105,8 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(JSON.stringify(selectedColumns) + "selectedColumnsHANDLESUBMIT");
+    alert(JSON.stringify(selectedColumns)+"selectedColumns");
     let buildOrderBy = selectedColumns;
-    alert(JSON.stringify(isChecked) + "isCheckedisCheckedisChecked");
-    alert(JSON.stringify(selectedColumns) + "selectedColumns");
     const showAdditionalinputlength = showAdditionalInputs.length;
 
 
@@ -122,10 +119,6 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
     buildOrderBy += thenByIsChecked ? ' DESC' : '';
 
     console.log(buildOrderBy);
-
-
-    alert(JSON.stringify(buildOrderBy) + "insidepopupsubmit");
-
 
     onValueSubmit(selectedNodeId, name, buildOrderBy, selectedColumns,
       isChecked, thenByIsChecked, selectedThenByColumns, showAdditionalinputlength);
@@ -150,8 +143,6 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
   const handleColumnChange = (event) => {
     const selectedColumnName = event.target.value;
     setSelectedColumns(selectedColumnName);
-    alert(selectedColumnName);
-
   };
 
 
@@ -163,7 +154,6 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   const handleCheckboxChange = (event) => {
     const isChecked = event.target.checked;
-    alert(isChecked);
     setIsChecked(isChecked);
   };
 
