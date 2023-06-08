@@ -10,22 +10,50 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
   const [name, setName] = useState(nodeName);
   const [selectedDatabase, setSelectedDatabase] = useState(data.databases[0]);
   const [selectedTable, setSelectedTable] = useState(selectedDatabase.tables[0]);
+  const [selectedTableColumns, setSelectedTableColumns] = useState([]);
 
   const handleDatabaseChange = (event) => {
     const selectedDatabaseName = event.target.value;
     const selectedDatabase = data.databases.find(
       (database) => database.name === selectedDatabaseName
     );
+
     setSelectedDatabase(selectedDatabase);
     // Find the corresponding table for the selected database
     const selectedTable = selectedDatabase.tables[0]; // Change this logic based on your requirements
     setSelectedTable(selectedTable);
+
+    alert(JSON.stringify(selectedTable) + "selectedTableselectedTable");
+
+    if (selectedTable) {
+      const columns = selectedTable.columns;
+      setSelectedTableColumns(columns);
+      alert(JSON.stringify(selectedTableColumns));
+    }
+
   };
 
 
-  const handleTableChange = (event) => {
+  const handleTableChange = (event, selectedDatabase) => {
     const selectedTableName = event.target.value;
-    setSelectedTable(selectedTable);
+    let selectedTable = null;
+    let columns = [];
+    if (selectedDatabase) {
+      // Find the selected table based on the selectedTableName within the selected database
+      selectedTable = selectedDatabase.tables.find(
+        (table) => table.name === selectedTableName
+      );
+    }
+    if (selectedTable) {
+      columns = selectedTable.columns;
+    }
+    setSelectedTable({
+      name: selectedTableName,
+      columns: columns,
+    });
+    alert(JSON.stringify(selectedTableName));
+
+    setSelectedTableColumns(columns);
   };
 
   const renderDatabaseOptions = () => {
@@ -54,6 +82,7 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
 
     setName(nodeName);
     setSelectedTable(selectedTable);
+    setSelectedTableColumns(selectedTableColumns);
     // Find the selected node based on the selectedNodeId
 
     const selectedNode = nodes.find((node) => node.id === selectedNodeId);
@@ -62,6 +91,7 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
       // Update the selectedDatabase and selectedTable states based on the selected node's values
       setSelectedDatabase(selectedNode.data.selectedDatabase);
       setSelectedTable(selectedNode.data.selectedTable);
+      setSelectedTableColumns(selectedNode.data.selectedTable.columns);
     }
   }, [nodeName], [selectedNodeId], [nodes]);
 
@@ -90,7 +120,10 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
     onClose(nodes);
   };
   const handleSubmit = (event) => {
-    onValueSubmit(selectedNodeId, name, selectedDatabase, selectedTable);
+    console.log(JSON.stringify(selectedDatabase) + "selectedDatabase");
+    console.log(JSON.stringify(selectedTable) + "selectedTable");
+    console.log(JSON.stringify(selectedTableColumns) + "selectedTableColumns");
+    onValueSubmit(selectedNodeId, name, selectedDatabase, selectedTable, selectedTableColumns);
   };
 
 
@@ -137,8 +170,9 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
             <div className="form-group">
               <label htmlFor="dropdown">List of Table</label>
 
-              <select id="table" className="form-control" value={selectedTable}
-                onChange={handleTableChange}
+              <select id="table" className="form-control" value={selectedTable.name}
+                onChange={(event) => handleTableChange(event, selectedDatabase)}
+
               >
                 {renderTableOptions()}
               </select>
