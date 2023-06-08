@@ -489,7 +489,7 @@ const DnDFlow = () => {
 
 
 
-  const handleDataTableSubmit = (selectedNodeId, name, selectedDatabase, selectedTable, columns) => {
+  const handleDataTableSubmit = (selectedNodeId, name, selectedDatabase, selectedTable) => {
 
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
@@ -501,8 +501,7 @@ const DnDFlow = () => {
               ...node.data,
               label: name,
               selectedDatabase: selectedDatabase,
-              selectedTable: selectedTable,
-              columns: columns
+              selectedTable: selectedTable
 
             },
             // Set the desired label for the node
@@ -523,15 +522,14 @@ const DnDFlow = () => {
       [selectedNodeId]: {
         name,
         selectedDatabase,
-        selectedTable,
-        columns
+        selectedTable
       },
     }));
 
     setShowPopup(false);
   };
 
-  const handleSortSubmit = (selectedNodeId, name, selectedColumns) => {
+  const handleSortSubmit = (selectedNodeId, name) => {
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
       const updatedNodes = nodes.map((node) => {
@@ -541,9 +539,8 @@ const DnDFlow = () => {
             data: {
               ...node.data,
               label: name,
-              // selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
-              // selectedTable: node.data.selectedTable,
-              selectedColumns: selectedColumns
+              selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
+              selectedTable: node.data.selectedTable,
             },
             // Set the desired label for the node
           };
@@ -562,7 +559,6 @@ const DnDFlow = () => {
       ...prevNodeData,
       [selectedNodeId]: {
         name,
-        selectedColumns: selectedColumns
         //   selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
         // selectedTable: node.data.selectedTable,
       },
@@ -1001,12 +997,15 @@ const DnDFlow = () => {
         nodes={nodes} // Pass the nodes array as a prop
         droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
         setDroppedNodes={setDroppedNodes}
-
         data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
 
       // Check if the Sort node is connected to a DataTable node
+      // const connectedDataTable = edges.some(
+      //   (edge) =>
+      //     edge.target === node.id && nodes[edge.source]?.alt === 'dataTable');
+
       const connectedDataTable = edges.some((edge) => {
         const isTargetMatch = edge.target === selectedNodeId;
         console.log('Edge target:', edge.target);
@@ -1016,6 +1015,9 @@ const DnDFlow = () => {
         console.log('Alt:', sourceNode.alt);
         return isTargetMatch && isDataTableSource;
       });
+
+
+
       if (connectedDataTable) {
         // Sort node is connected to a DataTable node
         // Perform your desired actions here
@@ -1035,7 +1037,7 @@ const DnDFlow = () => {
 
         const sourceId = dataTableNode.source;
         const dataTableNodeData = nodeData[sourceId];
-        alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
+
         const columns = dataTableNodeData.selectedTable.columns;
 
         //console.log('Tables:', tables);
@@ -1056,30 +1058,17 @@ const DnDFlow = () => {
           edges={edges}
           setEdges={setEdges}
           columns={columns}
-          firstColumn={node.data.selectedColumns}
+        // firstColumn={selectedTable.columns}
         />;
+
       } else {
         // Sort node is not connected to a DataTable node
+        // Perform other actions if desired
         console.log('Sort node is not connected to a DataTable node');
-
-        // Handle the popup window for sort nodes with empty columns
-        popupContent = (
-          <SortPopupComponent
-            onClose={closePopup}
-            onRemoveTable={handleRemoveTable}
-            selectedNodeId={selectedNodeId}
-            nodeName={node.data.label}
-            onValueSubmit={handleSortSubmit}
-            setNodes={setNodes}
-            nodes={nodes}
-            droppedNodes={droppedNodes}
-            setDroppedNodes={setDroppedNodes}
-            edges={edges}
-            setEdges={setEdges}
-            columns={[]} // Empty columns array
-          />
-        );
       }
+
+
+
 
     } else if ((selectedNodeId).match(/^filter/)) {
       // Handle the popup window for filter nodes
