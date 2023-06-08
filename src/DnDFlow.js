@@ -985,7 +985,7 @@ if(newNode.alt === 'sort'){
 
 
     },
-    [reactFlowInstance, setNodes, setDroppedNodes, nodeData, droppedNodes]
+    [reactFlowInstance, setNodes, setDroppedNodes]
   );
 
   // Function to close the popup window
@@ -1110,12 +1110,12 @@ if(newNode.alt === 'sort'){
         alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
        // alert(JSON.stringify(sortNodeData)+"sortNodeData");
         const columns = dataTableNodeData.selectedTable.columns;
-        let selectedColumns;
-        if(columns.length>0){
-           selectedColumns = columns[0];
-        }else{
-          selectedColumns = '';
-        }
+        // let selectedColumns;
+        // if(columns.length>0){
+        //    selectedColumns = columns[0];
+        // }else{
+        //   selectedColumns = '';
+        // }
       
 
 
