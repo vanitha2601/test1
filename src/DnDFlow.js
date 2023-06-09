@@ -346,13 +346,13 @@ const DnDFlow = () => {
           {
             name: 'Accounts Table',
             columns: ['id', 'name', 'age', 'salary', 'address'],
-          //  columns: [
-          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-          //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
-          //   { name: 'age', dataType: 'int', data: [30, 35, 28, 42, 39] },
-          //   { name: 'salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
-          //   { name: 'address', dataType: 'varchar', data: ['New York', 'London', 'Paris', 'Tokyo', 'Sydney'] },
-          // ],
+            //  columns: [
+            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
+            //   { name: 'age', dataType: 'int', data: [30, 35, 28, 42, 39] },
+            //   { name: 'salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
+            //   { name: 'address', dataType: 'varchar', data: ['New York', 'London', 'Paris', 'Tokyo', 'Sydney'] },
+            // ],
           },
           {
             name: 'Employee Table',
@@ -373,20 +373,20 @@ const DnDFlow = () => {
           {
             name: 'Boolean Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-          //  columns: [
-          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-          //   { name: 'companyName', dataType: 'varchar', data: ['Company A', 'Company B', 'Company C', 'Company D', 'Company E'] },
-          //   { name: 'isActive', dataType: 'boolean', data: [true, false, true, true, false] },
-          // ],
+            //  columns: [
+            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'companyName', dataType: 'varchar', data: ['Company A', 'Company B', 'Company C', 'Company D', 'Company E'] },
+            //   { name: 'isActive', dataType: 'boolean', data: [true, false, true, true, false] },
+            // ],
           },
           {
             name: 'Simons Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-          // columns: [
-          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-          //   { name: 'companyName', dataType: 'varchar', data: ['Company X', 'Company Y', 'Company Z', 'Company W', 'Company V'] },
-          //   { name: 'isActive', dataType: 'boolean', data: [true, true, false, false, true] },
-          // ],
+            // columns: [
+            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'companyName', dataType: 'varchar', data: ['Company X', 'Company Y', 'Company Z', 'Company W', 'Company V'] },
+            //   { name: 'isActive', dataType: 'boolean', data: [true, true, false, false, true] },
+            // ],
           },
           {
             name: 'Products Table',
@@ -406,23 +406,23 @@ const DnDFlow = () => {
           {
             name: 'Junior Table',
             columns: ['id', 'name', 'gender', 'roles', 'yearsofexperionce'],
-          //  columns: [
-          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-          //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
-          //   { name: 'gender', dataType: 'varchar', data: ['Male', 'Female', 'Male', 'Female', 'Male'] },
-          //   { name: 'role', dataType: 'varchar', data: ['Junior Developer', 'Junior Designer', 'Junior Analyst', 'Junior Engineer', 'Junior Manager'] },
-          //   { name: 'yearsOfExperience', dataType: 'int', data: [2, 3, 1, 4, 2] },
-          // ],
+            //  columns: [
+            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
+            //   { name: 'gender', dataType: 'varchar', data: ['Male', 'Female', 'Male', 'Female', 'Male'] },
+            //   { name: 'role', dataType: 'varchar', data: ['Junior Developer', 'Junior Designer', 'Junior Analyst', 'Junior Engineer', 'Junior Manager'] },
+            //   { name: 'yearsOfExperience', dataType: 'int', data: [2, 3, 1, 4, 2] },
+            // ],
           },
           {
             name: 'Senior Table',
             columns: ['id', 'name', 'roles', 'yearsofexperionce'],
-          //  columns: [
-          //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-          //   { name: 'name', dataType: 'varchar', data: ['Vanitha', 'Jane', 'Aaron', 'Emily', 'Sanvi'] },
-          //   { name: 'role', dataType: 'varchar', data: ['Senior Developer', 'Senior Designer', 'Senior Analyst', 'Senior Engineer', 'Senior Manager'] },
-          //   { name: 'yearsOfExperience', dataType: 'int', data: [5, 6, 7, 8, 9] },
-          // ],
+            //  columns: [
+            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
+            //   { name: 'name', dataType: 'varchar', data: ['Vanitha', 'Jane', 'Aaron', 'Emily', 'Sanvi'] },
+            //   { name: 'role', dataType: 'varchar', data: ['Senior Developer', 'Senior Designer', 'Senior Analyst', 'Senior Engineer', 'Senior Manager'] },
+            //   { name: 'yearsOfExperience', dataType: 'int', data: [5, 6, 7, 8, 9] },
+            // ],
           },
         ],
       },
@@ -522,7 +522,7 @@ const DnDFlow = () => {
               selectedDatabase: selectedDatabase,
               selectedTable: selectedTable,
               columns: columns
-              
+
 
             },
             // Set the desired label for the node
@@ -551,32 +551,28 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
 
-  const handleSortSubmit = (selectedNodeId, name,buildOrderBy, selectedColumns, isChecked, 
-    thenByIsChecked, 
+  const handleSortSubmit = (selectedNodeId, name, buildOrderBy, selectedTable, selectedColumns, isChecked,
+    thenByIsChecked,
     selectedThenByColumns, showAdditionalinputlength) => {
-    //   let isCheckedValue;
-    //   if (isChecked) {
-    //     isCheckedValue = "DESC";
-    // } else {
-    //   isCheckedValue = "ASC";
-    // }
-    alert(JSON.stringify(selectedColumns)+"selectedColumnsSORTSUBMIT");
-      alert(selectedColumns+"selectedColumns"+selectedThenByColumns+"--selectedThenByColumns");
+    console.log(showAdditionalinputlength + "showAdditionalinputlength");
+    console.log(JSON.stringify(selectedColumns) + "selectedColumnsSORTSUBMIT");
+    console.log(selectedColumns + "selectedColumns" + selectedThenByColumns + "--selectedThenByColumns");
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
       const updatedNodes = nodes.map((node) => {
         if (node.id === selectedNodeId) {
-        //   const buildOrderBy = [selectedColumns,selectedThenByColumns];
-        // alert(JSON.stringify(buildOrderBy)+"buildOrderBySORTSUBMIT");
+          //   const buildOrderBy = [selectedColumns,selectedThenByColumns];
+          // alert(JSON.stringify(buildOrderBy)+"buildOrderBySORTSUBMIT");
           return {
             ...node,
             data: {
               ...node.data,
               label: name,
-              
+
               // selectedDatabase: node.data.selectedDatabase, // Maintain the selectedDatabase value
               // selectedTable: node.data.selectedTable,
               buildOrderBy,
+              selectedTable,
               selectedColumns,
               isChecked,
               thenByIsChecked,
@@ -601,6 +597,7 @@ const DnDFlow = () => {
       [selectedNodeId]: {
         name,
         buildOrderBy,
+        selectedTable,
         selectedColumns,
         isChecked,
         thenByIsChecked,
@@ -887,21 +884,21 @@ const DnDFlow = () => {
           newNode.maxConnections = Infinity; // Default to unlimited connections
           break;
       }
-if(newNode.alt === 'dataTable'){
-  // newNode.data.selectedDatabase = initialDatabase;
-  // newNode.data.buildOrderBy = initialColumn;
-  newNode.data.selectedDatabase = initialDatabase;
-  newNode.data.selectedTable =  initialTable;
-  newNode.data.selectedColumns =  initialColumn;
-}
-if(newNode.alt === 'sort'){
-  
-  newNode.data.buildOrderBy= initialColumn;
-  newNode.data.selectedColumns = initialColumn;
-  newNode.data.isChecked=false;
-  newNode.data.thenByIsChecked=false;
-  newNode.data.selectedThenByColumns=[];
-}
+      if (newNode.alt === 'dataTable') {
+        // newNode.data.selectedDatabase = initialDatabase;
+        // newNode.data.buildOrderBy = initialColumn;
+        newNode.data.selectedDatabase = initialDatabase;
+        newNode.data.selectedTable = initialTable;
+        newNode.data.selectedColumns = initialColumn;
+      }
+      if (newNode.alt === 'sort') {
+
+        newNode.data.buildOrderBy = initialColumn;
+        newNode.data.selectedColumns = initialColumn;
+        newNode.data.isChecked = false;
+        newNode.data.thenByIsChecked = false;
+        newNode.data.selectedThenByColumns = [];
+      }
       // Update the selectedDatabase and selectedTable states in the parent component
       setSelectedDatabase(initialDatabase);
       setSelectedTable(initialTable);
@@ -909,7 +906,7 @@ if(newNode.alt === 'sort'){
       setNodes((nodes) => nodes.concat(newNode));
       // Update the droppedNodes array with the new node
       setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode.id]);
-     // setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
+      // setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
       // Update the droppedNodes state by adding the new node
       // setDroppedNodes((droppedNodes) => [...droppedNodes, newNode]);
 
@@ -951,14 +948,7 @@ if(newNode.alt === 'sort'){
         if ((newNode.id) in nodeData) {
           selectedNodeData = nodeData[newNode.id];
         }
-         alert(JSON.stringify(selectedNodeData));
-
-
-        // Handle the popup window for datatable nodes
-        // if (selectedNodeId in nodeData) {
-        //   selectedNodeData = nodeData[selectedNodeId];
-        // }
-        // Handle the popup window for sort nodes
+        console.log(JSON.stringify(selectedNodeData));
 
 
         popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
@@ -1020,7 +1010,7 @@ if(newNode.alt === 'sort'){
 
     // Open the popup when a node is double-clicked
     const selectedNode = node;
-    alert(JSON.stringify(selectedNode.data)+"selectedNode");
+    console.log(JSON.stringify(selectedNode.data.selectedTable) + "selectedNode");
 
     const selectedNodeId = selectedNode.id;
     setSelectedNodeId(selectedNodeId);
@@ -1028,7 +1018,7 @@ if(newNode.alt === 'sort'){
     const selectedDatabase = node.data.selectedDatabase;
     const selectedTable = node.data.selectedTable;
     const selectedColumns = node.data.selectedColumns;
-    alert(JSON.stringify(selectedColumns)+"INIALNODEDOUBLECLICK");
+    console.log(JSON.stringify(selectedTable) + "*********888INIALNODEDOUBLECLICK");
 
     const selectedDatabaseSort = data.databases.find((database) => database.name === selectedDatabase);
 
@@ -1062,18 +1052,10 @@ if(newNode.alt === 'sort'){
         data={data}
       />
     } else if ((selectedNodeId).match(/^sort/)) {
-     
-      alert(JSON.stringify(selectedColumns)+"node.data.selectedColumnsINSIDESORT");
-    const isChecked = node.data.isChecked;
-    alert(JSON.stringify(isChecked)+"isChecked");
-// let isCheckedValue;
-//     if(isChecked === "DESC"){
-//       isCheckedValue = 'true';
-//     }else{
-//       isCheckedValue = 'false';
-//     }
-
-
+      console.log(JSON.stringify(node.data.selectedTable) + "node.data.selectedTable");
+      console.log(JSON.stringify(selectedColumns) + "node.data.selectedColumnsINSIDESORT");
+      const isChecked = node.data.isChecked;
+      console.log(JSON.stringify(isChecked) + "isChecked");
       // Check if the Sort node is connected to a DataTable node
       const connectedDataTable = edges.some((edge) => {
         const isTargetMatch = edge.target === selectedNodeId;
@@ -1101,26 +1083,29 @@ if(newNode.alt === 'sort'){
 
           });
 
-        alert(JSON.stringify(dataTableNode)+"dataTableNode");
+        console.log(JSON.stringify(dataTableNode) + "dataTableNode");
 
         const targetId = dataTableNode.target;
         const sortNodeData = nodeData[targetId];
         const sourceId = dataTableNode.source;
         const dataTableNodeData = nodeData[sourceId];
-        alert(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
-       // alert(JSON.stringify(sortNodeData)+"sortNodeData");
+        console.log(JSON.stringify(dataTableNodeData) + "dataTableNodeData");
+        // alert(JSON.stringify(sortNodeData)+"sortNodeData");
+        const selectedTable = dataTableNodeData.selectedTable;
         const columns = dataTableNodeData.selectedTable.columns;
+        console.log(JSON.stringify(columns) + "COLUMSN**************");
         // let selectedColumns;
         // if(columns.length>0){
         //    selectedColumns = columns[0];
         // }else{
         //   selectedColumns = '';
         // }
-      
+
+        console.log(JSON.stringify(node.data.selectedTable) + "----CHECK------" + JSON.stringify(dataTableNodeData.selectedTable));
 
 
-alert(JSON.stringify(node.data.selectedThenByColumns)+"node.data.selectedThenByColumns");
-alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
+        console.log(JSON.stringify(node.data.selectedThenByColumns) + "node.data.selectedThenByColumns");
+        console.log(JSON.stringify(node.data.showAdditionalinputlength) + "length");
         // Handle the popup window for sort nodes
         popupContent = <SortPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
           onRemoveTable={handleRemoveTable}
@@ -1133,10 +1118,12 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
           setDroppedNodes={setDroppedNodes}
           edges={edges}
           setEdges={setEdges}
+          selectedPreviousTable={node.data.selectedTable}
+          selectedCurrentTable={selectedTable}
           columns={columns}
-          firstColumn={selectedColumns}
-          isCheckedValue = {node.data.isChecked}
-          thenByIsCheckedValue = {node.data.thenByIsChecked}
+          firstColumn={node.data.selectedColumns}
+          isCheckedValue={node.data.isChecked}
+          thenByIsCheckedValue={node.data.thenByIsChecked}
           selectedThenByColumnValue={node.data.selectedThenByColumns}
           showAdditionalinputlength={node.data.showAdditionalinputlength}
         />;
@@ -1160,8 +1147,8 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
             setEdges={setEdges}
             columns={[]} // Empty columns array
             firstColumn={''}
-            isCheckedValue = {false}
-            thenByIsCheckedValue = {false}
+            isCheckedValue={false}
+            thenByIsCheckedValue={false}
             selectedThenByColumnValue={[]}
             showAdditionalinputlength={0}
           //  isCheckedValue={false}
@@ -1342,45 +1329,45 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
 
 
   const handleCreate = () => {
-  alert(JSON.stringify(droppedNodes)+"droppednodesid");
-    console.log(JSON.stringify(nodes)+"nodes");
+    console.log(JSON.stringify(droppedNodes) + "droppednodesid");
+    console.log(JSON.stringify(nodes) + "nodes");
 
     const sqlArray = [
       { buildSelect: '*' },
     ];
     droppedNodes.forEach((droppedNodeId) => {
       const droppedNode = nodes.find((node) => node.id === droppedNodeId);
-    
+
       if (droppedNode) {
         if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
           sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
         }
         const { buildOrderBy } = droppedNode.data;
-        alert(JSON.stringify(buildOrderBy) + "buildOrderBy");
-        if(buildOrderBy){
+        console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
+        if (buildOrderBy) {
           sqlArray.push({ buildOrderBy: buildOrderBy });
         }
-        
+
       }
     });
 
-    console.log(JSON.stringify(sqlArray)+"firstsqlArray");
+    console.log(JSON.stringify(sqlArray) + "firstsqlArray");
 
 
 
 
-  //  alert(JSON.stringify(nodeData));
+    //  alert(JSON.stringify(nodeData));
 
-     // Check if the target and source nodes exist in the right container
-  
-     const connection = edges.find((edge) => {
+    // Check if the target and source nodes exist in the right container
+
+    const connection = edges.find((edge) => {
       return edge.source === 'dataTable_1' && edge.target === 'sort_1';
     });
   };
 
   const handleCancel = () => {
     // Reset the newArray to an empty array
-   // setNewArray([]);
+    // setNewArray([]);
   };
   const NodePopup = () => {
     // Render the popup window with the details of the selectedNode
@@ -1439,9 +1426,9 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
                     onElementsRemove={handleElementsRemove}
                     onNodeClick={handleNodeClick}
                     nodeData={nodeData}
-            setNodeData={setNodeData}
-            droppedNodes={droppedNodes}
-            setDroppedNodes={setDroppedNodes}
+                    setNodeData={setNodeData}
+                    droppedNodes={droppedNodes}
+                    setDroppedNodes={setDroppedNodes}
                     // nodeTypes={nodesTypesRightContainer}
                     // nodeTypes={nodeTypes}
                     fitView
@@ -1461,9 +1448,9 @@ alert(JSON.stringify(node.data.showAdditionalinputlength)+"length");
 
           </div>
           <div className="create-cancel">
-        <button className="btn btn-success" type="button" onClick={handleCreate}>Create</button>
-        <button className="btn btn-default" type="button" onClick={handleCancel}>Cancel</button>
-      </div>
+            <button className="btn btn-success" type="button" onClick={handleCreate}>Create</button>
+            <button className="btn btn-default" type="button" onClick={handleCancel}>Cancel</button>
+          </div>
         </div>
       </form>
     </div>

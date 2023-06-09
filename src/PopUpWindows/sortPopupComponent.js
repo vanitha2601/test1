@@ -3,13 +3,16 @@ import React, { useState, useEffect } from 'react';
 import '../css/dataTablePopUp.css';
 
 const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, onValueSubmit,
-  nodes, setNodes, droppedNodes, setDroppedNodes, data,
-  firstColumn,
+  nodes, setNodes, droppedNodes, setDroppedNodes, data, selectedPreviousTable,
+  selectedCurrentTable, firstColumn,
   columns, isCheckedValue, thenByIsCheckedValue,
   selectedThenByColumnValue, showAdditionalinputlength
 }) => {
-  alert(JSON.stringify(firstColumn)+"firstColumn");
-  alert(JSON.stringify(columns[0])+"columns[]0");
+  console.log(JSON.stringify(selectedPreviousTable) + "selectedPreviousTable");
+  console.log(JSON.stringify(showAdditionalinputlength) + "showAdditionalInputs.length");
+  console.log(JSON.stringify(selectedCurrentTable) + "selectedCurrentTable");
+  console.log(JSON.stringify(firstColumn) + "firstColumn");
+  console.log(JSON.stringify(columns[0]) + "columns[]0");
   const [isChecked, setIsChecked] = useState(isCheckedValue);
   const [thenByIsChecked, setThenByIsChecked] = useState(thenByIsCheckedValue);
   const [selectedColumns, setSelectedColumns] = useState(firstColumn);
@@ -23,15 +26,29 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
   const [name, setName] = useState(nodeName);
 
   useEffect(() => {
-    setShowAdditionalInputs(showAdditionalinputlength > 0 ? [{}] : []);
+    // setShowAdditionalInputs(showAdditionalinputlength > 0 ? [{}] : []);
 
     setName(nodeName);
     setSelectedColumns(firstColumn);
     setIsChecked(isCheckedValue);
     setThenByIsChecked(thenByIsCheckedValue);
     setSelectedThenByColumns(selectedThenByColumnValue);
+
+    if (
+      selectedCurrentTable &&
+      selectedPreviousTable &&
+      selectedCurrentTable.name !== selectedPreviousTable.name
+    ) {
+      setShowAdditionalInputs([]);
+      setSelectedThenByColumns([]);
+      setIsChecked(false);
+      setThenByIsChecked(false);
+    } else {
+      setShowAdditionalInputs(showAdditionalinputlength > 0 ? [{}] : []);
+    }
+
     //  setShowAdditionalInputs(showAdditionalinputlength);
-  }, [nodeName, firstColumn, isCheckedValue, thenByIsCheckedValue, selectedThenByColumnValue, showAdditionalinputlength]
+  }, [nodeName, selectedCurrentTable, selectedPreviousTable, firstColumn, isCheckedValue, thenByIsCheckedValue, selectedThenByColumnValue, showAdditionalinputlength]
   );
 
 
@@ -105,7 +122,10 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(JSON.stringify(selectedColumns)+"selectedColumns");
+    console.log(JSON.stringify(firstColumn) + "firstColumn");
+    console.log(JSON.stringify(selectedColumns) + "selectedColumns");
+
+    //  firstColumn = selectedColumns;
     let buildOrderBy = selectedColumns;
     const showAdditionalinputlength = showAdditionalInputs.length;
 
@@ -120,7 +140,7 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
     console.log(buildOrderBy);
 
-    onValueSubmit(selectedNodeId, name, buildOrderBy, selectedColumns,
+    onValueSubmit(selectedNodeId, name, buildOrderBy, selectedCurrentTable, selectedColumns,
       isChecked, thenByIsChecked, selectedThenByColumns, showAdditionalinputlength);
     // Perform the submit action with the formData
     // ...
@@ -128,7 +148,7 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
 
   };
 
-  
+
 
   const handleThenByColumnChange = (event, index) => {
     const { value } = event.target;
@@ -170,13 +190,27 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
     // Perform any actions when the link is clicked
     // ...
   };
+  // const renderColumnOptions = () => {
+  //   return columns.map((column) => (
+  //     <option key={column} value={column}>
+  //       {column}
+  //     </option>
+  //   ));
+  // };
+
   const renderColumnOptions = () => {
-    return columns.map((column) => (
-      <option key={column} value={column}>
-        {column}
-      </option>
-    ));
+    if (selectedCurrentTable) {
+      return selectedCurrentTable.columns.map((column) => (
+        <option key={column} value={column}>
+          {column}
+        </option>
+      ));
+    }
+    return null;
   };
+
+
+
 
   return (
     <div className="overlay">

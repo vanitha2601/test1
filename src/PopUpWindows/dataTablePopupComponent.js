@@ -23,12 +23,12 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
     const selectedTable = selectedDatabase.tables[0]; // Change this logic based on your requirements
     setSelectedTable(selectedTable);
 
-    alert(JSON.stringify(selectedTable) + "selectedTableselectedTable");
+    console.log(JSON.stringify(selectedTable) + "selectedTableselectedTable");
 
     if (selectedTable) {
       const columns = selectedTable.columns;
       setSelectedTableColumns(columns);
-      alert(JSON.stringify(selectedTableColumns));
+      console.log(JSON.stringify(selectedTableColumns));
     }
 
   };
@@ -51,7 +51,7 @@ const DataTablePopupComponent = ({ onClose, onRemoveTable, selectedNodeId, onVal
       name: selectedTableName,
       columns: columns,
     });
-    alert(JSON.stringify(selectedTableName));
+    console.log(JSON.stringify(selectedTableName));
 
     setSelectedTableColumns(columns);
   };
