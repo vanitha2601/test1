@@ -163,3 +163,25 @@ img {
   color: white; /* Adjust the color as needed */
   white-space: nowrap;
 }
+
+.btn-warning {
+  color: #fff;
+  background-color: #fd7400;
+  border-color: #e46800;
+}
+/* #addanother{
+margin-left:5px;
+} */
+
+.create-cancel{
+  position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 15px;
+    text-align: center;
+}
+
+.create-cancel button {
+  margin-left: 10px;
+}
