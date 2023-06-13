@@ -24,7 +24,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
 
   const [name, setName] = useState(nodeName);
   const [enterValue, setEnterValue] = useState(firstEnterValue);
-  const [selectedFilterColumns, setSelectedFilterColumns] = useState(firstColumn);
+  const [selectedFilterColumns, setSelectedFilterColumns] = useState(firstColumn || '');
 
   const [compareType, setCompareType] = useState(firstCompareToValue);
   const [isConnectionMade, setIsConnectionMade] = useState(connectionValue);
@@ -96,8 +96,8 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
               value={additionalLogicalOperators[index]}
               onChange={(event) => handleLogicalOperatorChange(event, index)}
             >
-              <option value="AND">AND</option>
-              <option value="OR">OR</option>
+              <option value="and">AND</option>
+              <option value="or">OR</option>
             </select>
           </div>
 
@@ -123,7 +123,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
               value={additionalCompareType[index]}
               onChange={(event) => handleFilterGroupChange(event, index)}>
               {dropdownCompareToOptions.map((option) => (
-                <option key={option.value} value={option.value}>
+                <option key={option.value} value={option.symbol}>
                   {option.label}
                 </option>
               ))}
@@ -154,6 +154,56 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
 
   const handleSubmit = (event) => {
     event.preventDefault();
+   
+    alert(JSON.stringify(selectedFilterColumns)+"selectedFilterColumns");
+
+    // Add the first column of selectFiltercolumns to selectGroupColumns
+const combinedFilterColumns = [selectedFilterColumns, ...selectedGroupColumns];
+alert(JSON.stringify(combinedFilterColumns)+"combinedFilterColumns");
+
+alert(JSON.stringify(compareType)+"compareType");
+const combinedCompareType = [compareType, ...additionalCompareType];
+alert(JSON.stringify(combinedCompareType)+"combinedCompareType");
+alert(JSON.stringify(enterValue)+"enterValue");
+alert(JSON.stringify(additionalTextboxValues)+"additionalTextboxValues");
+
+const combinedEntervalues = [enterValue, ...additionalTextboxValues];
+
+
+const logicalOperators = ['', ...additionalLogicalOperators];
+alert(JSON.stringify(logicalOperators)+"logicalOperators");
+
+// Example dynamic column values
+// const columns = ['testCol', 'testCol2', 'testCol3', 'testCol4', 'testCol5'];
+// const comparisonOperators = ['=', '!=', '==', '>', 'LIKE'];
+// const values = ['2', "'testVal'", '1234', '10', "'%keyword%'"];
+
+// Build the JSON object dynamically
+const buildWhere = {
+  groupSeparator: [{ sep: '' }],
+  group: []
+};
+
+for (let i = 0; i < combinedFilterColumns.length; i++) {
+  const combinedFilterColumn = combinedFilterColumns[i];
+  const comparisonOperator = combinedCompareType[i];
+  const value = combinedEntervalues[i];
+
+  const columnData = {
+    logicalOperator: i > 0 ? logicalOperators[i] : '', // Use the logical operator based on the index
+    column: combinedFilterColumn,
+    comparisionOperator: comparisonOperator,
+    value: value
+  };
+
+  buildWhere.group.push(columnData);
+}
+
+// Convert the JSON object to string
+const jsonData = JSON.stringify({ buildWhere });
+
+console.log(jsonData);
+
 
     const showAdditionalinputGrouplength = showAdditionalGroupInputs.length;
     onValueSubmit(selectedNodeId, name, compareType, selectedCurrentTable,
@@ -217,15 +267,16 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
     });
   };
 
+
   const dropdownCompareToOptions = [
-    { value: 'EqualTo', label: 'is equal to' },
-    { value: 'DoesNotEqual', label: 'is not equal to' },
-    { value: 'GreaterThan', label: 'is greater than' },
-    { value: 'GreaterThanOrEqualTo', label: 'is greater than or equal to' },
-    { value: 'LessThan', label: 'is less than' },
-    { value: 'LessThanOrEqualTo', label: 'is less than or equal to' },
-    { value: 'IsEmpty', label: 'is empty' },
-    { value: 'IsNotEmpty', label: 'is not empty' },
+    { value: 'EqualTo', label: 'is equal to', symbol: '=' },
+    { value: 'DoesNotEqual', label: 'is not equal to', symbol: '!=' },
+    { value: 'GreaterThan', label: 'is greater than', symbol: '>' },
+    { value: 'GreaterThanOrEqualTo', label: 'is greater than or equal to', symbol: '>=' },
+    { value: 'LessThan', label: 'is less than', symbol: '<' },
+    { value: 'LessThanOrEqualTo', label: 'is less than or equal to', symbol: '<=' },
+    { value: 'IsEmpty', label: 'is empty', symbol: '' },
+    { value: 'IsNotEmpty', label: 'is not empty', symbol: '' },
   ];
 
 
@@ -328,7 +379,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
               <select id="filterDropdown" className="form-control"
                 value={compareType} onChange={handleFilterChange}>
                 {dropdownCompareToOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option.value} value={option.symbol}>
                     {option.label}
                   </option>
                 ))}
