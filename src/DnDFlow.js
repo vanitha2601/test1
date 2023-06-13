@@ -611,6 +611,66 @@ const DnDFlow = () => {
     setShowPopup(false);
   };
 
+  const handleFilterSubmit = (selectedNodeId, name, compareType, selectedTable,
+    selectedFilterColumns, enterValue, additionalTextboxValues, selectedGroupColumns, additionalCompareType,
+    showAdditionalinputGrouplength, additionalLogicalOperators) => {
+    alert(JSON.stringify(selectedFilterColumns) + "selectedFilterColumns");
+    alert(JSON.stringify(selectedGroupColumns) + "selectedGroupColumns");
+    alert(JSON.stringify(additionalCompareType) + "additionalCompareType");
+    alert(JSON.stringify(showAdditionalinputGrouplength) + "showAdditionalinputGrouplength");
+
+    setNodes((nodes) => {
+      // Map over the nodes array and update the label for the desired node
+      const updatedNodes = nodes.map((node) => {
+        if (node.id === selectedNodeId) {
+          //   const buildOrderBy = [selectedColumns,selectedThenByColumns];
+          // alert(JSON.stringify(buildOrderBy)+"buildOrderBySORTSUBMIT");
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              label: name,
+              compareType,
+              selectedTable,
+              selectedFilterColumns,
+              selectedGroupColumns,
+              additionalCompareType,
+              showAdditionalinputGrouplength,
+              enterValue,
+              additionalTextboxValues,
+              additionalLogicalOperators
+            },
+            // Set the desired label for the node
+          };
+        }
+        return node;
+      });
+
+      return updatedNodes;
+      setNodes((nodes) => nodes.concat(updatedNodes));
+    }, [reactFlowInstance]);
+
+    // setNodeName(name);
+    // setSelectedOption(option);
+
+    setNodeData((prevNodeData) => ({
+      ...prevNodeData,
+      [selectedNodeId]: {
+        name,
+        compareType,
+        selectedTable,
+        selectedFilterColumns,
+        additionalCompareType,
+        showAdditionalinputGrouplength,
+        selectedGroupColumns,
+        enterValue,
+        additionalTextboxValues,
+        additionalLogicalOperators
+      },
+    }));
+
+    setShowPopup(false);
+  };
 
 
 
@@ -891,13 +951,19 @@ const DnDFlow = () => {
         newNode.data.selectedTable = initialTable;
         newNode.data.selectedColumns = initialColumn;
       }
-      if (newNode.alt === 'sort') {
+      else if (newNode.alt === 'sort') {
 
         newNode.data.buildOrderBy = initialColumn;
         newNode.data.selectedColumns = initialColumn;
         newNode.data.isChecked = false;
         newNode.data.thenByIsChecked = false;
         newNode.data.selectedThenByColumns = [];
+      } else if (newNode.alt === 'filter') {
+        newNode.data.selectedGroupColumns = [];
+        newNode.data.additionalCompareType = [];
+        newNode.data.enterValue = '';
+        newNode.data.additionalLogicalOperators = [];
+
       }
       // Update the selectedDatabase and selectedTable states in the parent component
       setSelectedDatabase(initialDatabase);
@@ -958,6 +1024,29 @@ const DnDFlow = () => {
 
 
           onValueSubmit={handleSortSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes}
+          data={data}
+        />;
+
+      } else if ((newNode.id).match(/^filter/)) {
+
+
+        if ((newNode.id) in nodeData) {
+          selectedNodeData = nodeData[newNode.id];
+        }
+        console.log(JSON.stringify(selectedNodeData));
+
+
+        popupContent = <FilterPopupComponent onClose={closePopup} // Pass droppedNodes when calling onClose
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={newNode.id}
+          nodeName={newNode.id}
+
+
+          onValueSubmit={handleFilterSubmit}
           setNodes={setNodes} // Pass the callback function as a prop
           nodes={nodes} // Pass the nodes array as a prop
           droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
@@ -1157,19 +1246,181 @@ const DnDFlow = () => {
       }
 
     } else if ((selectedNodeId).match(/^filter/)) {
-      // Handle the popup window for filter nodes
-      popupContent = <FilterPopupComponent onClose={closePopup}
-        onRemoveTable={handleRemoveTable}
-        selectedNodeId={selectedNodeId}
-        nodeName={selectedNodeData?.name || ''}
-        // nodeName={nodeName}
-        // selectedOption={selectedOption}
-        selectedOption={selectedNodeData?.option || ''}
-        onValueSubmit={handlePopupSubmit}
-        setNodes={setNodes} // Pass the callback function as a prop
-        nodes={nodes} // Pass the nodes array as a prop
-        droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
-        setDroppedNodes={setDroppedNodes} />;
+
+      alert(JSON.stringify(node.data.showAdditionalinputGrouplength) + "showAdditionalinputGrouplength");
+      console.log(JSON.stringify(node.data.selectedTable) + "node.data.selectedTable");
+      console.log(JSON.stringify(selectedNodeId) + "selectedNodeId");
+
+
+      const connectedDataTable = edges.some((edge) => {
+        const isTargetMatch = edge.target === selectedNodeId;
+        console.log('Edge target:', edge.target);
+        const sourceNode = nodes.find((n) => n.id === edge.source);
+        const isDataTableSource = sourceNode && sourceNode.alt === 'dataTable';
+
+        console.log('Node source:', sourceNode);
+        console.log('Alt:', sourceNode.alt);
+        return isTargetMatch && isDataTableSource;
+
+      });
+
+
+
+
+      if (connectedDataTable) {
+        alert("if");
+
+        // Access the DataTable node data if needed
+        const dataTableNode = edges.find(
+          (edge) => {
+            const isTargetMatch = edge.target === selectedNodeId;
+            const sourceNode = nodes.find((n) => n.id === edge.source);
+            const isDataTableSource = sourceNode && sourceNode.alt === 'dataTable';
+            console.log('edge.target:', edge.target);
+            console.log('nodes[]:', nodes);
+            return isTargetMatch && isDataTableSource;
+
+          });
+
+
+
+
+
+
+
+
+        console.log(JSON.stringify(node.data.selectedColumns) + "node.data.selectedColumns");
+
+
+        const sourceId = dataTableNode.source;
+        const dataTableNodeData = nodeData[sourceId];
+        console.log(JSON.stringify(dataTableNodeData) + "dataTableNodeDataFORFILTER");
+        const selectedTable = dataTableNodeData.selectedTable;
+        const filterColumns = dataTableNodeData.selectedTable.columns;
+        alert(JSON.stringify(node.data.selectedColumns) + "FILET");
+        // Handle the popup window for filter nodes
+        popupContent = <FilterPopupComponent onClose={closePopup}
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={selectedNodeId}
+          nodeName={node.data.label}
+
+          onValueSubmit={handleFilterSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes}
+          selectedCurrentTable={selectedTable}
+          firstColumn={node.data.selectedFilterColumns}
+          firstCompareToValue={node.data.compareType}
+          selectedGroupColumnValue={node.data.selectedGroupColumns}
+          connectionValue={connectedDataTable}
+          showAdditionalinputGrouplength={node.data.showAdditionalinputGrouplength}
+          selectedPreviousTable={node.data.selectedTable}
+          columns={columns}
+          additionalCompareTypeValues={node.data.additionalCompareType}
+          firstEnterValue={node.data.enterValue}
+          groupEnterValue={node.data.additionalTextboxValues}
+          additionalLogicalOperatorsValue={node.data.additionalLogicalOperators}
+        />;
+
+      } else if (!connectedDataTable) {
+
+        const dataTableNode = nodes.find((node) => node.alt === 'dataTable');
+        const sortNode = nodes.find((node) => node.alt === 'sort');
+        alert(JSON.stringify(dataTableNode.id) + "----" + JSON.stringify(sortNode.id));
+
+        if (dataTableNode && sortNode) {
+          const isDataTableToSortConnected =
+            edges.some((edge) => edge.source === dataTableNode.id && edge.target === sortNode.id);
+
+          const isSortToFilterConnected =
+            edges.some((edge) => edge.source === sortNode.id && edge.target === selectedNodeId);
+
+          if ((isDataTableToSortConnected && isSortToFilterConnected)) {
+
+            alert("YES CONNECTION MATCH");
+
+            // Find the sort node connected to the filter node
+            const sortToFilterNode = edges.find((edge) => {
+              const isFilterTargetMatch = edge.target === selectedNodeId;
+              const sourceNode = nodes.find((n) => n.id === edge.source);
+              const isSortSource = sourceNode && sourceNode.alt === 'sort';
+              return isFilterTargetMatch && isSortSource;
+            });
+            alert(JSON.stringify(sortToFilterNode) + "sortToFilterNode");
+
+            const dataTableToSortNodeConn = edges.find(
+              (edge) => {
+                const isTargetMatch = edge.target === sortToFilterNode.source;
+                const sourceNode = nodes.find((n) => n.id === edge.source);
+                const isSortSource = sourceNode && sourceNode.alt === 'dataTable';
+                console.log('edge.target:', edge.target);
+                console.log('nodes[]:', nodes);
+                return isTargetMatch && isSortSource;
+
+              });
+            console.log(JSON.stringify(node.data.selectedColumns) + "node.data.selectedColumns");
+            alert(JSON.stringify(dataTableToSortNodeConn) + "dataTableToSortNodeConn");
+
+            const sourceId = dataTableToSortNodeConn.source;
+
+            const sortNodeDataValue = nodes.find((n) => n.id === sourceId)?.data;
+            alert(JSON.stringify(sortNodeDataValue) + "sortNodeDataFORFILTER");
+
+            //   const sortNodeData = sortNodeConn[sourceId];
+            //  alert(JSON.stringify(sortNodeData) + "sortNodeDataFORFILTER");
+            const selectedTable = sortNodeDataValue.selectedTable;
+            const filterColumns = sortNodeDataValue.selectedTable.columns;
+            alert(JSON.stringify(selectedTable) + "selectedTable");
+            alert(JSON.stringify(filterColumns) + "FILET");
+            alert(JSON.stringify(node.data.selectedColumns) + "node.data.selectedColumns");
+            alert(JSON.stringify(node.data.showAdditionalinputGrouplength) + "node.data.showAdditionalinputGrouplength");
+            // Handle the popup window for filter nodes
+            popupContent = <FilterPopupComponent onClose={closePopup}
+              onRemoveTable={handleRemoveTable}
+              selectedNodeId={selectedNodeId}
+              nodeName={node.data.label}
+
+              onValueSubmit={handleFilterSubmit}
+              setNodes={setNodes} // Pass the callback function as a prop
+              nodes={nodes} // Pass the nodes array as a prop
+              droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+              setDroppedNodes={setDroppedNodes}
+              selectedCurrentTable={selectedTable}
+              firstColumn={node.data.selectedColumns}
+              firstCompareToValue={node.data.compareType}
+              connectionValue={true}
+              selectedGroupColumnValue={node.data.selectedGroupColumns}
+              showAdditionalinputGrouplength={node.data.showAdditionalinputGrouplength}
+
+              selectedPreviousTable={node.data.selectedTable}
+              columns={columns}
+              additionalCompareTypeValues={node.data.additionalCompareType}
+              firstEnterValue={node.data.enterValue}
+            />;
+
+
+          }
+        }
+
+
+      } else {
+        alert("else");
+        // Handle the popup window for filter nodes
+        popupContent = <FilterPopupComponent onClose={closePopup}
+          onRemoveTable={handleRemoveTable}
+          selectedNodeId={selectedNodeId}
+          nodeName={node.data.label}
+
+          onValueSubmit={handleFilterSubmit}
+          setNodes={setNodes} // Pass the callback function as a prop
+          nodes={nodes} // Pass the nodes array as a prop
+          droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
+          setDroppedNodes={setDroppedNodes}
+          selectedCurrentTable={''}
+          connectionValue={connectedDataTable}
+        />;
+      }
     } else if ((selectedNodeId).match(/^join/)) {
       // Handle the popup window for filter nodes
       popupContent = <JoinPopupComponent onClose={closePopup}
