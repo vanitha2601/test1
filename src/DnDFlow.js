@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -613,7 +614,7 @@ const DnDFlow = () => {
 
   const handleFilterSubmit = (selectedNodeId, name, compareType, selectedTable,
     selectedFilterColumns, enterValue, additionalTextboxValues, selectedGroupColumns, additionalCompareType,
-    showAdditionalinputGrouplength, additionalLogicalOperators) => {
+    showAdditionalinputGrouplength, additionalLogicalOperators, jsonFilterData) => {
     alert(JSON.stringify(selectedFilterColumns) + "selectedFilterColumns");
     alert(JSON.stringify(selectedGroupColumns) + "selectedGroupColumns");
     alert(JSON.stringify(additionalCompareType) + "additionalCompareType");
@@ -638,7 +639,8 @@ const DnDFlow = () => {
               showAdditionalinputGrouplength,
               enterValue,
               additionalTextboxValues,
-              additionalLogicalOperators
+              additionalLogicalOperators,
+              jsonFilterData
             },
             // Set the desired label for the node
           };
@@ -665,7 +667,8 @@ const DnDFlow = () => {
         selectedGroupColumns,
         enterValue,
         additionalTextboxValues,
-        additionalLogicalOperators
+        additionalLogicalOperators,
+        jsonFilterData
       },
     }));
 
@@ -1387,7 +1390,6 @@ const DnDFlow = () => {
               droppedNodes={droppedNodes} // Pass the droppedNodes as a prop
               setDroppedNodes={setDroppedNodes}
               selectedCurrentTable={selectedTable}
-              firstColumn={node.data.selectedColumns}
               firstCompareToValue={node.data.compareType}
               connectionValue={true}
               selectedGroupColumnValue={node.data.selectedGroupColumns}
@@ -1397,6 +1399,10 @@ const DnDFlow = () => {
               columns={columns}
               additionalCompareTypeValues={node.data.additionalCompareType}
               firstEnterValue={node.data.enterValue}
+              firstColumn={node.data.selectedFilterColumns}
+              groupEnterValue={node.data.additionalTextboxValues}
+              additionalLogicalOperatorsValue={node.data.additionalLogicalOperators}
+
             />;
 
 
@@ -1578,43 +1584,175 @@ const DnDFlow = () => {
     };
   }, [selectedNodeId]);
 
-
-  const handleCreate = () => {
-    console.log(JSON.stringify(droppedNodes) + "droppednodesid");
-    console.log(JSON.stringify(nodes) + "nodes");
-
-    const sqlArray = [
-      { buildSelect: '*' },
-    ];
-    droppedNodes.forEach((droppedNodeId) => {
-      const droppedNode = nodes.find((node) => node.id === droppedNodeId);
-
-      if (droppedNode) {
-        if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
-          sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
-        }
-        const { buildOrderBy } = droppedNode.data;
-        console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
-        if (buildOrderBy) {
-          sqlArray.push({ buildOrderBy: buildOrderBy });
-        }
-
-      }
-    });
-
-    console.log(JSON.stringify(sqlArray) + "firstsqlArray");
+  const handleCreate = async (e) => {
+    e.preventDefault();
 
 
+    
+    const requestBody = {
+      organisation: 'boolean',
+      email: 'vasistabhargava@gmail.com',
+      password: 'panjas-80'
+    };
+    
+   fetch('http://localhost:8000/token', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+   
+  },
+  body: JSON.stringify(requestBody)
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Request failed');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+
+ // Handle the response data and extract the token
+ const token = data.token;
+ alert(token+"token");
+
+ // Second fetch request to generate SQL
+ const sqlArray = [
+  { buildSelect: '*' },
+];
+droppedNodes.forEach((droppedNodeId) => {
+  const droppedNode = nodes.find((node) => node.id === droppedNodeId);
+
+  if (droppedNode) {
+    if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
+      sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
+    }
+    const { buildOrderBy } = droppedNode.data;
+    console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
+    if (buildOrderBy) {
+      sqlArray.push({ buildOrderBy: buildOrderBy });
+    }
+    alert(droppedNode.data.jsonFilterData+" droppedNode.data.jsonFilterData");
+  //  const {buildWhere} =  droppedNode.data.jsonFilterData;
+  //  if(buildWhere){
+  //   sqlArray.push({ buildWhere });
+  //  }
 
 
-    //  alert(JSON.stringify(nodeData));
+  }
+  
+  console.log(JSON.stringify(sqlArray) + "firstsqlArray");
 
-    // Check if the target and source nodes exist in the right container
+});
 
-    const connection = edges.find((edge) => {
-      return edge.source === 'dataTable_1' && edge.target === 'sort_1';
-    });
-  };
+alert(JSON.stringify(sqlArray));
+
+ fetch('http://localhost:8000/generateSql', {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json',
+     'Authorization': token
+   },
+   body: JSON.stringify(sqlArray)
+ })
+   .then(response => {
+     if (!response.ok) {
+       throw new Error('Request failed');
+     }
+     return response;
+   })
+   .then(data => {
+     // Handle the response data
+     console.log(data);
+   })
+   .catch(error => {
+     // Handle any errors
+     console.error(error);
+   });
+
+
+
+
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error(error);
+  });
+
+
+// TO generate the SQL (POST REQUEST)
+
+
+
+console.log(JSON.stringify(droppedNodes) + "droppednodesid");
+console.log(JSON.stringify(nodes) + "nodes");
+
+const sqlArray = [
+  { buildSelect: '*' },
+];
+droppedNodes.forEach((droppedNodeId) => {
+  const droppedNode = nodes.find((node) => node.id === droppedNodeId);
+
+  if (droppedNode) {
+    if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
+      sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
+    }
+    const { buildOrderBy } = droppedNode.data;
+    console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
+    if (buildOrderBy) {
+      sqlArray.push({ buildOrderBy: buildOrderBy });
+    }
+    alert(droppedNode.data.jsonFilterData+" droppedNode.data.jsonFilterData");
+  //  const {buildWhere} =  droppedNode.data.jsonFilterData;
+  //  if(buildWhere){
+  //   sqlArray.push({ buildWhere });
+  //  }
+
+
+  }
+  
+  console.log(JSON.stringify(sqlArray) + "firstsqlArray");
+
+});
+
+alert(sqlArray);
+// // Add the sqlArray to the request body
+// const requestData = {
+//   sqlArray: sqlArray
+// };
+// alert(JSON.stringify(sqlArray)+"sqlArray");
+//   // const jsonData = {
+//   //   // Your JSON data here
+//   // };
+  
+//   fetch('http://localhost:8000/generateSql', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': `Bearer ${authorization.token}`
+//     },
+//     body: JSON.stringify(sqlArray)
+//   })
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Request failed');
+//       }
+//       return response.text(); // Assuming the response is plain text SQL
+//     })
+//     .then(sql => {
+//       // Handle the generated SQL
+//       console.log('Generated SQL:', sql);
+//     })
+//     .catch(error => {
+//       // Handle any errors
+//       console.error(error);
+//     });
+
+
+  }
+
+
 
   const handleCancel = () => {
     // Reset the newArray to an empty array

@@ -200,15 +200,16 @@ for (let i = 0; i < combinedFilterColumns.length; i++) {
 }
 
 // Convert the JSON object to string
-const jsonData = JSON.stringify({ buildWhere });
+const jsonFilterData = JSON.stringify({ buildWhere });
 
-console.log(jsonData);
+console.log(jsonFilterData);
 
 
     const showAdditionalinputGrouplength = showAdditionalGroupInputs.length;
     onValueSubmit(selectedNodeId, name, compareType, selectedCurrentTable,
       selectedFilterColumns, enterValue, additionalTextboxValues,
-      selectedGroupColumns, additionalCompareType, showAdditionalinputGrouplength, additionalLogicalOperators
+      selectedGroupColumns, additionalCompareType, showAdditionalinputGrouplength, 
+      additionalLogicalOperators, jsonFilterData
     );
   };
 
