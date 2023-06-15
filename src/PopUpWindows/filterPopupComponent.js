@@ -12,7 +12,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
   selectedGroupColumnValue, additionalCompareTypeValues,
   showAdditionalinputGrouplength, additionalLogicalOperatorsValue
 }) => {
-  alert(additionalLogicalOperatorsValue + "additionalLogicalOperatorsValue");
+
   console.log(JSON.stringify(selectedPreviousTable) + "selectedPreviousTable");
   console.log(JSON.stringify(showAdditionalinputGrouplength) + "showAdditionalInputs.length");
   console.log(JSON.stringify(selectedCurrentTable) + "selectedCurrentTable");
@@ -154,62 +154,75 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
 
   const handleSubmit = (event) => {
     event.preventDefault();
-   
-    alert(JSON.stringify(selectedFilterColumns)+"selectedFilterColumns");
 
     // Add the first column of selectFiltercolumns to selectGroupColumns
-const combinedFilterColumns = [selectedFilterColumns, ...selectedGroupColumns];
-alert(JSON.stringify(combinedFilterColumns)+"combinedFilterColumns");
+    const combinedFilterColumns = [selectedFilterColumns, ...selectedGroupColumns];
 
-alert(JSON.stringify(compareType)+"compareType");
-const combinedCompareType = [compareType, ...additionalCompareType];
-alert(JSON.stringify(combinedCompareType)+"combinedCompareType");
-alert(JSON.stringify(enterValue)+"enterValue");
-alert(JSON.stringify(additionalTextboxValues)+"additionalTextboxValues");
-
-const combinedEntervalues = [enterValue, ...additionalTextboxValues];
+    const combinedCompareType = [compareType, ...additionalCompareType];
 
 
-const logicalOperators = ['', ...additionalLogicalOperators];
-alert(JSON.stringify(logicalOperators)+"logicalOperators");
+    const combinedEntervalues = [enterValue, ...additionalTextboxValues];
 
-// Example dynamic column values
-// const columns = ['testCol', 'testCol2', 'testCol3', 'testCol4', 'testCol5'];
-// const comparisonOperators = ['=', '!=', '==', '>', 'LIKE'];
-// const values = ['2', "'testVal'", '1234', '10', "'%keyword%'"];
 
-// Build the JSON object dynamically
-const buildWhere = {
-  groupSeparator: [{ sep: '' }],
-  group: []
-};
+    const logicalOperators = ['', ...additionalLogicalOperators];
 
-for (let i = 0; i < combinedFilterColumns.length; i++) {
-  const combinedFilterColumn = combinedFilterColumns[i];
-  const comparisonOperator = combinedCompareType[i];
-  const value = combinedEntervalues[i];
+    // Example dynamic column values
+    // const columns = ['testCol', 'testCol2', 'testCol3', 'testCol4', 'testCol5'];
+    // const comparisonOperators = ['=', '!=', '==', '>', 'LIKE'];
+    // const values = ['2', "'testVal'", '1234', '10', "'%keyword%'"];
 
-  const columnData = {
-    logicalOperator: i > 0 ? logicalOperators[i] : '', // Use the logical operator based on the index
-    column: combinedFilterColumn,
-    comparisionOperator: comparisonOperator,
-    value: value
-  };
+    // Build the JSON object dynamically
+    const buildWhere = {
+      groupSeparator: [{ sep: '' }],
+      group: []
+    };
 
-  buildWhere.group.push(columnData);
-}
+    for (let i = 0; i < combinedFilterColumns.length; i++) {
+      const combinedFilterColumn = combinedFilterColumns[i];
+      const comparisonOperator = combinedCompareType[i];
+      const value = combinedEntervalues[i];
 
-// Convert the JSON object to string
-const jsonFilterData = JSON.stringify({ buildWhere });
+      const columnData = {
+        logicalOperator: i > 0 ? logicalOperators[i] : '', // Use the logical operator based on the index
+        column: combinedFilterColumn,
+        comparisionOperator: comparisonOperator,
+        value: `'${value}'`
+      };
 
-console.log(jsonFilterData);
+      buildWhere.group.push(columnData);
+    }
+
+    alert(buildWhere);
+
+    const data = [{ buildWhere: JSON.stringify(buildWhere) }];
+    const jsonString = JSON.stringify(data);
+    console.log(jsonString + "jsonString--------");
+    // Convert the JSON object to string
+    const jsonFilterData = JSON.stringify({ buildWhere });
+
+    console.log(jsonFilterData);
+
+    const dataFilterJson = {
+      buildWhere: `[{"groupSeparator": ${JSON.stringify(buildWhere.groupSeparator)}, "group": ${JSON.stringify(buildWhere.group)}}]`
+    };
+
+    const dataFilterJson1 = {
+      buildWhere: [{
+        groupSeparator: buildWhere.groupSeparator,
+        group: buildWhere.group
+      }]
+    };
+    console.log(JSON.stringify(dataFilterJson1) + "dataFilterJson1");
+    console.log(JSON.stringify(dataFilterJson) + "dataFilterJson");
+    const jsonFilterString = JSON.stringify(dataFilterJson);
+    console.log(jsonFilterString);
 
 
     const showAdditionalinputGrouplength = showAdditionalGroupInputs.length;
     onValueSubmit(selectedNodeId, name, compareType, selectedCurrentTable,
       selectedFilterColumns, enterValue, additionalTextboxValues,
-      selectedGroupColumns, additionalCompareType, showAdditionalinputGrouplength, 
-      additionalLogicalOperators, jsonFilterData
+      selectedGroupColumns, additionalCompareType, showAdditionalinputGrouplength,
+      additionalLogicalOperators, dataFilterJson
     );
   };
 

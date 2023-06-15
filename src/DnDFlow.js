@@ -402,18 +402,17 @@ const DnDFlow = () => {
         ],
       },
       {
-        name: 'Roles Database',
+        name: 'public',
         tables: [
           {
-            name: 'Junior Table',
-            columns: ['id', 'name', 'gender', 'roles', 'yearsofexperionce'],
-            //  columns: [
-            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
-            //   { name: 'gender', dataType: 'varchar', data: ['Male', 'Female', 'Male', 'Female', 'Male'] },
-            //   { name: 'role', dataType: 'varchar', data: ['Junior Developer', 'Junior Designer', 'Junior Analyst', 'Junior Engineer', 'Junior Manager'] },
-            //   { name: 'yearsOfExperience', dataType: 'int', data: [2, 3, 1, 4, 2] },
-            // ],
+            name: 'roles',
+            // columns: ['role_id', 'role_name', 'gender', 'roles', 'yearsofexperionce'],
+            columns: ['role_id', 'role_name'],
+          },
+          {
+            name: 'company',
+            // columns: ['role_id', 'role_name', 'gender', 'roles', 'yearsofexperionce'],
+            columns: ['id', 'name', 'age', 'address', 'salary', 'join_date'],
           },
           {
             name: 'Senior Table',
@@ -614,11 +613,7 @@ const DnDFlow = () => {
 
   const handleFilterSubmit = (selectedNodeId, name, compareType, selectedTable,
     selectedFilterColumns, enterValue, additionalTextboxValues, selectedGroupColumns, additionalCompareType,
-    showAdditionalinputGrouplength, additionalLogicalOperators, jsonFilterData) => {
-    alert(JSON.stringify(selectedFilterColumns) + "selectedFilterColumns");
-    alert(JSON.stringify(selectedGroupColumns) + "selectedGroupColumns");
-    alert(JSON.stringify(additionalCompareType) + "additionalCompareType");
-    alert(JSON.stringify(showAdditionalinputGrouplength) + "showAdditionalinputGrouplength");
+    showAdditionalinputGrouplength, additionalLogicalOperators, dataFilterJson) => {
 
     setNodes((nodes) => {
       // Map over the nodes array and update the label for the desired node
@@ -640,7 +635,7 @@ const DnDFlow = () => {
               enterValue,
               additionalTextboxValues,
               additionalLogicalOperators,
-              jsonFilterData
+              dataFilterJson
             },
             // Set the desired label for the node
           };
@@ -668,7 +663,7 @@ const DnDFlow = () => {
         enterValue,
         additionalTextboxValues,
         additionalLogicalOperators,
-        jsonFilterData
+        dataFilterJson
       },
     }));
 
@@ -962,6 +957,7 @@ const DnDFlow = () => {
         newNode.data.thenByIsChecked = false;
         newNode.data.selectedThenByColumns = [];
       } else if (newNode.alt === 'filter') {
+        newNode.data.jsonFilterData = [];
         newNode.data.selectedGroupColumns = [];
         newNode.data.additionalCompareType = [];
         newNode.data.enterValue = '';
@@ -974,8 +970,8 @@ const DnDFlow = () => {
       setSelectedColumn(initialColumn);
       setNodes((nodes) => nodes.concat(newNode));
       // Update the droppedNodes array with the new node
-      setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode.id]);
-      // setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode));
+      // setDroppedNodes((prevDroppedNodes) => [...prevDroppedNodes, newNode.id]);
+      setDroppedNodes((droppedNodes) => droppedNodes.concat(newNode.id));
       // Update the droppedNodes state by adding the new node
       // setDroppedNodes((droppedNodes) => [...droppedNodes, newNode]);
 
@@ -1249,8 +1245,6 @@ const DnDFlow = () => {
       }
 
     } else if ((selectedNodeId).match(/^filter/)) {
-
-      alert(JSON.stringify(node.data.showAdditionalinputGrouplength) + "showAdditionalinputGrouplength");
       console.log(JSON.stringify(node.data.selectedTable) + "node.data.selectedTable");
       console.log(JSON.stringify(selectedNodeId) + "selectedNodeId");
 
@@ -1271,7 +1265,7 @@ const DnDFlow = () => {
 
 
       if (connectedDataTable) {
-        alert("if");
+
 
         // Access the DataTable node data if needed
         const dataTableNode = edges.find(
@@ -1300,7 +1294,7 @@ const DnDFlow = () => {
         console.log(JSON.stringify(dataTableNodeData) + "dataTableNodeDataFORFILTER");
         const selectedTable = dataTableNodeData.selectedTable;
         const filterColumns = dataTableNodeData.selectedTable.columns;
-        alert(JSON.stringify(node.data.selectedColumns) + "FILET");
+
         // Handle the popup window for filter nodes
         popupContent = <FilterPopupComponent onClose={closePopup}
           onRemoveTable={handleRemoveTable}
@@ -1330,7 +1324,7 @@ const DnDFlow = () => {
 
         const dataTableNode = nodes.find((node) => node.alt === 'dataTable');
         const sortNode = nodes.find((node) => node.alt === 'sort');
-        alert(JSON.stringify(dataTableNode.id) + "----" + JSON.stringify(sortNode.id));
+
 
         if (dataTableNode && sortNode) {
           const isDataTableToSortConnected =
@@ -1341,7 +1335,7 @@ const DnDFlow = () => {
 
           if ((isDataTableToSortConnected && isSortToFilterConnected)) {
 
-            alert("YES CONNECTION MATCH");
+
 
             // Find the sort node connected to the filter node
             const sortToFilterNode = edges.find((edge) => {
@@ -1350,7 +1344,7 @@ const DnDFlow = () => {
               const isSortSource = sourceNode && sourceNode.alt === 'sort';
               return isFilterTargetMatch && isSortSource;
             });
-            alert(JSON.stringify(sortToFilterNode) + "sortToFilterNode");
+
 
             const dataTableToSortNodeConn = edges.find(
               (edge) => {
@@ -1363,21 +1357,15 @@ const DnDFlow = () => {
 
               });
             console.log(JSON.stringify(node.data.selectedColumns) + "node.data.selectedColumns");
-            alert(JSON.stringify(dataTableToSortNodeConn) + "dataTableToSortNodeConn");
 
             const sourceId = dataTableToSortNodeConn.source;
 
             const sortNodeDataValue = nodes.find((n) => n.id === sourceId)?.data;
-            alert(JSON.stringify(sortNodeDataValue) + "sortNodeDataFORFILTER");
 
             //   const sortNodeData = sortNodeConn[sourceId];
             //  alert(JSON.stringify(sortNodeData) + "sortNodeDataFORFILTER");
             const selectedTable = sortNodeDataValue.selectedTable;
             const filterColumns = sortNodeDataValue.selectedTable.columns;
-            alert(JSON.stringify(selectedTable) + "selectedTable");
-            alert(JSON.stringify(filterColumns) + "FILET");
-            alert(JSON.stringify(node.data.selectedColumns) + "node.data.selectedColumns");
-            alert(JSON.stringify(node.data.showAdditionalinputGrouplength) + "node.data.showAdditionalinputGrouplength");
             // Handle the popup window for filter nodes
             popupContent = <FilterPopupComponent onClose={closePopup}
               onRemoveTable={handleRemoveTable}
@@ -1551,6 +1539,7 @@ const DnDFlow = () => {
       (edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId
     );
     setNodes(updatedNodes);
+    setDroppedNodes(updatedNodes);
     setEdges(updatedEdges);
   };
 
@@ -1587,167 +1576,109 @@ const DnDFlow = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
 
+    alert(JSON.stringify(droppedNodes) + "droppednodes");
 
-    
+
+
+    const sqlArray = [
+      { buildSelect: '*' },
+    ];
+    const orderByArray = [];
+
+    droppedNodes.forEach((droppedNodeId) => {
+      const droppedNode = nodes.find((node) => node.id === droppedNodeId);
+
+      if (droppedNode) {
+        if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
+          sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
+        }
+
+        const { dataFilterJson } = droppedNode.data;
+        if (dataFilterJson !== undefined) {
+          sqlArray.push(dataFilterJson);
+        }
+        const { buildOrderBy } = droppedNode.data;
+        console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
+        if (buildOrderBy) {
+          orderByArray.push({ buildOrderBy: buildOrderBy });
+        }
+
+
+      }
+
+
+
+    });
+    sqlArray.push(...orderByArray);
+    console.log(JSON.stringify(sqlArray) + "firstsqlArray");
+
     const requestBody = {
       organisation: 'boolean',
       email: 'vasistabhargava@gmail.com',
       password: 'panjas-80'
     };
-    
-   fetch('http://localhost:8000/token', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-   
-  },
-  body: JSON.stringify(requestBody)
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Request failed');
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Handle the response data
-    console.log(data);
 
- // Handle the response data and extract the token
- const token = data.token;
- alert(token+"token");
+    fetch('http://localhost:8000/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
 
- // Second fetch request to generate SQL
- const sqlArray = [
-  { buildSelect: '*' },
-];
-droppedNodes.forEach((droppedNodeId) => {
-  const droppedNode = nodes.find((node) => node.id === droppedNodeId);
+      },
+      body: JSON.stringify(requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Handle the response data
+        console.log(data);
 
-  if (droppedNode) {
-    if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
-      sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
-    }
-    const { buildOrderBy } = droppedNode.data;
-    console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
-    if (buildOrderBy) {
-      sqlArray.push({ buildOrderBy: buildOrderBy });
-    }
-    alert(droppedNode.data.jsonFilterData+" droppedNode.data.jsonFilterData");
-  //  const {buildWhere} =  droppedNode.data.jsonFilterData;
-  //  if(buildWhere){
-  //   sqlArray.push({ buildWhere });
-  //  }
-
-
-  }
-  
-  console.log(JSON.stringify(sqlArray) + "firstsqlArray");
-
-});
-
-alert(JSON.stringify(sqlArray));
-
- fetch('http://localhost:8000/generateSql', {
-   method: 'POST',
-   headers: {
-     'Content-Type': 'application/json',
-     'Authorization': token
-   },
-   body: JSON.stringify(sqlArray)
- })
-   .then(response => {
-     if (!response.ok) {
-       throw new Error('Request failed');
-     }
-     return response;
-   })
-   .then(data => {
-     // Handle the response data
-     console.log(data);
-   })
-   .catch(error => {
-     // Handle any errors
-     console.error(error);
-   });
+        // Handle the response data and extract the token
+        const token = data.token;
+        alert(token + "token");
+        fetch('http://localhost:8000/generateSql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify(sqlArray)
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Request failed');
+            }
+            return response;
+          })
+          .then(data => {
+            // Handle the response data
+            console.log(data);
+          })
+          .catch(error => {
+            // Handle any errors
+            console.error(error);
+          });
 
 
 
 
-  })
-  .catch(error => {
-    // Handle any errors
-    console.error(error);
-  });
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
 
 
-// TO generate the SQL (POST REQUEST)
+    // TO generate the SQL (POST REQUEST)
 
 
 
-console.log(JSON.stringify(droppedNodes) + "droppednodesid");
-console.log(JSON.stringify(nodes) + "nodes");
+    console.log(JSON.stringify(droppedNodes) + "droppednodesid");
+    console.log(JSON.stringify(nodes) + "nodes");
 
-const sqlArray = [
-  { buildSelect: '*' },
-];
-droppedNodes.forEach((droppedNodeId) => {
-  const droppedNode = nodes.find((node) => node.id === droppedNodeId);
-
-  if (droppedNode) {
-    if (droppedNode.data.selectedDatabase && droppedNode.data.selectedTable) {
-      sqlArray.push({ buildTableName: `${droppedNode.data.selectedDatabase.name}.${droppedNode.data.selectedTable.name}` });
-    }
-    const { buildOrderBy } = droppedNode.data;
-    console.log(JSON.stringify(buildOrderBy) + "buildOrderBy");
-    if (buildOrderBy) {
-      sqlArray.push({ buildOrderBy: buildOrderBy });
-    }
-    alert(droppedNode.data.jsonFilterData+" droppedNode.data.jsonFilterData");
-  //  const {buildWhere} =  droppedNode.data.jsonFilterData;
-  //  if(buildWhere){
-  //   sqlArray.push({ buildWhere });
-  //  }
-
-
-  }
-  
-  console.log(JSON.stringify(sqlArray) + "firstsqlArray");
-
-});
-
-alert(sqlArray);
-// // Add the sqlArray to the request body
-// const requestData = {
-//   sqlArray: sqlArray
-// };
-// alert(JSON.stringify(sqlArray)+"sqlArray");
-//   // const jsonData = {
-//   //   // Your JSON data here
-//   // };
-  
-//   fetch('http://localhost:8000/generateSql', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${authorization.token}`
-//     },
-//     body: JSON.stringify(sqlArray)
-//   })
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Request failed');
-//       }
-//       return response.text(); // Assuming the response is plain text SQL
-//     })
-//     .then(sql => {
-//       // Handle the generated SQL
-//       console.log('Generated SQL:', sql);
-//     })
-//     .catch(error => {
-//       // Handle any errors
-//       console.error(error);
-//     });
 
 
   }
