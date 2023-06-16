@@ -8,6 +8,7 @@ const SortPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId, 
   columns, isCheckedValue, thenByIsCheckedValue,
   selectedThenByColumnValue, showAdditionalinputlength
 }) => {
+  alert(selectedThenByColumnValue+"selectedThenByColumnValue");
   console.log(JSON.stringify(selectedPreviousTable) + "selectedPreviousTable");
   console.log(JSON.stringify(showAdditionalinputlength) + "showAdditionalInputs.length");
   console.log(JSON.stringify(selectedCurrentTable) + "selectedCurrentTable");

@@ -302,3 +302,41 @@ li.blockItem {
   margin-left: 10px;
   font-weight: bold;
 }
+.additional-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.additional-input label {
+  font-weight: bold;
+}
+
+.additional-input select,
+.additional-input input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.additional-input select:focus,
+.additional-input input:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.additional-input:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+.additional-input button {
+  margin-top: 10px;
+}
