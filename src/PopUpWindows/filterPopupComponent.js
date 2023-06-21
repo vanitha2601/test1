@@ -10,7 +10,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
   firstEnterValue,
   groupEnterValue,
   selectedGroupColumnValue, additionalCompareTypeValues,
-  showAdditionalinputGrouplength, additionalLogicalOperatorsValue
+  showAdditionalinputGrouplength, additionalLogicalOperatorsValue,buttonValue
 }) => {
 
   console.log(JSON.stringify(selectedPreviousTable) + "selectedPreviousTable");
@@ -167,14 +167,10 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
     const logicalOperators = ['', ...additionalLogicalOperators];
 
     alert(JSON.stringify(combinedFilterColumns) + "combinedFilterColumns");
-    // Example dynamic column values
-    // const columns = ['testCol', 'testCol2', 'testCol3', 'testCol4', 'testCol5'];
-    // const comparisonOperators = ['=', '!=', '==', '>', 'LIKE'];
-    // const values = ['2', "'testVal'", '1234', '10', "'%keyword%'"];
-
+    alert("buttonValue"+buttonValue);
     // Build the JSON object dynamically
     const buildWhere = {
-      groupSeparator: [{ sep: '' }],
+      groupSeparator: [{ sep: buttonValue }],
       group: []
     };
 
@@ -191,10 +187,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
       };
 
       buildWhere.group.push(columnData);
-      // Check if it's not the first iteration and a new groupSeparator is needed
-      // if (i > 0 && shouldAddGroupSeparator()) {
-      //   buildWhere.groupSeparator.push({ sep: 'AND' });
-      // }
+   
     }
 
     alert(buildWhere);
@@ -214,7 +207,7 @@ const FilterPopupComponent = ({ onClose, onRemoveTable, nodeName, selectedNodeId
       ;
 
     console.log(JSON.stringify(dataFilterJson) + "dataFilterJson");
-
+alert(JSON.stringify(dataFilterJson));
 
 
     const showAdditionalinputGrouplength = showAdditionalGroupInputs.length;
