@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import CustomEdge from './CustomEdge';
+import CustomEdge, { EdgeProvider } from './CustomEdge';
+
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -9,7 +10,8 @@ import ReactFlow, {
   ArrowHeadType, Position,
   removeElements, useStoreState,
   useStoreActions, useReactFlow,
-  getConnectedEdges, Background, MarkerType
+  getConnectedEdges, Background, MarkerType,
+  EdgeTypes
 } from 'reactflow';
 //import {useStoreState, removeElements } from 'react-flow-chart';
 
@@ -334,7 +336,7 @@ const DnDFlow = () => {
   const [nodeData, setNodeData] = useState({}); // State to store individual node data
 
   const [sqlArray, setSqlArray] = useState([]);
-
+  const [edgeTypeButton, setEdgeTypesButton] = useState('AND');
 
   const [data, setData] = useState({
     connection: {
@@ -347,24 +349,12 @@ const DnDFlow = () => {
           {
             name: 'Accounts Table',
             columns: ['id', 'name', 'age', 'salary', 'address'],
-            //  columns: [
-            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'name', dataType: 'varchar', data: ['John', 'Jane', 'Michael', 'Emily', 'David'] },
-            //   { name: 'age', dataType: 'int', data: [30, 35, 28, 42, 39] },
-            //   { name: 'salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
-            //   { name: 'address', dataType: 'varchar', data: ['New York', 'London', 'Paris', 'Tokyo', 'Sydney'] },
-            // ],
+
           },
           {
             name: 'Employee Table',
             columns: ['employee_id', 'employee_name', 'employee_age', 'employee_salary', 'employee_address'],
-            // columns: [
-            //   { name: 'Employee ID', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'First Name', dataType: 'varchar', data: ['vanitha', 'ana', 'Rose', 'aaron', 'David'] },
-            //   { name: 'Last Name', dataType: 'varchar', data: ['Venkat', 'Smith', 'Johnson', 'Williams', 'Brown'] },
-            //   { name: 'Age', dataType: 'int', data: [30, 35, 28, 42, 39] },
-            //   { name: 'Salary', dataType: 'decimal', data: [50000, 60000, 55000, 70000, 65000] },
-            // ],
+
           },
         ],
       },
@@ -374,30 +364,17 @@ const DnDFlow = () => {
           {
             name: 'Boolean Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-            //  columns: [
-            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'companyName', dataType: 'varchar', data: ['Company A', 'Company B', 'Company C', 'Company D', 'Company E'] },
-            //   { name: 'isActive', dataType: 'boolean', data: [true, false, true, true, false] },
-            // ],
+
           },
           {
             name: 'Simons Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-            // columns: [
-            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'companyName', dataType: 'varchar', data: ['Company X', 'Company Y', 'Company Z', 'Company W', 'Company V'] },
-            //   { name: 'isActive', dataType: 'boolean', data: [true, true, false, false, true] },
-            // ],
+
           },
           {
             name: 'Products Table',
             columns: ['product_id', 'product_name', 'Price', 'quantity'],
-            // columns: [
-            //   { name: 'Product ID', dataType: 'int', data: [101, 102, 103, 104, 105] },
-            //   { name: 'Product Name', dataType: 'varchar', data: ['Keyboard', 'Mouse', 'Monitor', 'Headphones', 'Speakers'] },
-            //   { name: 'Price', dataType: 'decimal', data: [49.99, 29.99, 199.99, 79.99, 149.99] },
-            //   { name: 'Quantity', dataType: 'int', data: [50, 100, 25, 10, 30] },
-            // ],
+
           },
         ],
       },
@@ -417,12 +394,6 @@ const DnDFlow = () => {
           {
             name: 'Senior Table',
             columns: ['id', 'name', 'roles', 'yearsofexperionce'],
-            //  columns: [
-            //   { name: 'id', dataType: 'int', data: [1, 2, 3, 4, 5] },
-            //   { name: 'name', dataType: 'varchar', data: ['Vanitha', 'Jane', 'Aaron', 'Emily', 'Sanvi'] },
-            //   { name: 'role', dataType: 'varchar', data: ['Senior Developer', 'Senior Designer', 'Senior Analyst', 'Senior Engineer', 'Senior Manager'] },
-            //   { name: 'yearsOfExperience', dataType: 'int', data: [5, 6, 7, 8, 9] },
-            // ],
           },
         ],
       },
@@ -432,6 +403,32 @@ const DnDFlow = () => {
   const [selectedTable, setSelectedTable] = useState('');
   const [selectedColumn, setSelectedColumn] = useState('');
   const [popupDropdownValues, setPopupDropdownValues] = useState([]);
+  const [elements, setElements] = useState([]);
+
+  const [toggleStates, setToggleStates] = useState({});
+
+
+  const handleToggleValue = (edgeId, newState) => {
+    const updatedToggleStates = {
+      ...toggleStates,
+      [edgeId]: newState,
+    };
+
+    setToggleStates(updatedToggleStates);
+
+    // Rest of the code...
+  };
+
+  const [edgeButtonValues, setEdgeButtonValues] = useState({});
+
+  const handleButtonValueChange = (edgeId, value) => {
+
+    setEdgeButtonValues((prevValues) => ({
+      ...prevValues,
+      [edgeId]: value,
+    }));
+    console.log(JSON.stringify(edgeButtonValues) + "edgeButtonValues");
+  };
 
 
   const getDropdownValues = (selectedNode) => {
@@ -483,22 +480,6 @@ const DnDFlow = () => {
       const existingSourceConnections = sourceNode.connections.length;
       const existingTargetConnections = targetNode.connections.length;
 
-      // Check if the source node already has two connections
-      // if (existingSourceConnections >= 2) {
-      //   return; // Ignore the connection attempt
-      // }
-
-      // CHECK for filter to filter connections
-
-      // if (sourceNode.alt === "filter" && targetNode.alt === "filter") {
-      //   alert("true");
-      // }
-
-      // if (isConnected) {
-      //   console.log('There is a connection between the filter nodes.');
-      // } else {
-      //   console.log('There is no connection between the filter nodes.');
-      // }
 
 
       const newConnection = {
@@ -697,54 +678,9 @@ const DnDFlow = () => {
     return nodeId.startsWith('join');
   };
 
-  const CustomEdge = ({ edge, onClick }) => {
-    const handleButtonClick = () => {
-      onClick(edge.id);
-    };
-
-    const lineStyle = {
-      stroke: edge.status === 'on' ? '#00ff00' : '#ff0000',
-      strokeWidth: 2,
-    };
-
-    // Calculate the position of the button
-    const buttonX = (edge.sourceX + edge.targetX) / 2;
-    const buttonY = (edge.sourceY + edge.targetY) / 2;
-
-    const buttonStyle = {
-      cx: buttonX,
-      cy: buttonY,
-      r: 8,
-      fill: edge.status === 'on' ? '#00ff00' : '#ff0000',
-      stroke: '#000',
-      strokeWidth: 1,
-      cursor: 'pointer',
-    };
-
-    return (
-      <>
-        {/* Render the edge line */}
-        <line
-          x1={edge.sourceX}
-          y1={edge.sourceY}
-          x2={edge.targetX}
-          y2={edge.targetY}
-          style={lineStyle}
-        />
-
-        {/* Render the button in the middle */}
-        <circle {...buttonStyle} onClick={handleButtonClick} />
-      </>
-    );
-  };
-
-
-
-
 
   // const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
   const onConnect = (event) => {
-
 
     const { source, target } = event;
     console.log(event);
@@ -818,13 +754,26 @@ const DnDFlow = () => {
       if (isTargetConnected && targetNodeIDSplit[0] !== "join") {
         return;
       } else {
+
+        const isSourceFilterNode = sourceNode.alt === 'filter';
+        const isTargetFilterNode = targetNode.alt === 'filter';
+        alert(JSON.stringify(isSourceFilterNode) + "---" + JSON.stringify(isTargetFilterNode));
+
+        let edgeType = 'defaultEdge';
+        let buttonValue = '';
+        if (isSourceFilterNode && isTargetFilterNode) {
+          edgeType = 'customEdge';
+          // buttonValue = 'AND';
+        }
+
+
         const newEdge = {
           id: `e${source}-${target}`, // a unique ID for the edge
           source,
           sourceHandle: 'right', // you can set this if you have multiple source handles
           target,
           targetHandle: 'left', // you can set this if you have multiple target handles
-          type: 'custom-edge-type', // set your own custom edge type if needed
+          type: edgeType, // set your own custom edge type if needed
           animated: true, // set to false if you don't want the edge to animate
           // set the label for the edge
           style: { stroke: '#ccc', strokeWidth: 2 }, // set the style for the edge
@@ -834,17 +783,18 @@ const DnDFlow = () => {
           markerEnd: {
             type: MarkerType.Arrow,
           },
-          status: 'on',
+          //  buttonValue: 'AND', 
+          initialEdgeType: 'AND',
+
+          onToggle: handleToggleValue,
 
         };
 
         console.log(JSON.stringify(newEdge));
 
         setEdges([...edges, newEdge]);
+
       }
-
-
-
 
       // }
     }
@@ -1404,12 +1354,37 @@ const DnDFlow = () => {
 
       // } 
       if (connectedToSource) {
-
+        console.log('Edge type:', edgeTypeButton);
         const dataTableNode = nodes.find((node) => node.alt === 'dataTable');
         const sortNode = nodes.find((node) => node.alt === 'sort');
         // const dataTableNode = nodes.find((node) => node.alt === 'dataTable');
 
         if (dataTableNode) {
+          alert(edgeTypeButton);
+          alert(JSON.stringify(edgeButtonValues) + "edgeButtonValues");
+
+          const edgeConnectionId = edges.find(edge => edge.source === selectedNodeId || edge.target === selectedNodeId)?.id;
+
+          edges.find(edge => {
+            console.log('Edge:', edge);
+            console.log('Is edge.source matching selectedNodeId:', edge.source === selectedNodeId);
+            console.log('Is edge.source matching selectedNodeId:', edge.target === selectedNodeId);
+
+          });
+
+          alert(JSON.stringify(edgeConnectionId) + "edgeConnectionId");
+          alert(JSON.stringify(edgeButtonValues[edgeConnectionId]) + "edgeButtonValues[edgeConnectionId]");
+          let edgeValue = edgeButtonValues[edgeConnectionId];
+
+          if (edgeValue) {
+            // Perform the comparison or further processing based on the edge value
+            console.log('Edge Connection ID:', edgeConnectionId);
+            console.log('Edge Button Value:', edgeValue);
+          } else {
+            edgeValue = '';
+          }
+
+
           const selectedTable = dataTableNode.data.selectedTable;
           const filterColumns = selectedTable.columns;
 
@@ -1436,6 +1411,7 @@ const DnDFlow = () => {
             firstColumn={node.data.selectedFilterColumns}
             groupEnterValue={node.data.additionalTextboxValues}
             additionalLogicalOperatorsValue={node.data.additionalLogicalOperators}
+            buttonValue={edgeValue}
           />;
 
           // Continue with your logic using the selectedTable and filterColumns
@@ -1678,6 +1654,7 @@ const DnDFlow = () => {
   };
 
   const handleDeleteSelectedNodes = (selectedNodeId) => {
+
     const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
     const updatedEdges = edges.filter(
       (edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId
@@ -1687,10 +1664,18 @@ const DnDFlow = () => {
     setEdges(updatedEdges);
   };
 
-  const handleElementsRemove = (selectedNodeIds) => {
-    const selectedNodes = selectedNodeIds.filter((el) => el.id === 'dataTable');
-    console.log('Selected nodes:', selectedNodes);
+  // const handleElementsRemove = (selectedNodeIds) => {
+  //   const selectedNodes = selectedNodeIds.filter((el) => el.id === 'dataTable');
+  //   console.log('Selected nodes:', selectedNodes);
+  // };
+  const handleElementsRemove = (elementsToRemove) => {
+
+    const removeElementIds = elementsToRemove.map((element) => element.id);
+    setNodes((prevNodes) => prevNodes.filter((node) => !removeElementIds.includes(node.id)));
+    setEdges((prevEdges) => prevEdges.filter((edge) => !removeElementIds.includes(edge.id)));
   };
+
+
 
   const handleNodeClick = (event, nodeId) => {
     const selectedNodeId = nodeId;
@@ -1700,10 +1685,12 @@ const DnDFlow = () => {
 
 
   useEffect(() => {
+
     const handleKeyDown = (event) => {
 
       const { source, target } = event;
       if (event.key === 'Delete' && selectedNodeId) {
+
         event.preventDefault();
         handleDeleteSelectedNodes(selectedNodeId);
         setSelectedNodeId(null);
@@ -1746,34 +1733,38 @@ const DnDFlow = () => {
         if (buildOrderBy) {
           orderByArray.push({ buildOrderBy: buildOrderBy });
         }
-
-
       }
-
-
-
     });
-    alert(JSON.stringify(buildWhereArray) + "buildWhereArray");
+    alert(JSON.stringify(buildWhereArray) + "1buildWhereArray");
+
+    // AND or OR iniitial groupseparator sep empty string condition
+    // updateGroupSeparatorSep(buildWhereArray);
+
+    // function updateGroupSeparatorSep(buildWhereArray) {
+    //   // for (let i = 0; i < buildWhereArray.length; i++) {
+    //   //   alert(JSON.stringify(buildWhereArray[i].groupSeparator)+"buildWhereArray[i].groupSeparator");
+    //   //   const groupSeparator = buildWhereArray[i].groupSeparator;
+    //   //   if (groupSeparator && groupSeparator.length  0) {
+    //   //     groupSeparator[0].sep = '';
+    //   //   }
+    //   // }
+    // }
+    // alert(JSON.stringify(buildWhereArray) + "2buildWhereArray");
 
 
-
-
-
-
-
-    if (buildWhereArray.length > 0) {
-
-      const dataFilterJson1 = {
-        buildWhere: JSON.stringify(buildWhereArray)
-      };
-      sqlArray.push(dataFilterJson1);
-      alert(JSON.stringify(dataFilterJson1) + "dataFilterJson1");
-    }
-
+    const dataFilterJson1 = {
+      buildWhere: JSON.stringify(buildWhereArray)
+    };
+    sqlArray.push(dataFilterJson1);
+    alert(JSON.stringify(dataFilterJson1) + "dataFilterJson1");
 
     sqlArray.push(...orderByArray);
     console.log(JSON.stringify(sqlArray) + "firstsqlArray");
     alert(JSON.stringify(sqlArray) + "sqlArray");
+
+
+
+
     const requestBody = {
       organisation: 'boolean',
       email: 'vasistabhargava@gmail.com',
@@ -1845,6 +1836,7 @@ const DnDFlow = () => {
 
   }
 
+
   const handleEdgeClick = (edgeId) => {
     // Find the clicked edge by its ID
     const clickedEdge = edges.find((edge) => edge.id === edgeId);
@@ -1883,6 +1875,19 @@ const DnDFlow = () => {
     );
   };
 
+  const edgeTypes = {
+
+    customEdge: (props) => <CustomEdge {...props} initialEdgeType={props.initialEdgeType}
+      onToggle={handleToggleValue} key={id} id={props.id} onButtonValueChange={handleButtonValueChange}
+    // initialEdgeType={toggleStates} 
+    // initialEdgeType={props.initialEdgeType}
+    />, // Pass the handleToggle function as onToggle prop
+
+  };
+  // const edgeTypes = {
+  //   customEdge:CustomEdge
+  // };
+
   return (
     <div>
       <Navbar></Navbar>
@@ -1914,42 +1919,67 @@ const DnDFlow = () => {
 
             <div className="right-container">
               <ReactFlowProvider>
-                <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+                <EdgeProvider>
+                  <div className="reactflow-wrapper" ref={reactFlowWrapper}>
 
-                  <ReactFlow
-                    onNodeDoubleClick={handleNodeDoubleClick}
-                    CustomEdge
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onInit={setReactFlowInstance}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    onElementsRemove={handleElementsRemove}
-                    onNodeClick={handleNodeClick}
-                    nodeData={nodeData}
-                    setNodeData={setNodeData}
-                    droppedNodes={droppedNodes}
-                    setDroppedNodes={setDroppedNodes}
-                    // nodeTypes={nodesTypesRightContainer}
-                    // nodeTypes={nodeTypes}
-                    fitView
+                    <ReactFlow
+                      onNodeDoubleClick={handleNodeDoubleClick}
+                      edgeTypes={edgeTypes}
+                      nodes={nodes}
+                      edges={edges}
+                      setNodes={setNodes}
+                      setEdges={setEdges}
+                      onNodesChange={onNodesChange}
+                      onEdgesChange={onEdgesChange}
+                      onConnect={onConnect}
+                      onInit={setReactFlowInstance}
+                      onDrop={onDrop}
+                      onDragOver={onDragOver}
+                      elements={elements} // Pass the `elements` state to ReactFlow
+                      onElementsRemove={handleElementsRemove}
 
+                      onNodeClick={handleNodeClick}
+                      nodeData={nodeData}
+                      setNodeData={setNodeData}
+                      droppedNodes={droppedNodes}
+                      setDroppedNodes={setDroppedNodes}
+                      //  initialEdgeType="AND"
+                      fitView
 
-                  >
+                    >
 
-                    {/* Render custom edges */}
-                    {edges.map((edge) => (
-                      <CustomEdge key={edge.id} edge={edge} onClick={handleEdgeClick} />
-                    ))}
+                      {/* {edges.map((connection) => (
+    <CustomEdge
+      key={connection.id}
+      id={connection.id}
+      initialEdgeType={connection.initialEdgeType}
+      onToggle={handleToggleValue}
+      onButtonValueChange={handleButtonValueChange}
+      // Pass the edgeTypes prop to CustomEdge
+    />
+  ))} */}
 
-                  </ReactFlow>
-                  {showPopup && popupContent}
+                      {/* <CustomEdge onToggle={handleToggleValue} /> */}
+                      {/* <div>
+      {edges.map((edge) => (
+        <CustomEdge
+          key={edge.id}
+          connectionId={edge.id}
+          buttonValue={edge.buttonValue}
+          toggleState={toggleStates[edge.id]}
+          sourcePosition={edge.sourcePosition}
+    targetPosition={edge.targetPosition}
+          onToggle={handleToggleValue}
+        />
+      ))}
+     
+    </div> */}
+                    </ReactFlow>
 
-                </div>
+                    {showPopup && popupContent}
 
+                  </div>
+                </EdgeProvider>
               </ReactFlowProvider>
             </div>
 
