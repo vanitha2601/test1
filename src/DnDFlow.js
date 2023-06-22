@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import CustomEdge from './CustomEdge';
+import CustomEdge, { EdgeProvider } from './CustomEdge';
 
 import ReactFlow, {
   ReactFlowProvider,
@@ -349,12 +349,12 @@ const DnDFlow = () => {
           {
             name: 'Accounts Table',
             columns: ['id', 'name', 'age', 'salary', 'address'],
-           
+
           },
           {
             name: 'Employee Table',
             columns: ['employee_id', 'employee_name', 'employee_age', 'employee_salary', 'employee_address'],
-           
+
           },
         ],
       },
@@ -364,17 +364,17 @@ const DnDFlow = () => {
           {
             name: 'Boolean Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-           
+
           },
           {
             name: 'Simons Table',
             columns: ['company_id', 'Company_name', 'Company_address'],
-           
+
           },
           {
             name: 'Products Table',
             columns: ['product_id', 'product_name', 'Price', 'quantity'],
-          
+
           },
         ],
       },
@@ -405,28 +405,30 @@ const DnDFlow = () => {
   const [popupDropdownValues, setPopupDropdownValues] = useState([]);
   const [elements, setElements] = useState([]);
 
- const [toggleStates, setToggleStates] = useState({});
+  const [toggleStates, setToggleStates] = useState({});
 
 
+  const handleToggleValue = (edgeId, newState) => {
+    const updatedToggleStates = {
+      ...toggleStates,
+      [edgeId]: newState,
+    };
 
-const handleToggleValue = (edgeId, newState) => {
- alert(edgeId+"------"+newState);
- const currentValue=newState;
- console.log(edgeId+"------"+newState+"---------------");
-  const updatedEdges = edges.map((edge) => {
-    if (edge.id === edgeId) {
-      return { ...edge, initialEdgeType: currentValue };
-    }
-    return edge;
-  });
-alert(JSON.stringify(updatedEdges)+"updatedEdges");
-console.log(JSON.stringify(updatedEdges)+"updatedEdges");
-  setEdges(updatedEdges);
-  setToggleStates((prevToggleStates) => ({
-        ...prevToggleStates,
-        [edgeId]: currentValue,
-      }));
-};
+    setToggleStates(updatedToggleStates);
+
+    // Rest of the code...
+  };
+
+  const [edgeButtonValues, setEdgeButtonValues] = useState({});
+
+  const handleButtonValueChange = (edgeId, value) => {
+
+    setEdgeButtonValues((prevValues) => ({
+      ...prevValues,
+      [edgeId]: value,
+    }));
+    console.log(JSON.stringify(edgeButtonValues) + "edgeButtonValues");
+  };
 
 
   const getDropdownValues = (selectedNode) => {
@@ -680,7 +682,6 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
   // const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
   const onConnect = (event) => {
 
-
     const { source, target } = event;
     console.log(event);
     const sourceHandle = 'right';
@@ -762,8 +763,9 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
         let buttonValue = '';
         if (isSourceFilterNode && isTargetFilterNode) {
           edgeType = 'customEdge';
-         // buttonValue = 'AND';
+          // buttonValue = 'AND';
         }
+
 
         const newEdge = {
           id: `e${source}-${target}`, // a unique ID for the edge
@@ -781,10 +783,11 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
           markerEnd: {
             type: MarkerType.Arrow,
           },
-        //  buttonValue: 'AND', 
+          //  buttonValue: 'AND', 
           initialEdgeType: 'AND',
-          onToggle: handleToggleValue, 
-        
+
+          onToggle: handleToggleValue,
+
         };
 
         console.log(JSON.stringify(newEdge));
@@ -1358,6 +1361,30 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
 
         if (dataTableNode) {
           alert(edgeTypeButton);
+          alert(JSON.stringify(edgeButtonValues) + "edgeButtonValues");
+
+          const edgeConnectionId = edges.find(edge => edge.source === selectedNodeId || edge.target === selectedNodeId)?.id;
+
+          edges.find(edge => {
+            console.log('Edge:', edge);
+            console.log('Is edge.source matching selectedNodeId:', edge.source === selectedNodeId);
+            console.log('Is edge.source matching selectedNodeId:', edge.target === selectedNodeId);
+
+          });
+
+          alert(JSON.stringify(edgeConnectionId) + "edgeConnectionId");
+          alert(JSON.stringify(edgeButtonValues[edgeConnectionId]) + "edgeButtonValues[edgeConnectionId]");
+          let edgeValue = edgeButtonValues[edgeConnectionId];
+
+          if (edgeValue) {
+            // Perform the comparison or further processing based on the edge value
+            console.log('Edge Connection ID:', edgeConnectionId);
+            console.log('Edge Button Value:', edgeValue);
+          } else {
+            edgeValue = '';
+          }
+
+
           const selectedTable = dataTableNode.data.selectedTable;
           const filterColumns = selectedTable.columns;
 
@@ -1384,7 +1411,7 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
             firstColumn={node.data.selectedFilterColumns}
             groupEnterValue={node.data.additionalTextboxValues}
             additionalLogicalOperatorsValue={node.data.additionalLogicalOperators}
-          buttonValue={edgeTypeButton}
+            buttonValue={edgeValue}
           />;
 
           // Continue with your logic using the selectedTable and filterColumns
@@ -1627,7 +1654,7 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
   };
 
   const handleDeleteSelectedNodes = (selectedNodeId) => {
-   
+
     const updatedNodes = nodes.filter((node) => node.id !== selectedNodeId);
     const updatedEdges = edges.filter(
       (edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId
@@ -1642,7 +1669,7 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
   //   console.log('Selected nodes:', selectedNodes);
   // };
   const handleElementsRemove = (elementsToRemove) => {
- 
+
     const removeElementIds = elementsToRemove.map((element) => element.id);
     setNodes((prevNodes) => prevNodes.filter((node) => !removeElementIds.includes(node.id)));
     setEdges((prevEdges) => prevEdges.filter((edge) => !removeElementIds.includes(edge.id)));
@@ -1658,12 +1685,12 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
 
 
   useEffect(() => {
-  
+
     const handleKeyDown = (event) => {
 
       const { source, target } = event;
       if (event.key === 'Delete' && selectedNodeId) {
-      
+
         event.preventDefault();
         handleDeleteSelectedNodes(selectedNodeId);
         setSelectedNodeId(null);
@@ -1709,26 +1736,21 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
       }
     });
     alert(JSON.stringify(buildWhereArray) + "1buildWhereArray");
-   
-    updateGroupSeparatorSep(buildWhereArray);
 
-    function updateGroupSeparatorSep(buildWhereArray) {
-      // for (let i = 0; i < buildWhereArray.length; i++) {
-      //   alert(JSON.stringify(buildWhereArray[i].groupSeparator)+"buildWhereArray[i].groupSeparator");
-      //   const groupSeparator = buildWhereArray[i].groupSeparator;
-      //   if (groupSeparator && groupSeparator.length  0) {
-      //     groupSeparator[0].sep = '';
-      //   }
-      // }
-      for (let i = 0; i < buildWhereArray.length; i++) {
-        const groupSeparator = buildWhereArray[i].groupSeparator;
-        if (groupSeparator && groupSeparator.length > 0 && i === 0) {
-          groupSeparator[0].sep = '';
-        }
-      }
-    }
-    alert(JSON.stringify(buildWhereArray) + "2buildWhereArray");
-   
+    // AND or OR iniitial groupseparator sep empty string condition
+    // updateGroupSeparatorSep(buildWhereArray);
+
+    // function updateGroupSeparatorSep(buildWhereArray) {
+    //   // for (let i = 0; i < buildWhereArray.length; i++) {
+    //   //   alert(JSON.stringify(buildWhereArray[i].groupSeparator)+"buildWhereArray[i].groupSeparator");
+    //   //   const groupSeparator = buildWhereArray[i].groupSeparator;
+    //   //   if (groupSeparator && groupSeparator.length  0) {
+    //   //     groupSeparator[0].sep = '';
+    //   //   }
+    //   // }
+    // }
+    // alert(JSON.stringify(buildWhereArray) + "2buildWhereArray");
+
 
     const dataFilterJson1 = {
       buildWhere: JSON.stringify(buildWhereArray)
@@ -1814,7 +1836,7 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
 
   }
 
- 
+
   const handleEdgeClick = (edgeId) => {
     // Find the clicked edge by its ID
     const clickedEdge = edges.find((edge) => edge.id === edgeId);
@@ -1854,13 +1876,13 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
   };
 
   const edgeTypes = {
-   
-    customEdge: (props) => <CustomEdge {...props}  initialEdgeType={props.initialEdgeType}
-    onToggle={handleToggleValue} key={id}  id={props.id}
-   // initialEdgeType={toggleStates} 
-  // initialEdgeType={props.initialEdgeType}
-   />, // Pass the handleToggle function as onToggle prop
-  
+
+    customEdge: (props) => <CustomEdge {...props} initialEdgeType={props.initialEdgeType}
+      onToggle={handleToggleValue} key={id} id={props.id} onButtonValueChange={handleButtonValueChange}
+    // initialEdgeType={toggleStates} 
+    // initialEdgeType={props.initialEdgeType}
+    />, // Pass the handleToggle function as onToggle prop
+
   };
   // const edgeTypes = {
   //   customEdge:CustomEdge
@@ -1897,46 +1919,49 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
 
             <div className="right-container">
               <ReactFlowProvider>
-                <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+                <EdgeProvider>
+                  <div className="reactflow-wrapper" ref={reactFlowWrapper}>
 
-                  <ReactFlow
-                    onNodeDoubleClick={handleNodeDoubleClick}
-                     edgeTypes={edgeTypes}
-                     nodes={nodes}
-                    edges={edges}
-                    setNodes={setNodes}
-                    setEdges={setEdges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onInit={setReactFlowInstance}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    elements={elements} // Pass the `elements` state to ReactFlow
-                    onElementsRemove={handleElementsRemove}
+                    <ReactFlow
+                      onNodeDoubleClick={handleNodeDoubleClick}
+                      edgeTypes={edgeTypes}
+                      nodes={nodes}
+                      edges={edges}
+                      setNodes={setNodes}
+                      setEdges={setEdges}
+                      onNodesChange={onNodesChange}
+                      onEdgesChange={onEdgesChange}
+                      onConnect={onConnect}
+                      onInit={setReactFlowInstance}
+                      onDrop={onDrop}
+                      onDragOver={onDragOver}
+                      elements={elements} // Pass the `elements` state to ReactFlow
+                      onElementsRemove={handleElementsRemove}
 
-                    onNodeClick={handleNodeClick}
-                    nodeData={nodeData}
-                    setNodeData={setNodeData}
-                    droppedNodes={droppedNodes}
-                    setDroppedNodes={setDroppedNodes}
-                  //  initialEdgeType="AND"
-                    fitView
-                    
-                  >
- {/* {edges.map((connection) => (
+                      onNodeClick={handleNodeClick}
+                      nodeData={nodeData}
+                      setNodeData={setNodeData}
+                      droppedNodes={droppedNodes}
+                      setDroppedNodes={setDroppedNodes}
+                      //  initialEdgeType="AND"
+                      fitView
+
+                    >
+
+                      {/* {edges.map((connection) => (
     <CustomEdge
       key={connection.id}
       id={connection.id}
       initialEdgeType={connection.initialEdgeType}
       onToggle={handleToggleValue}
+      onButtonValueChange={handleButtonValueChange}
       // Pass the edgeTypes prop to CustomEdge
     />
   ))} */}
 
-                     {/* <CustomEdge onToggle={handleToggleValue} /> */}
-                     <div>
-      {/* {edges.map((edge) => (
+                      {/* <CustomEdge onToggle={handleToggleValue} /> */}
+                      {/* <div>
+      {edges.map((edge) => (
         <CustomEdge
           key={edge.id}
           connectionId={edge.id}
@@ -1944,17 +1969,17 @@ console.log(JSON.stringify(updatedEdges)+"updatedEdges");
           toggleState={toggleStates[edge.id]}
           sourcePosition={edge.sourcePosition}
     targetPosition={edge.targetPosition}
-          onToggle={handleToggle}
+          onToggle={handleToggleValue}
         />
-      ))} */}
-      {/* Render more CustomEdge components for additional connections */}
-    </div>
-                  </ReactFlow>
+      ))}
+     
+    </div> */}
+                    </ReactFlow>
 
-                  {showPopup && popupContent}
+                    {showPopup && popupContent}
 
-                </div>
-
+                  </div>
+                </EdgeProvider>
               </ReactFlowProvider>
             </div>
 

@@ -1,7 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from 'reactflow';
-
 import './index.css';
+
+// Create a Context
+export const EdgeContext = createContext();
+
+// Create a provider which will keep the state
+export function EdgeProvider({ children }) {
+  const [edgeStates, setEdgeStates] = useState({});
+
+  const toggleEdge = id => {
+    setEdgeStates(edgeStates => ({
+      ...edgeStates,
+      //  [id]: !edgeStates[id]
+
+      [id]: edgeStates[id] === 'AND' ? 'OR' : 'AND'
+    }));
+    console.log(JSON.stringify(edgeStates) + "edgeStates");
+  };
+
+  return (
+    <EdgeContext.Provider value={{ edgeStates, toggleEdge }}>
+      {children}
+    </EdgeContext.Provider>
+  );
+}
 
 export default function CustomEdge({
   id,
@@ -13,8 +36,7 @@ export default function CustomEdge({
   targetPosition,
   style = {},
   markerEnd,
-  initialEdgeType,
-  onToggle,
+  onButtonValueChange
 }) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -25,25 +47,29 @@ export default function CustomEdge({
     targetPosition,
   });
 
-  console.log(initialEdgeType+"initialEdgeType");
-  const [toggleState, setToggleState] = useState(initialEdgeType);
-
-  const handleToggle = () => {
-    const currentState = toggleState;
-    const newState = currentState === 'AND' ? 'OR' : 'AND';
-    setToggleState(newState);
-    //onToggle(id, newState);
-    console.log(JSON.stringify(toggleState)+"toggleState");
+  const { edgeStates, toggleEdge } = useContext(EdgeContext);
+  
+  const onEdgeClick = (event) => {
+    event.stopPropagation();
+    // const newToggleState = !toggleState;
+    const newToggleState = edgeStates[id] === 'AND' ? 'OR' : 'AND';
+    console.log(JSON.stringify(newToggleState) + "newToggleState");
+    toggleEdge(id);
+    //setToggleState(newToggleState);
+    // alert(JSON.stringify(toggleState)+"toggleState");
+    // alert(JSON.stringify(edgeStates)+"edgeStates");
+    // alert(JSON.stringify(toggleEdge)+"toggleEdge");
+    //  console.log(JSON.stringify(toggleState)+"toggleState");
+    console.log(JSON.stringify(edgeStates) + "edgeStates");
+    console.log(JSON.stringify(toggleEdge) + "toggleEdge");
+    // console.log(JSON.stringify(toggleState)+"toggleState");
+    onButtonValueChange(id, newToggleState); // Invoke the prop with button value and edge ID
   };
 
-  useEffect(() => {
-    setToggleState(initialEdgeType);
-  }, [initialEdgeType]);
 
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
-
       <EdgeLabelRenderer>
         <div
           style={{
@@ -53,10 +79,10 @@ export default function CustomEdge({
             pointerEvents: 'all',
           }}
           className="nodrag nopan"
-          id={id}
         >
-          <button type="button" className="toggleButton" onClick={handleToggle}>
-          {toggleState || initialEdgeType}
+          <button type="button" className="toggleButton" onClick={onEdgeClick}>
+            {/* {edgeStates[id] ? 'AND' : 'OR'} */}
+            {edgeStates[id] || 'OR'}
           </button>
         </div>
       </EdgeLabelRenderer>
